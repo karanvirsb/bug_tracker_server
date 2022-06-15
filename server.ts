@@ -17,6 +17,7 @@ app.use(express.json());
 // ROUTES
 
 app.use("/register", require("./src/Routes/register"));
+app.use("/login", require("./src/Routes/login"));
 
 dbController.connect();
 
