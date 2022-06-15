@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-export interface IUser {
+interface IUser {
     username?: String;
     password: String;
     email?: String;
@@ -9,7 +9,7 @@ export interface IUser {
     lastName?: String;
     group_id?: String;
     refreshToken?: String;
-    roles?: String;
+    roles?: Object;
 }
 
 const usersSchema = new Schema({
@@ -20,9 +20,10 @@ const usersSchema = new Schema({
     lastName: String,
     group_id: String,
     refreshToken: String,
+    roles: Object,
 });
 
-const Users = mongoose.Model("Users", usersSchema);
+const Users = mongoose.model("Users", usersSchema);
 
 // FUNCTIONS
 
@@ -76,9 +77,10 @@ async function getUserByRefreshToken(token: String) {
 }
 
 module.exports = {
-    Users,
     getUser,
     saveUser,
     getUserByRefreshToken,
     updateUser,
 };
+
+export = { getUser, saveUser, getUserByRefreshToken, updateUser };
