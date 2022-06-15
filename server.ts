@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const corsOptions = require("./src/Config/corsOptions");
 const credentials = require("./src/Middleware/credentials");
+const verifyJWT = require("./src/Middleware/verifyJWT");
 
 // MIDDLEWARE
 app.use(credentials);
@@ -18,6 +19,9 @@ app.use(express.json());
 
 app.use("/register", require("./src/Routes/register"));
 app.use("/login", require("./src/Routes/login"));
+
+// Protected routes
+app.use(verifyJWT);
 
 dbController.connect();
 
