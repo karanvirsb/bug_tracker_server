@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 const bcrypt = require("bcrypt");
-const { getUser, saveUser } = require("./databaseController");
+const { Users } = require("./databaseController");
 
 const handleNewUser = async (req: Request, res: Response) => {
     const { username, password, firstName, lastName, email } = (req as any)
@@ -15,7 +15,7 @@ const handleNewUser = async (req: Request, res: Response) => {
     }
 
     try {
-        const duplicateUser = await getUser(username);
+        const duplicateUser = await Users.getUser(username);
 
         if (duplicateUser) {
             return res.sendStatus(409); // conflict
@@ -32,7 +32,7 @@ const handleNewUser = async (req: Request, res: Response) => {
             roles: { User: 2001 },
         };
 
-        const userAdded = saveUser(user);
+        const userAdded = Users.saveUser(user);
 
         if (userAdded) {
             return res.sendStatus(201);
