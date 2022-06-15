@@ -4,7 +4,12 @@ const app = express();
 const port = 8000;
 const dbController = require("./src/Controllers/databaseController");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const corsOptions = require("./src/Config/corsOptions");
+const credentials = require("./src/Middleware/credentials");
 
+app.use(credentials);
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
