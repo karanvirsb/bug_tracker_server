@@ -1,6 +1,6 @@
 export {};
 const mongoose = require("mongoose");
-const { Users } = require("../Model/Users");
+const Users = require("../Model/Users");
 
 function connect(): void {
     mongoose
