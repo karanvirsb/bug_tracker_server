@@ -1,10 +1,12 @@
+import { NextFunction, Request, Response } from "express";
+
 export = {};
 const allowedOrigins = require("../Config/allowedOrigins");
 
-const credentials = (req: Request, res: Response, next: Function) => {
-    const origin = req.headers.get("origin") || "";
+const credentials = (req: Request, res: Response, next: NextFunction) => {
+    const origin = req.header("origin");
     if (allowedOrigins.includes(origin)) {
-        res.headers.set("Access-Control-Allow-Credentials", "true");
+        res.header("Access-Control-Allow-Credentials", "true");
     }
     next();
 };
