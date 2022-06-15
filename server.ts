@@ -7,7 +7,9 @@ const mongoose = require("mongoose");
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
 dbController.connect();
+
 mongoose.connection.once("open", () => {
     console.log("open");
     app.listen(port, () => {
