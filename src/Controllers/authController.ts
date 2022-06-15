@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const ckey = require("ckey");
 const { Users } = require("./databaseController");
 
 const handleLogin = async (req: Request, res: Response) => {
@@ -31,13 +30,13 @@ const handleLogin = async (req: Request, res: Response) => {
                     group_id: foundUser.group_id,
                 },
             },
-            ckey.ACCESS_TOKEN_SECRET,
+            process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: "15m" }
         );
 
         const refreshToken = jwt.sign(
             { username: foundUser.username },
-            ckey.REFRESH_TOKEN_SECRET,
+            process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: "1d" }
         );
 

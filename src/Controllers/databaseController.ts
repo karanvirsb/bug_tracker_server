@@ -1,11 +1,10 @@
 export {};
 const mongoose = require("mongoose");
-const ckey = require("ckey");
 const { Users } = require("../Model/Users");
 
 function connect(): void {
     mongoose
-        .connect(ckey.DATABASE_URL)
+        .connect(process.env.DATABASE_URL)
         .then(() => {
             console.log("running");
         })
