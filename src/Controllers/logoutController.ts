@@ -38,3 +38,5 @@ const handleLogout = async (req: Request, res: Response) => {
         res.sendStatus(204);
     }
 };
+
+module.exports = { handleLogout };
