@@ -9,6 +9,7 @@ export interface IUser {
     lastName?: String;
     group_id?: String;
     refreshToken?: String;
+    roles?: String;
 }
 
 const usersSchema = new Schema({
