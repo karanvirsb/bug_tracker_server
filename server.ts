@@ -8,10 +8,15 @@ const cors = require("cors");
 const corsOptions = require("./src/Config/corsOptions");
 const credentials = require("./src/Middleware/credentials");
 
+// MIDDLEWARE
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// ROUTES
+
+app.use("/register", require("./src/Controllers/registerHandler"));
 
 dbController.connect();
 
