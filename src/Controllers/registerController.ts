@@ -4,8 +4,7 @@ const bcrypt = require("bcrypt");
 const { Users } = require("./databaseController");
 
 const handleNewUser = async (req: Request, res: Response) => {
-    const { username, password, firstName, lastName, email } = (req as any)
-        .body;
+    const { username, password, firstName, lastName, email } = req.body;
 
     if (!username || !password || !firstName || !lastName || !email) {
         return res.status(400).json({
@@ -30,6 +29,8 @@ const handleNewUser = async (req: Request, res: Response) => {
             lastName: lastName,
             email: email,
             roles: { User: 2001 },
+            group_id: "",
+            refreshToken: "",
         };
 
         const userAdded = Users.saveUser(user);
@@ -46,3 +47,4 @@ const handleNewUser = async (req: Request, res: Response) => {
 };
 
 module.exports = { handleNewUser };
+export = { handleNewUser };
