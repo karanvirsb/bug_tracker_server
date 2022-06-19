@@ -6,6 +6,7 @@ const { Users } = require("./databaseController");
 
 const handleLogin = async (req: Request, res: Response) => {
     const { username, password } = req.body;
+    console.log(username, password);
     if (!username || !password) {
         return res
             .status(400)
@@ -21,12 +22,14 @@ const handleLogin = async (req: Request, res: Response) => {
     //evaulte the password
     if (match) {
         // create JWTs
-
+        const roles = Object.keys(foundUser.roles).map(
+            (key: string) => foundUser.roles[key]
+        );
         const accessToken = jwt.sign(
             {
                 UserInfo: {
                     username: foundUser.username,
-                    roles: foundUser.roles,
+                    roles,
                     group_id: foundUser.group_id,
                 },
             },
@@ -47,7 +50,7 @@ const handleLogin = async (req: Request, res: Response) => {
             secure: true,
         });
         Users.updateUser(foundUser.username, { refreshToken: refreshToken });
-        res.json({ accessToken: accessToken });
+        return res.json({ accessToken: accessToken });
     } else {
         return res.sendStatus(401);
     }
