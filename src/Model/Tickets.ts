@@ -58,7 +58,7 @@ async function deleteTicket(ticketId: String) {
     try {
         const deletedTicket = await Tickets.deleteOne({
             ticketId: ticketId,
-        });
+        }).exec();
         return deletedTicket.acknowledged;
     } catch (err) {
         return false;
@@ -69,7 +69,7 @@ async function getTicket(ticketInfo: { filter: string; attribute: string }) {
     try {
         return await Tickets.find({
             [ticketInfo.filter]: ticketInfo.attribute,
-        });
+        }).exec();
     } catch (err) {
         return [];
     }
@@ -77,7 +77,7 @@ async function getTicket(ticketInfo: { filter: string; attribute: string }) {
 
 async function assignUserToTicket(ticketId: String, userId: String) {
     try {
-        const ticket = await Tickets.find({ ticketId: ticketId });
+        const ticket = await Tickets.find({ ticketId: ticketId }).exec();
         const users: String[] = ticket[0].assignedDev || [];
         users.push(userId);
 
@@ -89,7 +89,7 @@ async function assignUserToTicket(ticketId: String, userId: String) {
 
 async function removeUserFromTicket(ticketId: String, userId: String) {
     try {
-        const ticket = await Tickets.find({ ticketId: ticketId });
+        const ticket = await Tickets.find({ ticketId: ticketId }).exec();
         const users: String[] = ticket[0].assignedDev || [];
         const filteredUsers = users.filter((user) => user != userId);
 
@@ -99,6 +99,25 @@ async function removeUserFromTicket(ticketId: String, userId: String) {
     }
 }
 
+async function getStatistics(projectIds: []) {
+    try {
+        const ticketsArr = [];
+
+        for (let i = 0; i < projectIds.length; i++) {
+            const tickets = await Tickets.find(
+                { projectId: projectIds[i] },
+                "ticketStatus ticketSeverity ticketType"
+            ).exec();
+            ticketsArr.push(...tickets);
+        }
+        return ticketsArr;
+    } catch (error) {
+        return { success: false, status: 500, data: [] };
+    }
+}
+
+// TODO filter function
+
 export = {
     createTicket,
     deleteTicket,
@@ -106,4 +125,5 @@ export = {
     getTicket,
     assignUserToTicket,
     removeUserFromTicket,
+    getStatistics,
 };
