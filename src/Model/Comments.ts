@@ -97,4 +97,39 @@ async function replyTo(commentId: String, commentInfo: IComment) {
     }
 }
 
-export = { createComment, deleteComment, updateComment, getComment, replyTo };
+async function getAllReplys(commentId: String) {
+    try {
+        const replys = await Comments.find({ commentId: commentId }, `reply`);
+        return replys;
+    } catch (error) {
+        return {};
+    }
+}
+
+async function getAllComments(replyArr: []) {
+    try {
+        const commentsArr = [];
+        for (let i = 0; i < replyArr.length; i++) {
+            const replyId = replyArr[i];
+            const comment = await getComment({
+                filter: "commentId",
+                attribute: replyId,
+            });
+            commentsArr.push(comment[0]);
+        }
+
+        return commentsArr;
+    } catch (error) {
+        return {};
+    }
+}
+
+export = {
+    createComment,
+    deleteComment,
+    updateComment,
+    getComment,
+    replyTo,
+    getAllReplys,
+    getAllComments,
+};
