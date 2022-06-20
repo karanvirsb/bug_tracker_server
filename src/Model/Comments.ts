@@ -64,7 +64,7 @@ async function deleteComment(commentId: String) {
     try {
         const deletedComment = await Comments.deleteOne({
             commentId: commentId,
-        });
+        }).exec();
         return deletedComment.acknowledged;
     } catch (err) {
         return false;
@@ -75,7 +75,7 @@ async function getComment(commentInfo: { filter: string; attribute: string }) {
     try {
         return await Comments.find({
             [commentInfo.filter]: commentInfo.attribute,
-        });
+        }).exec();
     } catch (err) {
         return [];
     }
@@ -99,7 +99,10 @@ async function replyTo(commentId: String, commentInfo: IComment) {
 
 async function getAllReplys(commentId: String) {
     try {
-        const replys = await Comments.find({ commentId: commentId }, `reply`);
+        const replys = await Comments.find(
+            { commentId: commentId },
+            `reply`
+        ).exec();
         return replys;
     } catch (error) {
         return {};
