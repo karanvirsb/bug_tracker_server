@@ -6,7 +6,7 @@ interface IProject {
     projectName: String;
     projectDesc: String;
     dateCreated?: Date;
-    users?: String;
+    users?: [];
 }
 
 const projectSchema = new Schema<IProject>({
@@ -15,7 +15,7 @@ const projectSchema = new Schema<IProject>({
     projectName: { type: String },
     projectDesc: { type: String },
     dateCreated: { type: Date, default: Date.now },
-    users: { type: [String] },
+    users: { type: [] },
 });
 
 const Projects = model<IProject>("Projects", projectSchema);
@@ -61,6 +61,30 @@ async function getProject(projectInfo: { filter: string; attribute: string }) {
         });
     } catch (err) {
         return [];
+    }
+}
+
+async function addUserToProject(projectId: String, userId: String) {
+    try {
+        const project = await Projects.find({ projectId: projectId });
+        const users: String[] = project[0].users || [];
+        users.push(userId);
+
+        return await updateProject(projectId, { users: users });
+    } catch (error) {
+        return false;
+    }
+}
+
+async function removeUserFromProject(projectId: String, userId: String) {
+    try {
+        const project = await Projects.find({ projectId: projectId });
+        const users: String[] = project[0].users || [];
+        const filteredUsers = users.filter((user) => user != userId);
+
+        return await updateProject(projectId, { users: filteredUsers });
+    } catch (error) {
+        return false;
     }
 }
 
