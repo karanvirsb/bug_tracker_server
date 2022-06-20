@@ -47,7 +47,7 @@ async function deleteProject(projectId: String) {
     try {
         const deletedProject = await Projects.deleteOne({
             projectId: projectId,
-        });
+        }).exec();
         return deletedProject.acknowledged;
     } catch (err) {
         return false;
@@ -58,7 +58,7 @@ async function getProject(projectInfo: { filter: string; attribute: string }) {
     try {
         return await Projects.find({
             [projectInfo.filter]: projectInfo.attribute,
-        });
+        }).exec();
     } catch (err) {
         return [];
     }
@@ -66,7 +66,7 @@ async function getProject(projectInfo: { filter: string; attribute: string }) {
 
 async function addUserToProject(projectId: String, userId: String) {
     try {
-        const project = await Projects.find({ projectId: projectId });
+        const project = await Projects.find({ projectId: projectId }).exec();
         const users: String[] = project[0].users || [];
         users.push(userId);
 
@@ -78,13 +78,37 @@ async function addUserToProject(projectId: String, userId: String) {
 
 async function removeUserFromProject(projectId: String, userId: String) {
     try {
-        const project = await Projects.find({ projectId: projectId });
+        const project = await Projects.find({ projectId: projectId }).exec();
         const users: String[] = project[0].users || [];
         const filteredUsers = users.filter((user) => user != userId);
 
         return await updateProject(projectId, { users: filteredUsers });
     } catch (error) {
         return false;
+    }
+}
+
+async function getAllProjectsByGroupId(groupId: String) {
+    try {
+        const projects = await Projects.find(
+            { groupId: groupId },
+            "projectId"
+        ).exec();
+        return projects;
+    } catch (error) {
+        return {};
+    }
+}
+
+async function getAllUsersOfProject(projectId: String) {
+    try {
+        const users = await Projects.find(
+            { projectId: projectId },
+            `users`
+        ).exec();
+        return users;
+    } catch (error) {
+        return {};
     }
 }
 
@@ -95,4 +119,6 @@ export = {
     getProject,
     addUserToProject,
     removeUserFromProject,
+    getAllProjectsByGroupId,
+    getAllUsersOfProject,
 };
