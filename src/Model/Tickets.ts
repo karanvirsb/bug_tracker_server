@@ -5,12 +5,12 @@ interface ITicket {
     dateCreated: Date;
     title: String;
     description: String;
-    assignedDev?: [String];
+    assignedDev?: [];
     time: Number;
     ticketStatus: String;
     ticketSeverity: String;
     ticketType: String;
-    reporter: String;
+    reporterId: String;
     projectId: String;
 }
 
@@ -20,12 +20,12 @@ const ticketSchema = new Schema<ITicket>({
     dateCreated: { type: Date, default: Date.now },
     title: { type: String },
     description: { type: String },
-    assignedDev: { type: [String] },
+    assignedDev: { type: [] },
     time: { type: Number },
     ticketStatus: { type: String },
     ticketSeverity: { type: String },
     ticketType: { type: String },
-    reporter: { type: String },
+    reporterId: { type: String },
     projectId: { type: String },
 });
 
@@ -72,6 +72,30 @@ async function getTicket(ticketInfo: { filter: string; attribute: string }) {
         });
     } catch (err) {
         return [];
+    }
+}
+
+async function assignUserToTicket(ticketId: String, userId: String) {
+    try {
+        const ticket = await Tickets.find({ ticketId: ticketId });
+        const users: String[] = ticket[0].assignedDev || [];
+        users.push(userId);
+
+        return await updateTicket(ticketId, { assignedDev: users });
+    } catch (error) {
+        return false;
+    }
+}
+
+async function removeUserFromTicket(ticketId: String, userId: String) {
+    try {
+        const ticket = await Tickets.find({ ticketId: ticketId });
+        const users: String[] = ticket[0].assignedDev || [];
+        const filteredUsers = users.filter((user) => user != userId);
+
+        return await updateTicket(ticketId, { assignedDev: filteredUsers });
+    } catch (error) {
+        return false;
     }
 }
 
