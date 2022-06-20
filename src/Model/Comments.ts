@@ -6,7 +6,7 @@ interface IComment {
     userId: String;
     ticketID: String;
     comment: String;
-    reply?: String;
+    reply?: [string];
 }
 
 const commentSchema = new Schema<IComment>({
@@ -15,7 +15,7 @@ const commentSchema = new Schema<IComment>({
     userId: { type: String },
     ticketID: { type: String },
     comment: { type: String },
-    reply: { type: String },
+    reply: { type: [] },
 });
 
 const Comments = model<IComment>("Comments", commentSchema);
@@ -43,6 +43,22 @@ async function updateComment(commentId: String, updates: {}) {
         return false;
     }
 }
+async function updateReply(commentId: String, replyId: String) {
+    try {
+        const comment = await Comments.find({ commentId: commentId }).exec();
+        const reply: String[] = comment[0].reply || [];
+        reply.push(replyId);
+
+        const updatedComment = await Comments.updateOne(
+            { commentId: commentId },
+            { reply: reply }
+        );
+
+        return updatedComment.acknowledged;
+    } catch (err) {
+        return false;
+    }
+}
 
 async function deleteComment(commentId: String) {
     try {
@@ -62,6 +78,22 @@ async function getComment(commentInfo: { filter: string; attribute: string }) {
         });
     } catch (err) {
         return [];
+    }
+}
+
+async function replyTo(commentId: String, commentInfo: IComment) {
+    try {
+        const createdComment = await createComment(commentInfo);
+        if (!createdComment) return false;
+
+        const updatedComment = await updateReply(
+            commentId,
+            commentInfo.commentId
+        );
+
+        return updatedComment;
+    } catch (error) {
+        return false;
     }
 }
 
