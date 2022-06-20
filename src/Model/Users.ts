@@ -27,6 +27,7 @@ const Users = mongoose.model("Users", usersSchema);
 
 // FUNCTIONS
 
+// GETS
 async function getUser(id: String): Promise<IUser | []> {
     let user = [];
     try {
@@ -48,6 +49,15 @@ async function getUser(id: String): Promise<IUser | []> {
     }
 }
 
+async function getUserByRefreshToken(token: String) {
+    const user = await Users.find({ refreshToken: token }).exec();
+    if (!user) {
+        return [];
+    }
+    return user[0];
+}
+
+// CREATES
 async function saveUser(user: IUser): Promise<Boolean> {
     try {
         return Users.create(user) ? true : false;
@@ -56,6 +66,7 @@ async function saveUser(user: IUser): Promise<Boolean> {
     }
 }
 
+// UPDATES
 async function updateUser(username: String, updates: Object): Promise<Boolean> {
     try {
         const updatedBook = await Users.updateOne(
@@ -66,14 +77,6 @@ async function updateUser(username: String, updates: Object): Promise<Boolean> {
     } catch (err) {
         return false;
     }
-}
-
-async function getUserByRefreshToken(token: String) {
-    const user = await Users.find({ refreshToken: token }).exec();
-    if (!user) {
-        return [];
-    }
-    return user[0];
 }
 
 module.exports = {
