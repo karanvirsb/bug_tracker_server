@@ -6,7 +6,7 @@ interface IComment {
     userId: String;
     ticketID: String;
     comment: String;
-    reply?: [string];
+    reply?: [];
 }
 
 const commentSchema = new Schema<IComment>({
