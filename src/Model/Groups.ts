@@ -40,7 +40,9 @@ async function updateGroup(groupId: String, updates: {}) {
 
 async function deleteGroup(groupId: String) {
     try {
-        const deletedGroup = await Groups.deleteOne({ groupId: groupId });
+        const deletedGroup = await Groups.deleteOne({
+            groupId: groupId,
+        }).exec();
         return deletedGroup.acknowledged;
     } catch (err) {
         return false;
@@ -49,7 +51,7 @@ async function deleteGroup(groupId: String) {
 
 async function getGroup(groupInfo: {}) {
     try {
-        return await Groups.find(groupInfo);
+        return await Groups.find(groupInfo).exec();
     } catch (err) {
         return [];
     }
