@@ -99,4 +99,11 @@ async function removeUserFromTicket(ticketId: String, userId: String) {
     }
 }
 
-export = { Tickets };
+export = {
+    createTicket,
+    deleteTicket,
+    updateTicket,
+    getTicket,
+    assignUserToTicket,
+    removeUserFromTicket,
+};

@@ -88,4 +88,11 @@ async function removeUserFromProject(projectId: String, userId: String) {
     }
 }
 
-export = { Projects };
+export = {
+    createProject,
+    deleteProject,
+    updateProject,
+    getProject,
+    addUserToProject,
+    removeUserFromProject,
+};

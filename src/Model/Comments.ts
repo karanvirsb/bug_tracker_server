@@ -97,4 +97,4 @@ async function replyTo(commentId: String, commentInfo: IComment) {
     }
 }
 
-export = { Comments };
+export = { createComment, deleteComment, updateComment, getComment, replyTo };
