@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-interface IUser {
+export interface IUser {
     username?: String;
     password: String;
     email?: String;
@@ -28,41 +28,41 @@ const Users = mongoose.model("Users", usersSchema);
 // FUNCTIONS
 
 // GETS
-async function getUser(id: String): Promise<IUser | []> {
+async function getUser(id: String): Promise<{} | null> {
     let user = [];
     try {
         // to check if its an email
         if (id.includes("@")) {
             user = await Users.find({ email: id }).exec();
-            if (!user) {
-                return [];
-            }
-            return user[0];
+            return user;
         }
+
         user = await Users.find({ username: id }).exec();
-        if (!user) {
-            return [];
-        }
-        return user[0];
+        return user;
     } catch (error) {
-        return [];
+        return null;
     }
 }
 
 async function getUserByRefreshToken(token: String) {
-    const user = await Users.find({ refreshToken: token }).exec();
-    if (!user) {
-        return [];
+    try {
+        const user = await Users.find({ refreshToken: token }).exec();
+
+        if (!user) {
+            return [];
+        }
+        return user;
+    } catch (err) {
+        return null;
     }
-    return user[0];
 }
 
 // CREATES
-async function saveUser(user: IUser): Promise<Boolean> {
+async function saveUser(user: IUser): Promise<Boolean | null> {
     try {
         return Users.create(user) ? true : false;
     } catch (error) {
-        return false;
+        return null;
     }
 }
 
@@ -79,11 +79,15 @@ async function updateUser(username: String, updates: Object): Promise<Boolean> {
     }
 }
 
-module.exports = {
-    getUser,
-    saveUser,
-    getUserByRefreshToken,
-    updateUser,
-};
+// Delete user
 
-export = { getUser, saveUser, getUserByRefreshToken, updateUser };
+async function deleteUser(id: String): Promise<Boolean | null> {
+    try {
+        const deletedUser = await Users.deleteOne({ username: id });
+        return deletedUser.acknowledged;
+    } catch (error) {
+        return null;
+    }
+}
+
+exports = { getUser, saveUser, getUserByRefreshToken, updateUser, deleteUser };
