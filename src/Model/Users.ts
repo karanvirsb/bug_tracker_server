@@ -67,7 +67,10 @@ async function saveUser(user: IUser): Promise<Boolean | null> {
 }
 
 // UPDATES
-async function updateUser(username: String, updates: Object): Promise<Boolean> {
+async function updateUser(
+    username: String,
+    updates: Object
+): Promise<Boolean | null> {
     try {
         const updatedBook = await Users.updateOne(
             { username: username },
@@ -75,7 +78,7 @@ async function updateUser(username: String, updates: Object): Promise<Boolean> {
         );
         return updatedBook.acknowledged;
     } catch (err) {
-        return false;
+        return null;
     }
 }
 
