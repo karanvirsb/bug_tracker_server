@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { Users } = require("./databaseController");
+import { getUser, updateUser } from "../Controllers/Api/userController";
 
 const handleLogin = async (req: Request, res: Response) => {
     const { username, password } = req.body;
@@ -13,24 +13,24 @@ const handleLogin = async (req: Request, res: Response) => {
             .json({ message: "Username and Password are required" });
     }
 
-    const foundUser = await Users.getUser(username);
-    if (!foundUser) {
+    const foundUser = await getUser(username);
+    if (foundUser.status > 200) {
         return res.sendStatus(401);
     }
 
-    const match = await bcrypt.compare(password, foundUser.password);
+    const match = await bcrypt.compare(password, foundUser.data.password);
     //evaulte the password
     if (match) {
         // create JWTs
-        const roles = Object.keys(foundUser.roles).map(
-            (key: string) => foundUser.roles[key]
+        const roles = Object.keys(foundUser.data.roles).map(
+            (key: string) => foundUser.data.roles[key]
         );
         const accessToken = jwt.sign(
             {
                 UserInfo: {
-                    username: foundUser.username,
+                    username: foundUser.data.username,
                     roles,
-                    group_id: foundUser.group_id,
+                    group_id: foundUser.data.group_id,
                 },
             },
             process.env.ACCESS_TOKEN_SECRET,
@@ -38,7 +38,7 @@ const handleLogin = async (req: Request, res: Response) => {
         );
 
         const refreshToken = jwt.sign(
-            { username: foundUser.username },
+            { username: foundUser.data.username },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: "1d" }
         );
@@ -49,7 +49,7 @@ const handleLogin = async (req: Request, res: Response) => {
             sameSite: "none",
             secure: true,
         });
-        Users.updateUser(foundUser.username, { refreshToken: refreshToken });
+        updateUser(foundUser.data.username, { refreshToken: refreshToken });
         return res.json({ accessToken: accessToken });
     } else {
         return res.sendStatus(401);
