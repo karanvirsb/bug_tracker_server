@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
+import { getUser, createUser } from "./Api/userController";
 
 const bcrypt = require("bcrypt");
-const { Users } = require("./databaseController");
 
 const handleNewUser = async (req: Request, res: Response) => {
     const { username, password, firstName, lastName, email } = req.body;
@@ -14,9 +14,9 @@ const handleNewUser = async (req: Request, res: Response) => {
     }
 
     try {
-        const duplicateUser = await Users.getUser(username);
+        const duplicateUser = await getUser(username);
 
-        if (duplicateUser) {
+        if (duplicateUser.data) {
             return res.sendStatus(409); // conflict
         }
 
@@ -33,12 +33,12 @@ const handleNewUser = async (req: Request, res: Response) => {
             refreshToken: "",
         };
 
-        const userAdded = Users.saveUser(user);
+        const userAdded = await createUser(user);
 
-        if (userAdded) {
+        if (userAdded.success && userAdded.status === 200) {
             return res.sendStatus(201);
         } else {
-            return res.sendStatus(500);
+            return res.sendStatus(userAdded.status);
         }
     } catch (err: any) {
         console.log(err);
