@@ -1,4 +1,3 @@
-export {};
 const mongoose = require("mongoose");
 const Users = require("../Model/Users");
 
@@ -17,4 +16,4 @@ function disconnect(): void {
     mongoose.disconnect();
 }
 
-module.exports = { connect, disconnect, Users };
+export { connect, disconnect, Users };
