@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getUser, createUser } from "./Api/userController";
+import { getUser, createUser } from "./User/userController";
 
 const bcrypt = require("bcrypt");
 
