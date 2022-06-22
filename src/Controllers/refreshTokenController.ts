@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { JwtPayload, VerifyErrors } from "jsonwebtoken";
-import { getUserByRefreshToken } from "./User/userController";
+const { getUserByRefreshToken } = require("./User/userController");
 const jwt = require("jsonwebtoken");
 
 const handleRefreshToken = async (req: Request, res: Response) => {

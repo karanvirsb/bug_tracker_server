@@ -1,5 +1,5 @@
+const { Users } = require("../../Services/Users");
 import { IUser } from "../../Model/Users";
-import { Users } from "../databaseController";
 
 const getUser = async (id: string) => {
     try {
@@ -69,4 +69,10 @@ const updateUser = async (id: String, updates: {}) => {
     }
 };
 
-export { getUser, createUser, deleteUser, updateUser, getUserByRefreshToken };
+module.exports = {
+    getUser,
+    createUser,
+    deleteUser,
+    updateUser,
+    getUserByRefreshToken,
+};
