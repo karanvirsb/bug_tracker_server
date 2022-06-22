@@ -48,7 +48,8 @@ const getComment =
 
 const replyTo =
     (Comments: any) => async (commentId: String, commentInfo: IComment) => {
-        const createdComment = await Comments.create(commentInfo).exec();
+        const comment = new Comments(commentInfo);
+        const createdComment = await comment.save();
         if (!createdComment) return false;
 
         const updatedComment = await updateReply(
