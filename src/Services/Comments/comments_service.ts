@@ -3,7 +3,8 @@ import { IComment } from "../../Model/Comments";
 const createComment =
     (Comments: any) =>
     async (commentInfo: IComment): Promise<{}> => {
-        return await Comments.create(commentInfo).exec();
+        const comment = new Comments(commentInfo);
+        return await comment.save();
     };
 
 const updateComment =
@@ -52,7 +53,7 @@ const replyTo =
 
         const updatedComment = await updateReply(
             commentId,
-            commentInfo.commentId
+            createdComment.commentId
         );
 
         return updatedComment;
