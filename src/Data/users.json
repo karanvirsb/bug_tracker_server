@@ -14,5 +14,14 @@
             "firstName": "John",
             "lastName": "Smith"
         }
+    ],
+    "comments": [
+        {
+            "commentId": "1",
+            "dateCreated": "09/25/00",
+            "userId": "2",
+            "ticketID": "3",
+            "comment": "This is a test"
+        }
     ]
 }
