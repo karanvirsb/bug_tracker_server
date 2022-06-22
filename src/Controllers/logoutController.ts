@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { getUserByRefreshToken, updateUser } from "./User/userController";
+const { getUserByRefreshToken, updateUser } = require("./User/userController");
 
 const handleLogout = async (req: Request, res: Response) => {
     const cookies = req.cookies;
