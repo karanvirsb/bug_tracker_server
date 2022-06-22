@@ -60,7 +60,7 @@ const replyTo =
         return updatedComment;
     };
 
-const getAllReplys = (Comments: any) => async (commentId: String) => {
+const getReplyIds = (Comments: any) => async (commentId: String) => {
     const replys = await Comments.find(
         { commentId: commentId },
         `reply`
@@ -89,7 +89,7 @@ module.exports = (Comment: any) => {
         updateComment: updateComment(Comment),
         getComment: getComment(Comment),
         replyTo: replyTo(Comment),
-        getAllReplys: getAllReplys(Comment),
+        getReplyIds: getReplyIds(Comment),
         getAllComments: getAllComments(Comment),
     };
 };
