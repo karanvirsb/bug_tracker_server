@@ -6,7 +6,7 @@
     "scripts": {
         "start": "ts-node-dev --respawn server.ts",
         "dev": "nodemon --exec ts-node server.ts",
-        "test": "jest --watch"
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch --coverage"
     },
     "keywords": [],
     "author": "",
@@ -20,6 +20,7 @@
         "mongoose": "^6.3.8"
     },
     "devDependencies": {
+        "@babel/preset-env": "^7.18.2",
         "@babel/preset-typescript": "^7.17.12",
         "@types/bcrypt": "^5.0.0",
         "@types/express": "^4.17.13",
@@ -32,6 +33,7 @@
         "dotenv": "^16.0.1",
         "jest": "^28.1.1",
         "nodemon": "^2.0.16",
+        "supertest": "^6.2.3",
         "ts-jest": "^28.0.5",
         "ts-node": "^10.8.1",
         "ts-node-dev": "^2.0.0",
