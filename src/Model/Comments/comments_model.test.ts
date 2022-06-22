@@ -137,4 +137,67 @@ describe("Comment Model Test", () => {
 
         expect(actualReplyComment).toBe(expectedReplyComment);
     });
+
+    test("retrieving multiple replies", async () => {
+        // creating comments
+        const comment = new Comments({
+            commentId: "1",
+            dateCreated: "09/25/00",
+            userId: "2",
+            ticketId: "3",
+            comment: "This is a test",
+        });
+
+        const comment2 = new Comments({
+            commentId: "2",
+            dateCreated: "09/25/00",
+            userId: "3",
+            ticketId: "4",
+            comment: "This is a reply 2",
+        });
+
+        const comment3 = new Comments({
+            commentId: "3",
+            dateCreated: "09/25/00",
+            userId: "3",
+            ticketId: "4",
+            comment: "This is a reply 3",
+        });
+
+        const comment4 = new Comments({
+            commentId: "4",
+            dateCreated: "09/25/00",
+            userId: "3",
+            ticketId: "4",
+            comment: "This is a reply 4",
+        });
+
+        // saving comments
+        await comment.save();
+        await comment2.save();
+        await comment3.save();
+        await comment4.save();
+
+        // updating comment 1 to have the replys
+        await Comments.updateOne(
+            { commentId: "1" },
+            { reply: ["2", "3", "4"] }
+        );
+
+        // getting comment 1
+        const reply = await Comments.findOne({ commentId: "1" });
+
+        // going thorugh each reply
+        for (let i = 0; i < reply.reply.length; i++) {
+            const replyId = reply.reply[i];
+            const expectedReplyComment = `This is a reply ${replyId}`;
+            const actualReplyComment = (
+                await Comments.findOne({
+                    commentId: replyId,
+                })
+            ).comment;
+
+            expect(actualReplyComment).toBe(expectedReplyComment);
+        }
+    });
 });
