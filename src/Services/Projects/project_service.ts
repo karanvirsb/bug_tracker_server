@@ -38,8 +38,11 @@ const addUserToProject =
         }).exec();
         const users: String[] = project?.users || [];
         users.push(userId);
-
-        return await Projects.updateProject(projectId, { users: users });
+        const updatedProject = await Projects.updateOne(
+            { projectId: projectId },
+            { users: users }
+        );
+        return updatedProject.acknowledged;
     };
 
 const removeUserFromProject =
@@ -50,9 +53,11 @@ const removeUserFromProject =
         const users: String[] = project?.users || [];
         const filteredUsers = users.filter((user) => user != userId);
 
-        return await Projects.updateProject(projectId, {
-            users: filteredUsers,
-        });
+        const updatedProject = await Projects.updateOne(
+            { projectId: projectId },
+            { users: filteredUsers }
+        );
+        return updatedProject.acknowledged;
     };
 
 const getAllProjectsByGroupId = (Projects: any) => async (groupId: String) => {
