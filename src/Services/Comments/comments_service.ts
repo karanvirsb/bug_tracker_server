@@ -38,13 +38,11 @@ const deleteComment = (Comments: any) => async (commentId: String) => {
     return deletedComment.acknowledged;
 };
 
-const getComment =
-    (Comments: any) =>
-    async (commentInfo: { filter: string; attribute: string }) => {
-        return await Comments.find({
-            [commentInfo.filter]: commentInfo.attribute,
-        }).exec();
-    };
+const getComment = (Comments: any) => async (filter: string, val: string) => {
+    return await Comments.findOne({
+        [filter]: val,
+    }).exec();
+};
 
 const replyTo =
     (Comments: any) => async (commentId: String, commentInfo: IComment) => {
