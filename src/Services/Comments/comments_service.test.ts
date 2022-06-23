@@ -70,15 +70,6 @@ describe("CommentService tests", () => {
         expect(foundComment.comment).toBe("I think you should have done ...");
     });
 
-    test("deleting comment", async () => {
-        const commentService = CommentService(Comments);
-        const deletedComment = await commentService.deleteComment(
-            commentData[0].commentId
-        );
-
-        expect(deletedComment).toBe(true);
-    });
-
     test("replying to a comment", async () => {
         const commentService = CommentService(Comments);
         const addedReply = await commentService.replyTo(
@@ -86,6 +77,29 @@ describe("CommentService tests", () => {
             commentData[1]
         );
 
-        expect(addedReply).toBe(true);
+        expect(addedReply.reply).toStrictEqual(["2"]);
+    });
+
+    test("Getting reply Ids", async () => {
+        const commentService = CommentService(Comments);
+        const replys = await commentService.getReplyIds(
+            commentData[0].commentId
+        );
+        expect(replys.reply).toStrictEqual(["2"]);
+    });
+
+    test("Get reply comments", async () => {
+        const commentService = CommentService(Comments);
+        const replys = await commentService.getAllComments(["2"]);
+        expect(replys[0].commentId).toBe(commentData[1].commentId);
+    });
+
+    test("deleting comment", async () => {
+        const commentService = CommentService(Comments);
+        const deletedComment = await commentService.deleteComment(
+            commentData[0].commentId
+        );
+
+        expect(deletedComment).toBe(true);
     });
 });
