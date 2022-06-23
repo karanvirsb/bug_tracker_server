@@ -6,7 +6,7 @@ export interface IProject {
     projectName: String;
     projectDesc: String;
     dateCreated?: Date;
-    users?: [];
+    users?: String[];
 }
 
 const projectSchema = new Schema<IProject>({
