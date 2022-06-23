@@ -183,4 +183,65 @@ describe("Tickets Model Tests", () => {
 
         expect(actualAssignedDevs).toStrictEqual(expectedAssignedDev);
     });
+
+    test("Get statistics", async () => {
+        const ticket = new Tickets({
+            ticketId: "1",
+            title: "Fix login",
+            description: "Is always giving server error",
+            time: 1,
+            assignedDev: ["1", "2", "3"],
+            ticketStatus: "Open",
+            ticketSeverity: "Medium",
+            ticketType: "Issue",
+            reporterId: "1",
+            projectId: "1",
+        });
+        const ticket2 = new Tickets({
+            ticketId: "2",
+            title: "Fix login",
+            description: "Is always giving server error",
+            time: 1,
+            assignedDev: ["1", "2", "3"],
+            ticketStatus: "To be Processed",
+            ticketSeverity: "Medium",
+            ticketType: "Issue",
+            reporterId: "1",
+            projectId: "1",
+        });
+        const ticket3 = new Tickets({
+            ticketId: "3",
+            title: "Fix login",
+            description: "Is always giving server error",
+            time: 1,
+            assignedDev: ["1", "2", "3"],
+            ticketStatus: "Close",
+            ticketSeverity: "Medium",
+            ticketType: "Issue",
+            reporterId: "1",
+            projectId: "2",
+        });
+
+        await ticket.save();
+        await ticket2.save();
+        await ticket3.save();
+
+        const projectIds = ["1", "2"];
+
+        const ticketsArr: any[] = [];
+
+        for (let i = 0; i < projectIds.length; i++) {
+            const tickets = await Tickets.find(
+                { projectId: projectIds[i] },
+                "ticketStatus ticketSeverity ticketType projectId"
+            );
+            ticketsArr.push(...tickets);
+        }
+
+        const expectedTicketsArr1 = "Open";
+        const actualTicketArr1 = ticketsArr[0].ticketStatus;
+
+        expect(actualTicketArr1).toBe(expectedTicketsArr1);
+        expect(ticketsArr[1].ticketStatus).toBe("To be Processed");
+    });
 });
