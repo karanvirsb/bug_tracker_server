@@ -56,10 +56,7 @@ const removeUserFromProject =
     };
 
 const getAllProjectsByGroupId = (Projects: any) => async (groupId: String) => {
-    const projects = await Projects.find(
-        { groupId: groupId },
-        "projectId"
-    ).exec();
+    const projects = await Projects.find({ groupId: groupId }).exec();
     return projects;
 };
 
