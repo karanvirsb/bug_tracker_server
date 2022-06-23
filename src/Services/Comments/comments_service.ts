@@ -16,11 +16,16 @@ const updateComment =
         return updatedComment.acknowledged;
     };
 
-const updateReply = async (commentId: String, replyId: String) => {
-    const comment = await Comments.find({
+const updateReply = async (
+    commentId: String,
+    replyId: String,
+    Comments: any
+) => {
+    const comment = await Comments.findOne({
         commentId: commentId,
     }).exec();
-    const reply: String[] = comment[0].reply || [];
+
+    const reply: String[] = comment?.reply || [];
     reply.push(replyId);
 
     const updatedComment = await Comments.updateOne(
@@ -52,7 +57,8 @@ const replyTo =
 
         const updatedComment = await updateReply(
             commentId,
-            createdComment.commentId
+            createdComment.commentId,
+            Comments
         );
 
         return updatedComment;
