@@ -31,7 +31,7 @@ const updateReply = async (
     const updatedComment = await Comments.updateOne(
         { commentId: commentId },
         { reply: reply }
-    );
+    ).exec();
 
     return updatedComment.acknowledged;
 };
@@ -55,13 +55,13 @@ const replyTo =
         const createdComment = await comment.save();
         if (!createdComment) return false;
 
-        const updatedComment = await updateReply(
+        const updatedReply = await updateReply(
             commentId,
             createdComment.commentId,
             Comments
         );
 
-        return updatedComment;
+        return updatedReply;
     };
 
 const getReplyIds = (Comments: any) => async (commentId: String) => {
