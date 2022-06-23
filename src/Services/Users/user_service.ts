@@ -33,11 +33,11 @@ const updateUser =
         if (!username) throw Error("No username was provided");
         if (!updates) throw Error("No updates were provided");
 
-        const updatedBook = await User.updateOne(
+        const updatedUser = await User.updateOne(
             { username: username },
             updates
         );
-        return updatedBook.acknowledged;
+        return updatedUser.acknowledged;
     };
 
 // Delete user
