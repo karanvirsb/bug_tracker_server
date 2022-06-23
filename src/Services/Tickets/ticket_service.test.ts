@@ -87,6 +87,14 @@ describe("TicketService tests", () => {
         expect(updatedTicket).toBe(true);
     });
 
+    test("Getting stats", async () => {
+        const ticketService = TicketService(Tickets);
+        const ticketsArr = await ticketService.getStatistics(["1"]);
+
+        expect(ticketsArr[0].ticketSeverity).toBe("Medium");
+        expect(ticketsArr[0].ticketStatus).toBe("Processing");
+    });
+
     test("deleting ticket", async () => {
         const ticketService = TicketService(Tickets);
         const deletedTicket = await ticketService.deleteTicket(
