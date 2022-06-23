@@ -64,15 +64,6 @@ describe("ProjectService tests", () => {
         expect(foundProject.projectName).toBe("Coderz");
     });
 
-    test("deleting project", async () => {
-        const projectService = ProjectService(Projects);
-        const deletedProject = await projectService.deleteProject(
-            projectData[0].projectId
-        );
-
-        expect(deletedProject).toBe(true);
-    });
-
     test("Add user to project", async () => {
         const projectService = ProjectService(Projects);
         const updatedProject = await projectService.addUserToProject(
@@ -91,5 +82,21 @@ describe("ProjectService tests", () => {
         );
 
         expect(updatedProject).toBe(true);
+    });
+
+    test("Getting project by group id", async () => {
+        const projectService = ProjectService(Projects);
+        const projects = await projectService.getAllProjectsByGroupId("1");
+
+        expect(projects[0].projectName).toBe("Coderz");
+    });
+
+    test("deleting project", async () => {
+        const projectService = ProjectService(Projects);
+        const deletedProject = await projectService.deleteProject(
+            projectData[0].projectId
+        );
+
+        expect(deletedProject).toBe(true);
     });
 });
