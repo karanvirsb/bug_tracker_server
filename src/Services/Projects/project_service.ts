@@ -65,7 +65,7 @@ const getAllProjectsByGroupId = (Projects: any) => async (groupId: String) => {
 
 const getAllUsersOfProject = (Projects: any) => async (projectId: String) => {
     const users = await Projects.find({ projectId: projectId }, `users`).exec();
-    return users;
+    return users.users;
 };
 
 export = (Project: any) => {
