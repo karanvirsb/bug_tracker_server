@@ -22,12 +22,18 @@ describe("CommentService tests", () => {
         expect(Comments).toBeDefined();
     });
 
-    const commentData = [
+    const commentData: IComment[] = [
         {
             commentId: "1",
             userId: "1",
             ticketId: "1",
             comment: "I think you should do this ...",
+        },
+        {
+            commentId: "2",
+            userId: "2",
+            ticketId: "2",
+            comment: "I think it should be ...",
         },
     ];
 
@@ -71,5 +77,15 @@ describe("CommentService tests", () => {
         );
 
         expect(deletedComment).toBe(true);
+    });
+
+    test("replying to a comment", async () => {
+        const commentService = CommentService(Comments);
+        const addedReply = await commentService.replyTo(
+            commentData[0].commentId,
+            commentData[1]
+        );
+
+        expect(addedReply).toBe(true);
     });
 });
