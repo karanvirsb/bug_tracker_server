@@ -57,7 +57,7 @@ const getStatistics = (Tickets: any) => async (projectIds: []) => {
     for (let i = 0; i < projectIds.length; i++) {
         const tickets = await Tickets.find(
             { projectId: projectIds[i] },
-            "ticketStatus ticketSeverity ticketType"
+            "ticketStatus ticketSeverity ticketType projectId"
         ).exec();
         ticketsArr.push(...tickets);
     }
