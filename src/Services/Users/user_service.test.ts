@@ -29,6 +29,7 @@ describe("UserService tests", () => {
 
     it("has a module", () => {
         expect(Users).toBeDefined();
+        expect(UserService).toBeDefined();
     });
 
     test("create user", async () => {
@@ -47,6 +48,14 @@ describe("UserService tests", () => {
         });
 
         expect(updatedUser).toBe(true);
+    });
+
+    test("Getting user", async () => {
+        const userService = UserService(Users);
+        const foundUser = await userService.getUser(userData[0].email);
+
+        expect(foundUser.username).toBe("John21");
+        expect(foundUser.firstName).toBe("Johnny");
     });
 
     // test("Create user", async () => {
