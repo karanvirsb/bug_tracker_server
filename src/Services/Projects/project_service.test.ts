@@ -72,4 +72,24 @@ describe("ProjectService tests", () => {
 
         expect(deletedProject).toBe(true);
     });
+
+    test("Add user to project", async () => {
+        const projectService = ProjectService(Projects);
+        const updatedProject = await projectService.addUserToProject(
+            projectData[0].projectId,
+            "2"
+        );
+
+        expect(updatedProject).toBe(true);
+    });
+
+    test("Remove user from project", async () => {
+        const projectService = ProjectService(Projects);
+        const updatedProject = await projectService.removeUserFromProject(
+            projectData[0].projectId,
+            "2"
+        );
+
+        expect(updatedProject).toBe(true);
+    });
 });
