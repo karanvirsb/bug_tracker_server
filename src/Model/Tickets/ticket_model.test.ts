@@ -151,4 +151,36 @@ describe("Tickets Model Tests", () => {
 
         expect(actualResult).toStrictEqual(expectedResult);
     });
+
+    test("remove a user from a ticket", async () => {
+        const ticket = new Tickets({
+            ticketId: "1",
+            title: "Fix login",
+            description: "Is always giving server error",
+            time: 1,
+            assignedDev: ["1", "2", "3"],
+            ticketStatus: "Open",
+            ticketSeverity: "Medium",
+            ticketType: "Issue",
+            reporterId: "1",
+            projectId: "1",
+        });
+
+        await ticket.save();
+
+        const foundTicket = await Tickets.findOne({ ticketId: "1" });
+        const users: String[] = foundTicket.assignedDev || [];
+        const filteredUsers = users.filter((user) => user != "2");
+
+        await Tickets.updateOne(
+            { ticketId: "1" },
+            { assignedDev: filteredUsers }
+        );
+        const updatedTicket = await Tickets.findOne({ ticketId: "1" });
+
+        const expectedAssignedDev = ["1", "3"];
+        const actualAssignedDevs = updatedTicket.assignedDev;
+
+        expect(actualAssignedDevs).toStrictEqual(expectedAssignedDev);
+    });
 });
