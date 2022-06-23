@@ -21,4 +21,48 @@ describe("GroupService tests", () => {
         expect(GroupService).toBeDefined();
         expect(Groups).toBeDefined();
     });
+
+    const groupData = [
+        {
+            groupId: "1",
+            groupName: "Coders",
+        },
+    ];
+
+    test("create group", async () => {
+        const groupService = GroupService(Groups);
+        const createdGroup = await groupService.createGroup(groupData[0]);
+        const expectedGroup = groupData[0];
+        const actualGroup = createdGroup;
+
+        expect(actualGroup).toMatchObject(expectedGroup);
+    });
+
+    test("update group", async () => {
+        const groupService = GroupService(Groups);
+        const updatedGroup = await groupService.updateGroup(
+            groupData[0].groupId,
+            {
+                groupName: "Coderz",
+            }
+        );
+
+        expect(updatedGroup).toBe(true);
+    });
+
+    test("Getting group", async () => {
+        const groupService = GroupService(Groups);
+        const foundGroup = await groupService.getGroup(groupData[0].groupId);
+
+        expect(foundGroup.groupName).toBe("Coderz");
+    });
+
+    test("deleting group", async () => {
+        const groupService = GroupService(Groups);
+        const deletedGroup = await groupService.deleteGroup(
+            groupData[0].groupId
+        );
+
+        expect(deletedGroup).toBe(true);
+    });
 });
