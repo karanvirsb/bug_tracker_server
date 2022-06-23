@@ -77,6 +77,16 @@ describe("TicketService tests", () => {
         expect(updatedTicket).toBe(true);
     });
 
+    test("Remove assigned dev from ticket", async () => {
+        const ticketService = TicketService(Tickets);
+        const updatedTicket = await ticketService.removeUserFromTicket(
+            ticketData[0].ticketId,
+            "2"
+        );
+
+        expect(updatedTicket).toBe(true);
+    });
+
     test("deleting ticket", async () => {
         const ticketService = TicketService(Tickets);
         const deletedTicket = await ticketService.deleteTicket(
