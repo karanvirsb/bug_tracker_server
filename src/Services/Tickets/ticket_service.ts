@@ -37,7 +37,12 @@ const assignUserToTicket =
         const users: String[] = ticket.assignedDev || [];
         users.push(userId);
 
-        return await Tickets.updateTicket(ticketId, { assignedDev: users });
+        const updatedTicket = await Tickets.updateOne(
+            { ticketId: ticketId },
+            { assignedDev: users }
+        );
+
+        return updatedTicket.acknowledged;
     };
 
 const removeUserFromTicket =
@@ -46,9 +51,12 @@ const removeUserFromTicket =
         const users: String[] = ticket.assignedDev || [];
         const filteredUsers = users.filter((user) => user != userId);
 
-        return await Tickets.updateTicket(ticketId, {
-            assignedDev: filteredUsers,
-        });
+        const updatedTicket = await Tickets.updateOne(
+            { ticketId: ticketId },
+            { assignedDev: filteredUsers }
+        );
+
+        return updatedTicket.acknowledged;
     };
 
 const getStatistics = (Tickets: any) => async (projectIds: []) => {
