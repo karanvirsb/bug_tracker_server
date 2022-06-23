@@ -26,17 +26,17 @@ const deleteProject = (Projects: any) => async (projectId: String) => {
 const getProject =
     (Projects: any) =>
     async (projectInfo: { filter: string; attribute: string }) => {
-        return await Projects.find({
+        return await Projects.findOne({
             [projectInfo.filter]: projectInfo.attribute,
         }).exec();
     };
 
 const addUserToProject =
     (Projects: any) => async (projectId: String, userId: String) => {
-        const project = await Projects.find({
+        const project = await Projects.findOne({
             projectId: projectId,
         }).exec();
-        const users: String[] = project[0].users || [];
+        const users: String[] = project.users || [];
         users.push(userId);
 
         return await Projects.updateProject(projectId, { users: users });
@@ -44,10 +44,10 @@ const addUserToProject =
 
 const removeUserFromProject =
     (Projects: any) => async (projectId: String, userId: String) => {
-        const project = await Projects.find({
+        const project = await Projects.findOne({
             projectId: projectId,
         }).exec();
-        const users: String[] = project[0].users || [];
+        const users: String[] = project.users || [];
         const filteredUsers = users.filter((user) => user != userId);
 
         return await Projects.updateProject(projectId, {
