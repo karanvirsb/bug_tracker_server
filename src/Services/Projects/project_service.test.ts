@@ -91,6 +91,13 @@ describe("ProjectService tests", () => {
         expect(projects[0].projectName).toBe("Coderz");
     });
 
+    test("Get all users of a project", async () => {
+        const projectService = ProjectService(Projects);
+        const projects = await projectService.getAllUsersOfProject("1");
+
+        expect(projects[0].users).toStrictEqual(["1"]);
+    });
+
     test("deleting project", async () => {
         const projectService = ProjectService(Projects);
         const deletedProject = await projectService.deleteProject(
