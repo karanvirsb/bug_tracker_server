@@ -24,6 +24,7 @@ describe("UserService tests", () => {
             email: "John1@gmail",
             firstName: "John",
             lastName: "Smith",
+            refreshToken: "123",
         },
     ];
 
@@ -56,6 +57,15 @@ describe("UserService tests", () => {
 
         expect(foundUser.username).toBe("John21");
         expect(foundUser.firstName).toBe("Johnny");
+    });
+
+    test("Get user by refresh Token", async () => {
+        const userService = UserService(Users);
+        const foundUser = await userService.getUserByRefreshToken(
+            userData[0].refreshToken
+        );
+
+        expect(foundUser.username).toBe(userData[0].username);
     });
 
     // test("Create user", async () => {
