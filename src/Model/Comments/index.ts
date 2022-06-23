@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 export interface IComment {
     commentId: String;
-    dateCreated: Date;
+    dateCreated?: Date;
     userId: String;
     ticketId: String;
     comment: String;
