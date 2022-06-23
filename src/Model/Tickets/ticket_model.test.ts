@@ -123,4 +123,32 @@ describe("Tickets Model Tests", () => {
 
         expect(actualResult).toBe(expectedResult);
     });
+
+    test("Assign user to ticket", async () => {
+        const ticket = new Tickets({
+            ticketId: "1",
+            title: "Fix login",
+            description: "Is always giving server error",
+            time: 1,
+            ticketStatus: "Open",
+            ticketSeverity: "Medium",
+            ticketType: "Issue",
+            reporterId: "1",
+            projectId: "1",
+        });
+
+        await ticket.save();
+
+        const foundTicket = await Tickets.findOne({ ticketId: "1" });
+        const assignDev: String[] = foundTicket.assignedDev || [];
+        assignDev.push("1");
+
+        await Tickets.updateOne({ ticketId: "1" }, { assignedDev: assignDev });
+        const updatedTicket = await Tickets.findOne({ ticketId: "1" });
+
+        const expectedResult = ["1"];
+        const actualResult = updatedTicket.assignedDev;
+
+        expect(actualResult).toStrictEqual(expectedResult);
+    });
 });
