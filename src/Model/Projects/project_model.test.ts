@@ -148,4 +148,24 @@ describe("Project Model Tests", () => {
 
         expect(actual).toStrictEqual(expected);
     });
+
+    test("Get users of a project", async () => {
+        const project = new Projects({
+            projectId: "1",
+            groupId: "1",
+            projectName: "Bugs",
+            projectDesc: "Tracking all the bugs ",
+            users: ["1", "2"],
+        });
+
+        await project.save();
+        const foundProject = await Projects.findOne(
+            { projectId: "1" },
+            "users"
+        );
+
+        const expectedUsersArr = ["1", "2"];
+        const actualUserArr = foundProject.users;
+        expect(actualUserArr).toStrictEqual(expectedUsersArr);
+    });
 });
