@@ -36,7 +36,7 @@ const addUserToProject =
         const project = await Projects.findOne({
             projectId: projectId,
         }).exec();
-        const users: String[] = project.users || [];
+        const users: String[] = project?.users || [];
         users.push(userId);
 
         return await Projects.updateProject(projectId, { users: users });
@@ -47,7 +47,7 @@ const removeUserFromProject =
         const project = await Projects.findOne({
             projectId: projectId,
         }).exec();
-        const users: String[] = project.users || [];
+        const users: String[] = project?.users || [];
         const filteredUsers = users.filter((user) => user != userId);
 
         return await Projects.updateProject(projectId, {
