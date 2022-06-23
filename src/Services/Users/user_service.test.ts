@@ -1,7 +1,7 @@
 const UserService = require("./user_service");
 const Users = require("../../Model/Users");
 import { IUser } from "../../Model/Users";
-const sinon = require("sinon");
+// const sinon = require("sinon");
 export {};
 const mongoose = require("mongoose");
 const mongodb = "mongodb://localhost:27017/bugTracker_serviceTest";
