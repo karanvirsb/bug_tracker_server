@@ -7,10 +7,10 @@ const getUser =
         if (!id) throw Error("id was not provided");
 
         if (id.includes("@")) {
-            return await User.find({ email: id }).exec();
+            return await User.findOne({ email: id }).exec();
         }
 
-        return await User.find({ username: id }).exec();
+        return await User.findOne({ username: id }).exec();
     };
 
 const getUserByRefreshToken = (User: any) => async (token: String) => {
