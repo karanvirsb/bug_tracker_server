@@ -67,6 +67,16 @@ describe("TicketService tests", () => {
         expect(foundTicket.ticketStatus).toBe("Processing");
     });
 
+    test("Assigning dev to ticket", async () => {
+        const ticketService = TicketService(Tickets);
+        const updatedTicket = await ticketService.assignUserToTicket(
+            ticketData[0].ticketId,
+            "2"
+        );
+
+        expect(updatedTicket).toBe(true);
+    });
+
     test("deleting ticket", async () => {
         const ticketService = TicketService(Tickets);
         const deletedTicket = await ticketService.deleteTicket(
