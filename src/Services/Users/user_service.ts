@@ -15,7 +15,7 @@ const getUser =
 
 const getUserByRefreshToken = (User: any) => async (token: String) => {
     if (!User) throw Error("User data was not provided");
-    const user = await User.find({ refreshToken: token }).exec();
+    const user = await User.findOne({ refreshToken: token }).exec();
     return user;
 };
 
