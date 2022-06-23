@@ -22,7 +22,7 @@ describe("Tickets Model Tests", () => {
         expect(Tickets).toBeDefined();
     });
 
-    test("create a project", async () => {
+    test("create a ticket", async () => {
         const ticket = new Tickets({
             ticketId: "1",
             title: "Fix login",
@@ -53,7 +53,7 @@ describe("Tickets Model Tests", () => {
         expect(actualResult).toMatchObject(expectedResult);
     });
 
-    test("getting a project", async () => {
+    test("getting a ticket", async () => {
         const ticket = new Tickets({
             ticketId: "1",
             title: "Fix login",
@@ -74,7 +74,7 @@ describe("Tickets Model Tests", () => {
         expect(actualResult).toBe(expectedResult);
     });
 
-    test("updating project", async () => {
+    test("updating ticket", async () => {
         const ticket = new Tickets({
             ticketId: "1",
             title: "Fix login",
@@ -101,7 +101,7 @@ describe("Tickets Model Tests", () => {
         expect(updated.acknowledged).toBe(true);
     });
 
-    test("deleting project", async () => {
+    test("deleting ticket", async () => {
         const ticket = new Tickets({
             ticketId: "1",
             title: "Fix login",
