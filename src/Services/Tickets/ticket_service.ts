@@ -26,15 +26,15 @@ const deleteTicket = (Tickets: any) => async (ticketId: String) => {
 const getTicket =
     (Tickets: any) =>
     async (ticketInfo: { filter: string; attribute: string }) => {
-        return await Tickets.find({
+        return await Tickets.findOne({
             [ticketInfo.filter]: ticketInfo.attribute,
         }).exec();
     };
 
 const assignUserToTicket =
     (Tickets: any) => async (ticketId: String, userId: String) => {
-        const ticket = await Tickets.find({ ticketId: ticketId }).exec();
-        const users: String[] = ticket[0].assignedDev || [];
+        const ticket = await Tickets.findOne({ ticketId: ticketId }).exec();
+        const users: String[] = ticket.assignedDev || [];
         users.push(userId);
 
         return await Tickets.updateTicket(ticketId, { assignedDev: users });
@@ -42,8 +42,8 @@ const assignUserToTicket =
 
 const removeUserFromTicket =
     (Tickets: any) => async (ticketId: String, userId: String) => {
-        const ticket = await Tickets.find({ ticketId: ticketId }).exec();
-        const users: String[] = ticket[0].assignedDev || [];
+        const ticket = await Tickets.findOne({ ticketId: ticketId }).exec();
+        const users: String[] = ticket.assignedDev || [];
         const filteredUsers = users.filter((user) => user != userId);
 
         return await Tickets.updateTicket(ticketId, {
