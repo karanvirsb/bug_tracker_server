@@ -1,3 +1,4 @@
+export {};
 var mongoose = require("mongoose");
 require("jest");
 var mongoDb = "mongodb://127.0.0.1:27017/bugTracker_test";
