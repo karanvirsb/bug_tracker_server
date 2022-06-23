@@ -168,4 +168,40 @@ describe("Project Model Tests", () => {
         const actualUserArr = foundProject.users;
         expect(actualUserArr).toStrictEqual(expectedUsersArr);
     });
+
+    test("Get all projects by groupId", async () => {
+        const project = new Projects({
+            projectId: "1",
+            groupId: "1",
+            projectName: "Bugs",
+            projectDesc: "Tracking all the bugs ",
+            users: ["1", "2"],
+        });
+        const project1 = new Projects({
+            projectId: "2",
+            groupId: "1",
+            projectName: "Bugs",
+            projectDesc: "Tracking all the bugs ",
+            users: ["1", "2"],
+        });
+        const project2 = new Projects({
+            projectId: "3",
+            groupId: "1",
+            projectName: "Bugs",
+            projectDesc: "Tracking all the bugs ",
+            users: ["1", "2"],
+        });
+
+        await project.save();
+        await project1.save();
+        await project2.save();
+
+        const foundProjects = await Projects.find({ groupId: "1" });
+
+        const expectedLength = 3;
+        const actualLength = foundProjects.length;
+
+        expect(actualLength).toBe(expectedLength);
+        expect(foundProjects[2].projectId).toBe("3");
+    });
 });
