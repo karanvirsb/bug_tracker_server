@@ -61,11 +61,15 @@ const replyTo =
             Comments
         );
 
-        return updatedReply;
+        const updatedComment = await Comments.findOne({
+            commentId: commentId,
+        }).exec();
+
+        return updatedComment;
     };
 
 const getReplyIds = (Comments: any) => async (commentId: String) => {
-    const replys = await Comments.find(
+    const replys = await Comments.findOne(
         { commentId: commentId },
         `reply`
     ).exec();
@@ -76,11 +80,8 @@ const getAllComments = (Comments: any) => async (replyArr: []) => {
     const commentsArr = [];
     for (let i = 0; i < replyArr.length; i++) {
         const replyId = replyArr[i];
-        const comment = await Comments.getComment({
-            filter: "commentId",
-            attribute: replyId,
-        });
-        commentsArr.push(comment[0]);
+        const comment = await Comments.findOne({ commentId: replyId }).exec();
+        commentsArr.push(comment);
     }
 
     return commentsArr;
