@@ -19,8 +19,8 @@ const deleteGroup = (Groups: any) => async (groupId: String) => {
     return deletedGroup.acknowledged;
 };
 
-const getGroup = (Groups: any) => async (groupInfo: {}) => {
-    return await Groups.findOne(groupInfo).exec();
+const getGroup = (Groups: any) => async (groupId: String) => {
+    return await Groups.findOne({ groupId: groupId }).exec();
 };
 
 module.exports = (Group: any) => {
