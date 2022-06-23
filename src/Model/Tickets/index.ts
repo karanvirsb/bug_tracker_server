@@ -1,8 +1,8 @@
 import { Schema, model } from "mongoose";
 
 export interface ITicket {
-    ticketId: Number;
-    dateCreated: Date;
+    ticketId: String;
+    dateCreated?: Date;
     title: String;
     description: String;
     assignedDev?: [];
@@ -16,7 +16,7 @@ export interface ITicket {
 
 // TODO add validation to ticketStatus, severity, and type
 const ticketSchema = new Schema<ITicket>({
-    ticketId: { type: Number, unique: true },
+    ticketId: { type: String, unique: true },
     dateCreated: { type: Date, default: Date.now },
     title: { type: String },
     description: { type: String },
