@@ -210,7 +210,7 @@ describe("Testing routes", () => {
 
         test("adding new user to project", async () => {
             return request(app)
-                .post("/user")
+                .post("/project/user")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ projectId: "1", userId: "1" })
                 .expect(200);
@@ -218,7 +218,7 @@ describe("Testing routes", () => {
 
         test("removing user from project", async () => {
             return request(app)
-                .delete("/user")
+                .delete("/project/user")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ projectId: "1", userId: "1" })
                 .expect(200);
@@ -226,7 +226,7 @@ describe("Testing routes", () => {
 
         test("getting all projects based on group id", async () => {
             return request(app)
-                .post("/group/1")
+                .post("/project/group/1")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send()
                 .expect(200)
