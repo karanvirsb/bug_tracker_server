@@ -150,5 +150,13 @@ describe("Testing routes", () => {
                 .send({ id: "1", updates: { groupName: "Coders" } })
                 .expect(200);
         });
+
+        // test("Delete the group", async () => {
+        //     return request(app)
+        //         .delete("/group")
+        //         .set("Authorization", `Bearer ${accessToken}`)
+        //         .send({ id: "1" })
+        //         .expect(200);
+        // });
     });
 });
