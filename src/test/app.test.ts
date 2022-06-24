@@ -121,10 +121,10 @@ describe("Testing routes", () => {
     describe("Group Route tests", () => {
         test("Create Group", async () => {
             return request(app)
-                .post("/")
+                .post("/group")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ groupId: "1", groupName: "Coderz" })
-                .expect(200);
+                .expect(201);
         });
     });
 });
