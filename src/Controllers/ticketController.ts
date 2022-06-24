@@ -87,7 +87,24 @@ const getTicket = async (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 };
-const assignUserToTicket = async () => {};
+const assignUserToTicket = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { ticketId, userId } = req.body;
+
+    try {
+        const addedUser = await TicketService.assignUserToTicket(
+            ticketId,
+            userId
+        );
+        if (addedUser) return res.sendStatus(200);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const removeUserFromTicket = async () => {};
 const getStatistics = async () => {};
 
