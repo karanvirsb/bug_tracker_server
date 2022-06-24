@@ -48,9 +48,18 @@ describe("Testing routes", () => {
             .send({ id: "John20" })
             .expect(200)
             .then((response: any) => {
-                console.log(response);
                 expect(response.body).toEqual(
-                    expect.objectContaining({ username: expect.any(String) })
+                    expect.objectContaining({
+                        __v: expect.any(Number),
+                        _id: expect.any(String),
+                        password: expect.any(String),
+                        email: expect.any(String),
+                        firstName: expect.any(String),
+                        lastName: expect.any(String),
+                        refreshToken: expect.any(String),
+                        roles: expect.any(Object),
+                        username: expect.any(String),
+                    })
                 );
             });
     });
