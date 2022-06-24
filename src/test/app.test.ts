@@ -9,7 +9,7 @@ mongoose.connect(mongodb);
 describe("Testing routes", () => {
     let accessToken = "";
     let refreshToken = "";
-
+    jest.setTimeout(7500);
     afterAll(async () => {
         await mongoose.connection.db.dropDatabase();
         await mongoose.disconnect();
