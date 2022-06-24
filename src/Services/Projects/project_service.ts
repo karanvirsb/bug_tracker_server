@@ -25,7 +25,7 @@ const deleteProject = (Projects: any) => async (projectId: String) => {
 
 const getProject =
     (Projects: any) =>
-    async (projectInfo: { filter: string; attribute: string }) => {
+    async (projectInfo: { filter: string; attribute: String }) => {
         return await Projects.findOne({
             [projectInfo.filter]: projectInfo.attribute,
         }).exec();
