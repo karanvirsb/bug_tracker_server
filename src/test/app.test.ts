@@ -183,13 +183,11 @@ describe("Testing routes", () => {
                 .send()
                 .expect(200)
                 .then((response: any) => {
+                    expect(response.body.projectId).toBe("1");
                     expect(response.body).toEqual(
                         expect.objectContaining({
-                            projectId: "1",
-                            groupId: "1",
-                            projectName: expect.any(String),
-                            projectDesc: expect.any(String),
-                            users: expect.any([]),
+                            projectId: expect.any(String),
+                            groupId: expect.any(String),
                         })
                     );
                 });
