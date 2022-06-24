@@ -142,5 +142,13 @@ describe("Testing routes", () => {
                     );
                 });
         });
+
+        test("Update the group", async () => {
+            return request(app)
+                .put("/group")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "1", updates: { groupName: "Coders" } })
+                .expect(200);
+        });
     });
 });
