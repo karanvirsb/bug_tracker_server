@@ -293,14 +293,6 @@ describe("Testing routes", () => {
                 .expect(200);
         });
 
-        test("Delete Ticket", async () => {
-            return request(app)
-                .delete("/ticket")
-                .set("Authorization", `Bearer ${accessToken}`)
-                .send({ ticketId: "1" })
-                .expect(200);
-        });
-
         test("Assign a dev to a ticket", async () => {
             return request(app)
                 .post("/ticket/user")
@@ -333,6 +325,13 @@ describe("Testing routes", () => {
                         })
                     );
                 });
+        });
+        test("Delete Ticket", async () => {
+            return request(app)
+                .delete("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ ticketId: "1" })
+                .expect(200);
         });
     });
 });
