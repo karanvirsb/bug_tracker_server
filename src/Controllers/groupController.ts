@@ -26,7 +26,17 @@ const getGroup = async (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 };
-const updateGroup = () => {};
+const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
+    const { id, updates } = req.body;
+
+    try {
+        const updatedGroup = await GroupService.updateGroup(id, updates);
+        if (updatedGroup) return res.sendStatus(200);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const deleteGroup = () => {};
 
 module.exports = { createGroup, getGroup, updateGroup, deleteGroup };
