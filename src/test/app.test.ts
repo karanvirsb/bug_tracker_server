@@ -117,4 +117,14 @@ describe("Testing routes", () => {
                 .expect(403);
         });
     });
+
+    describe("Group Route tests", () => {
+        test("Create Group", async () => {
+            return request(app)
+                .post("/")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ groupId: "1", groupName: "Coderz" })
+                .expect(200);
+        });
+    });
 });
