@@ -9,7 +9,7 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
         if (!user) {
             return res.sendStatus(204);
         }
-        return res.send(200).json(user);
+        return res.status(200).json(user);
     } catch (error) {
         next(error);
     }
@@ -26,7 +26,7 @@ const getUserByRefreshToken = async (
         if (!user) {
             return res.sendStatus(204);
         }
-        return res.send(200).json(user);
+        return res.status(200).json(user);
     } catch (error) {
         next(error);
     }
