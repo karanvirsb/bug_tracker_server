@@ -207,5 +207,37 @@ describe("Testing routes", () => {
         //         .send({ id: "1" })
         //         .expect(200);
         // });
+
+        test("adding new user to project", async () => {
+            return request(app)
+                .post("/user")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ projectId: "1", userId: "1" })
+                .expect(200);
+        });
+
+        test("removing user from project", async () => {
+            return request(app)
+                .delete("/user")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ projectId: "1", userId: "1" })
+                .expect(200);
+        });
+
+        test("getting all projects based on group id", async () => {
+            return request(app)
+                .post("/group/1")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send()
+                .expect(200)
+                .then((response: any) => {
+                    expect(response.body[0]).toEqual(
+                        expect.objectContaining({
+                            projectId: expect.any(String),
+                            groupId: expect.any(String),
+                        })
+                    );
+                });
+        });
     });
 });
