@@ -71,6 +71,42 @@ describe("Testing routes", () => {
                 });
         });
 
-        test("");
+        test("Get user by refreshToken", async () => {
+            return request(app)
+                .post("/user/token")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ token: refreshToken })
+                .expect(200)
+                .then((response: any) => {
+                    expect(response.body).toEqual(
+                        expect.objectContaining({
+                            __v: expect.any(Number),
+                            _id: expect.any(String),
+                            password: expect.any(String),
+                            email: expect.any(String),
+                            firstName: expect.any(String),
+                            lastName: expect.any(String),
+                            refreshToken: expect.any(String),
+                            roles: expect.any(Object),
+                            username: expect.any(String),
+                        })
+                    );
+                });
+        });
+
+        test("Update user", async () => {
+            return request(app)
+                .put("/user/id")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "John20", updates: { firstName: "Johnathan" } })
+                .expect(200);
+        });
+
+        test("Error unauthorized", async () => {
+            return request(app)
+                .get("/user/id")
+                .send({ id: "John20" })
+                .expect(401);
+        });
     });
 });
