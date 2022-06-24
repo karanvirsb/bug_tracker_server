@@ -42,7 +42,20 @@ const createTicket = async (
         next(error);
     }
 };
-const deleteTicket = async () => {};
+const deleteTicket = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { id } = req.body;
+    try {
+        const deletedTicket = await TicketService.deleteTicket(id);
+        if (deletedTicket) return res.sendStatus(200);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const updateTicket = async () => {};
 const getTicket = async () => {};
 const assignUserToTicket = async () => {};
