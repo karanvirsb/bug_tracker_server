@@ -28,6 +28,7 @@ app.use(verifyJWT);
 app.use("/user", require("./src/Routes/api/user"));
 app.use("/group", require("./src/Routes/api/group"));
 app.use("/project", require("./src/Routes/api/project"));
+app.use("/ticket", require("./src/Routes/api/ticket"));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.send(404).json({ error: "Not Found" });
