@@ -9,6 +9,7 @@ mongoose.connect(mongodb);
 describe("Testing routes", () => {
     let accessToken = "";
     let refreshToken = "";
+
     afterAll(async () => {
         await mongoose.connection.db.dropDatabase();
         await mongoose.disconnect();
@@ -235,6 +236,100 @@ describe("Testing routes", () => {
                         expect.objectContaining({
                             projectId: expect.any(String),
                             groupId: expect.any(String),
+                        })
+                    );
+                });
+        });
+    });
+
+    describe("Ticket routes test", () => {
+        test("Creating a ticket", async () => {
+            return request(app)
+                .post("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
+                    ticketId: "1",
+                    title: "Login Bug",
+                    description: "Cannot click login",
+                    time: 0.5,
+                    ticketStatus: "open",
+                    ticketSeverity: "medium",
+                    ticketType: "Bug",
+                    reporterId: "1",
+                    projectId: "1",
+                })
+                .expect(200);
+        });
+
+        test("getting ticket", async () => {
+            const ticketId = 1;
+            return request(app)
+                .get("/ticket/" + ticketId)
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send()
+                .expect(200)
+                .then((response: any) => {
+                    expect(response.body).toEqual(
+                        expect.objectContaining({
+                            ticketId: expect.any(String),
+                            title: expect.any(String),
+                            description: expect.any(String),
+                            time: expect.any(Number),
+                            ticketStatus: expect.any(String),
+                            ticketSeverity: expect.any(String),
+                            ticketType: expect.any(String),
+                            reporterId: expect.any(String),
+                            projectId: expect.any(String),
+                        })
+                    );
+                });
+        });
+
+        test("Update Ticket", async () => {
+            return request(app)
+                .put("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ ticketId: "1", updates: { ticketStatus: "Closed" } })
+                .expect(200);
+        });
+
+        test("Delete Ticket", async () => {
+            return request(app)
+                .delete("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ ticketId: "1" })
+                .expect(200);
+        });
+
+        test("Assign a dev to a ticket", async () => {
+            return request(app)
+                .post("/ticket/user")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ ticketId: "1", userId: "1" })
+                .expect(200);
+        });
+
+        test("Remove assigned dev", async () => {
+            return request(app)
+                .delete("/ticket/user")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ ticketId: "1", userId: "1" })
+                .expect(200);
+        });
+
+        test("Get statistics", async () => {
+            return request(app)
+                .get("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ projectIds: ["1"] })
+                .expect(200)
+                .then((response: any) => {
+                    expect(response.body[0]).toEqual(
+                        expect.objectContaining({
+                            ticketStatus: expect.any(String),
+                            ticketSeverity: expect.any(String),
+                            ticketType: expect.any(String),
+                            projectId: expect.any(String),
                         })
                     );
                 });
