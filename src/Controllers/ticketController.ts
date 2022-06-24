@@ -123,7 +123,20 @@ const removeUserFromTicket = async (
         next(error);
     }
 };
-const getStatistics = async () => {};
+const getStatistics = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { projectIds } = req.body;
+    try {
+        const stats = await TicketService.getStatistics(projectIds);
+        if (stats) return res.status(200).json(stats);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
     createTicket,
