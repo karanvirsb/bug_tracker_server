@@ -2,10 +2,14 @@ export {};
 import { NextFunction, Request, Response } from "express";
 const ProjectService = require("../Services/Projects");
 
-const createProject = (req: Request, res: Response, next: NextFunction) => {
+const createProject = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     const { projectId, groupId, projectName, projectDesc, users } = req.body;
     try {
-        const createdProject = ProjectService.createProject({
+        const createdProject = await ProjectService.createProject({
             projectId,
             groupId,
             projectName,
@@ -19,7 +23,20 @@ const createProject = (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 };
-const getProject = () => {};
+const getProject = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    try {
+        const foundProject = await ProjectService.getProject({
+            filter: "projectId",
+            attribute: id,
+        });
+        if (foundProject) return res.status(200).json(foundProject);
+
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const updateProject = () => {};
 const deleteProject = () => {};
 const addUserToProject = () => {};
