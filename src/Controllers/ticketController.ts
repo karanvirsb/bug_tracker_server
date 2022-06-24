@@ -105,7 +105,24 @@ const assignUserToTicket = async (
         next(error);
     }
 };
-const removeUserFromTicket = async () => {};
+const removeUserFromTicket = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { ticketId, userId } = req.body;
+
+    try {
+        const removedUser = await TicketService.removeUserFromTicket(
+            ticketId,
+            userId
+        );
+        if (removedUser) return res.sendStatus(200);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const getStatistics = async () => {};
 
 module.exports = {
