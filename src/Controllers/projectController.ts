@@ -102,7 +102,20 @@ const removeUserFromProject = async (
         next(error);
     }
 };
-const getAllProjectsByGroupId = () => {};
+const getAllProjectsByGroupId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const groupId = req.params.id;
+    try {
+        const project = await ProjectService.getAllProjectsByGroupId(groupId);
+        if (project) return res.status(200).json(project);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const getAllUsersOfProject = () => {};
 
 module.exports = {
