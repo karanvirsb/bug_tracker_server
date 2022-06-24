@@ -26,6 +26,7 @@ app.use("/logout", require("./src/Routes/logout"));
 app.use(verifyJWT);
 // Protected routes
 app.use("/user", require("./src/Routes/api/user"));
+app.use("/group", require("./src/Routes/api/group"));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.send(404).json({ error: "Not Found" });
