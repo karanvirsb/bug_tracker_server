@@ -13,6 +13,24 @@ const getUser =
         return await User.findOne({ username: id }).exec();
     };
 
+//TODO get multiple users
+
+const getAllUsers =
+    (User: any) =>
+    async (userIds: String[]): Promise<[] | IUser[]> => {
+        if (userIds.length === 0) throw Error("No user Ids were provided");
+        const userArr = [];
+
+        for (let i = 0; i < userIds.length; i++) {
+            const user = await User.findOne(
+                { username: userIds },
+                "username email firstName lastName groupId roles"
+            );
+            userArr.push(user);
+        }
+        return userArr;
+    };
+
 const getUserByRefreshToken = (User: any) => async (token: String) => {
     if (!User) throw Error("User data was not provided");
     const user = await User.findOne({ refreshToken: token }).exec();
@@ -58,5 +76,6 @@ module.exports = (User: any) => {
         getUserByRefreshToken: getUserByRefreshToken(User),
         updateUser: updateUser(User),
         deleteUser: deleteUser(User),
+        getAllUsers: getAllUsers(User),
     };
 };
