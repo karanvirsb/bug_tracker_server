@@ -108,5 +108,13 @@ describe("Testing routes", () => {
                 .send({ id: "John20" })
                 .expect(401);
         });
+
+        test("Forbidden tempering", async () => {
+            return request(app)
+                .get("/user/id")
+                .set("Authorization", `Bearer ${accessToken + "1"}`)
+                .send({ id: "John20" })
+                .expect(403);
+        });
     });
 });
