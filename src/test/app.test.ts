@@ -201,12 +201,12 @@ describe("Testing routes", () => {
                 .expect(200);
         });
 
-        test("delete project", async () => {
-            return request(app)
-                .delete("/project")
-                .set("Authorization", `Bearer ${accessToken}`)
-                .send({ id: "1" })
-                .expect(200);
-        });
+        // test("delete project", async () => {
+        //     return request(app)
+        //         .delete("/project")
+        //         .set("Authorization", `Bearer ${accessToken}`)
+        //         .send({ id: "1" })
+        //         .expect(200);
+        // });
     });
 });
