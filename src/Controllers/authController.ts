@@ -33,13 +33,13 @@ const handleLogin = async (req: Request, res: Response) => {
                     group_id: foundUser.group_id,
                 },
             },
-            process.env.ACCESS_TOKEN_SECRET || "123443211234",
+            process.env.ACCESS_TOKEN_SECRET,
             { expiresIn: "15m" }
         );
 
         const refreshToken = jwt.sign(
             { username: foundUser.username },
-            process.env.REFRESH_TOKEN_SECRET || "123443211234",
+            process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: "1d" }
         );
 
