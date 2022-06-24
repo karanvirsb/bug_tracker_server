@@ -51,7 +51,21 @@ const updateProject = async (
         next(error);
     }
 };
-const deleteProject = () => {};
+const deleteProject = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { id } = req.body;
+
+    try {
+        const deletedGroup = await ProjectService.deleteProject(id);
+        if (deletedGroup) return res.sendStatus(200);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const addUserToProject = () => {};
 const removeUserFromProject = () => {};
 const getAllProjectsByGroupId = () => {};
