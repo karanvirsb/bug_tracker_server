@@ -226,7 +226,7 @@ describe("Testing routes", () => {
 
         test("getting all projects based on group id", async () => {
             return request(app)
-                .post("/project/group/1")
+                .get("/project/group/1")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send()
                 .expect(200)
