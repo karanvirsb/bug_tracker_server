@@ -84,7 +84,24 @@ const addUserToProject = async (
         next(error);
     }
 };
-const removeUserFromProject = () => {};
+const removeUserFromProject = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { projectId, userId } = req.body;
+
+    try {
+        const removedUser = await ProjectService.removeUserFromProject(
+            projectId,
+            userId
+        );
+        if (removedUser) return res.sendStatus(200);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const getAllProjectsByGroupId = () => {};
 const getAllUsersOfProject = () => {};
 
