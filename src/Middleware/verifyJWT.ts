@@ -13,7 +13,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     const token = authHeader.split(" ")[1];
     jwt.verify(
         token,
-        process.env.ACCESS_TOKEN_SECRET || "123443211234",
+        process.env.ACCESS_TOKEN_SECRET,
         (err: VerifyErrors, decoded: JwtPayload) => {
             if (err) return res.sendStatus(403); // could be tempered with
             req.user = decoded.username;
