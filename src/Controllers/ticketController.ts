@@ -56,7 +56,23 @@ const deleteTicket = async (
         next(error);
     }
 };
-const updateTicket = async () => {};
+const updateTicket = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { ticketId, updates } = req.body;
+    try {
+        const updatedTicket = await TicketService.updateTicket(
+            ticketId,
+            updates
+        );
+        if (updatedTicket) return res.sendStatus(200);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const getTicket = async () => {};
 const assignUserToTicket = async () => {};
 const removeUserFromTicket = async () => {};
