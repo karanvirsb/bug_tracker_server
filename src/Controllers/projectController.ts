@@ -37,7 +37,20 @@ const getProject = async (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 };
-const updateProject = () => {};
+const updateProject = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { id, updates } = req.body;
+    try {
+        const updatedProject = await ProjectService.updateProject(id, updates);
+        if (updatedProject) return res.sendStatus(200);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const deleteProject = () => {};
 const addUserToProject = () => {};
 const removeUserFromProject = () => {};
