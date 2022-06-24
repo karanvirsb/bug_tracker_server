@@ -126,5 +126,21 @@ describe("Testing routes", () => {
                 .send({ groupId: "1", groupName: "Coderz" })
                 .expect(201);
         });
+
+        test("Get the group", async () => {
+            return request(app)
+                .get("/group/1")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send()
+                .expect(200)
+                .then((response: any) => {
+                    expect(response.body).toEqual(
+                        expect.objectContaining({
+                            groupId: expect.any(String),
+                            groupName: expect.any(String),
+                        })
+                    );
+                });
+        });
     });
 });
