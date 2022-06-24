@@ -73,7 +73,20 @@ const updateTicket = async (
         next(error);
     }
 };
-const getTicket = async () => {};
+const getTicket = async (req: Request, res: Response, next: NextFunction) => {
+    const ticketId = req.params.id;
+
+    try {
+        const ticket = await TicketService.getTicket({
+            filter: "ticketId",
+            attribute: ticketId,
+        });
+        if (ticket) return res.status(200).json(ticket);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const assignUserToTicket = async () => {};
 const removeUserFromTicket = async () => {};
 const getStatistics = async () => {};
