@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 
 const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers["authorization"];
+
     // unauthorized
     if (!authHeader) return res.sendStatus(401);
 
@@ -12,7 +13,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     const token = authHeader.split(" ")[1];
     jwt.verify(
         token,
-        process.env.ACCESS_TOKEN_SECRET,
+        process.env.ACCESS_TOKEN_SECRET || "123443211234",
         (err: VerifyErrors, decoded: JwtPayload) => {
             if (err) return res.sendStatus(403); // could be tempered with
             req.user = decoded.username;
