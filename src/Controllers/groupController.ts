@@ -16,7 +16,16 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 };
-const getGroup = () => {};
+const getGroup = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    try {
+        const foundGroup = await GroupService.getGroup(id);
+        if (foundGroup) return res.status(200).json(foundGroup);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const updateGroup = () => {};
 const deleteGroup = () => {};
 
