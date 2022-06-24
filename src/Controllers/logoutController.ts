@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-const { getUserByRefreshToken, updateUser } = require("./User/userController");
+const UserService = require("../Services/Users");
 
 const handleLogout = async (req: Request, res: Response) => {
     const cookies = req.cookies;
@@ -12,10 +12,10 @@ const handleLogout = async (req: Request, res: Response) => {
     const refreshToken = cookies.jwt;
 
     // is the refresh token in the DB?
-    const foundUser = await getUserByRefreshToken(refreshToken);
+    const foundUser = await UserService.getUserByRefreshToken(refreshToken);
 
     // no found user but we have a cookie we clear it
-    if (foundUser.status === 204) {
+    if (!foundUser) {
         res.clearCookie("jwt", {
             httpOnly: true,
             sameSite: "none",
@@ -25,7 +25,7 @@ const handleLogout = async (req: Request, res: Response) => {
     }
 
     // Delete refreshToken in db
-    const updated = await updateUser(foundUser.data.username, {
+    const updated = await UserService.updateUser(foundUser.username, {
         refreshToken: "",
     });
 
@@ -35,7 +35,7 @@ const handleLogout = async (req: Request, res: Response) => {
             sameSite: "none",
             secure: true,
         }); // secure: true  - serves on https
-        res.sendStatus(204);
+        return res.sendStatus(204);
     }
 };
 

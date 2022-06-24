@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { JwtPayload, VerifyErrors } from "jsonwebtoken";
-const { getUserByRefreshToken } = require("./User/userController");
+const UserService = require("../Services/Users");
 const jwt = require("jsonwebtoken");
 
 const handleRefreshToken = async (req: Request, res: Response) => {
@@ -11,19 +11,19 @@ const handleRefreshToken = async (req: Request, res: Response) => {
 
     const refreshToken = cookies.jwt;
 
-    const foundUser = await getUserByRefreshToken(refreshToken);
+    const foundUser = await UserService.getUserByRefreshToken(refreshToken);
 
-    if (!foundUser.data) return res.sendStatus(403);
+    if (!foundUser) return res.sendStatus(403);
 
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         (err: VerifyErrors, decoded: JwtPayload) => {
-            if (err || foundUser.data.username !== decoded.username)
+            if (err || foundUser.username !== decoded.username)
                 return res.sendStatus(403);
 
-            const roles = Object.values(foundUser.data.roles);
-            const group_id = Object.values(foundUser.data.group_id);
+            const roles = Object.values(foundUser.roles);
+            const group_id = Object.values(foundUser.group_id);
 
             // new access token
             const accessToken = jwt.sign(

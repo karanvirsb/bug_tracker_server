@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-const { getUser, createUser } = require("./User/userController");
+const UserService = require("../Services/Users");
 
 const bcrypt = require("bcrypt");
 
@@ -14,9 +14,9 @@ const handleNewUser = async (req: Request, res: Response) => {
     }
 
     try {
-        const duplicateUser = await getUser(username);
+        const duplicateUser = await UserService.getUser(username);
 
-        if (duplicateUser.data) {
+        if (duplicateUser) {
             return res.sendStatus(409); // conflict
         }
 
@@ -33,15 +33,14 @@ const handleNewUser = async (req: Request, res: Response) => {
             refreshToken: "",
         };
 
-        const userAdded = await createUser(user);
+        const userAdded = await UserService.createUser(user);
 
-        if (userAdded.success && userAdded.status === 200) {
+        if (userAdded) {
             return res.sendStatus(201);
         } else {
-            return res.sendStatus(userAdded.status);
+            return res.sendStatus(502);
         }
     } catch (err: any) {
-        console.log(err);
         res.status(500).json({ message: err.message });
     }
 };

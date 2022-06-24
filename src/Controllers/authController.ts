@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { getUser, updateUser } = require("./User/userController");
+const UserService = require("../Services/Users");
 
 const handleLogin = async (req: Request, res: Response) => {
     const { username, password } = req.body;
@@ -13,24 +13,24 @@ const handleLogin = async (req: Request, res: Response) => {
             .json({ message: "Username and Password are required" });
     }
 
-    const foundUser = await getUser(username);
-    if (foundUser.status > 200) {
+    const foundUser = await UserService.getUser(username);
+    if (!foundUser) {
         return res.sendStatus(401);
     }
 
-    const match = await bcrypt.compare(password, foundUser.data.password);
+    const match = await bcrypt.compare(password, foundUser.password);
     //evaulte the password
     if (match) {
         // create JWTs
-        const roles = Object.keys(foundUser.data.roles).map(
-            (key: string) => foundUser.data.roles[key]
+        const roles = Object.keys(foundUser.roles).map(
+            (key: string) => foundUser.roles[key]
         );
         const accessToken = jwt.sign(
             {
                 UserInfo: {
-                    username: foundUser.data.username,
+                    username: foundUser.username,
                     roles,
-                    group_id: foundUser.data.group_id,
+                    group_id: foundUser.group_id,
                 },
             },
             process.env.ACCESS_TOKEN_SECRET,
@@ -38,7 +38,7 @@ const handleLogin = async (req: Request, res: Response) => {
         );
 
         const refreshToken = jwt.sign(
-            { username: foundUser.data.username },
+            { username: foundUser.username },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: "1d" }
         );
@@ -49,7 +49,9 @@ const handleLogin = async (req: Request, res: Response) => {
             sameSite: "none",
             secure: true,
         });
-        updateUser(foundUser.data.username, { refreshToken: refreshToken });
+        UserService.updateUser(foundUser.username, {
+            refreshToken: refreshToken,
+        });
         return res.json({ accessToken: accessToken });
     } else {
         return res.sendStatus(401);
