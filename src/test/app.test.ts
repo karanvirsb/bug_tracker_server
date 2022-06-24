@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const mongodb = "mongodb://localhost:27017/bugTracker_routes";
 const request = require("supertest");
 mongoose.connect(mongodb);
-
+// TODO get nano ID to generate IDs for Users, Projects, Groups, Tickets, Comments
 describe("Testing routes", () => {
     let accessToken = "";
     let refreshToken = "";
@@ -158,5 +158,57 @@ describe("Testing routes", () => {
         //         .send({ id: "1" })
         //         .expect(200);
         // });
+    });
+
+    describe("Project Route Tests", () => {
+        test("create Project", async () => {
+            return request(app)
+                .post("/project")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
+                    projectId: "1",
+                    groupId: "1",
+                    projectName: "Bug Tracker",
+                    projectDesc: "An application used to track bugs",
+                    users: ["1"],
+                })
+                .expect(200);
+        });
+
+        test("Get project", async () => {
+            const id = "1";
+            return request(app)
+                .get(`/project/${id}`)
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send()
+                .expect(200)
+                .then((response: any) => {
+                    expect(response.body).toEqual(
+                        expect.objectContaining({
+                            projectId: "1",
+                            groupId: "1",
+                            projectName: expect.any(String),
+                            projectDesc: expect.any(String),
+                            users: expect.any([]),
+                        })
+                    );
+                });
+        });
+
+        test("update project", async () => {
+            return request(app)
+                .put("/project")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "1", updates: { projectName: "Bug Tracking" } })
+                .expect(200);
+        });
+
+        test("delete project", async () => {
+            return request(app)
+                .delete("/project")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "1" })
+                .expect(200);
+        });
     });
 });
