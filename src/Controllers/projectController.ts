@@ -66,7 +66,24 @@ const deleteProject = async (
         next(error);
     }
 };
-const addUserToProject = () => {};
+const addUserToProject = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { projectId, userId } = req.body;
+
+    try {
+        const addedUser = await ProjectService.addUserToProject(
+            projectId,
+            userId
+        );
+        if (addedUser) return res.sendStatus(200);
+        return res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const removeUserFromProject = () => {};
 const getAllProjectsByGroupId = () => {};
 const getAllUsersOfProject = () => {};
