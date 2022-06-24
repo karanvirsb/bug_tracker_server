@@ -1,3 +1,5 @@
+import { NextFunction, Request, Response } from "express";
+
 export {};
 const express = require("express");
 const app = express();
@@ -24,5 +26,13 @@ app.use("/logout", require("./src/Routes/logout"));
 app.use("/user", require("./src/Routes/api/user"));
 // Protected routes
 app.use(verifyJWT);
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.send(404).json({ error: "Not Found" });
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    res.status(500).json({ error: err.message });
+});
 
 module.exports = app;
