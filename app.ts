@@ -21,6 +21,7 @@ app.use("/login", require("./src/Routes/login"));
 app.use("/refresh", require("./src/Routes/refresh"));
 app.use("/logout", require("./src/Routes/logout"));
 
+app.use("/user", require("./src/Routes/api/user"));
 // Protected routes
 app.use(verifyJWT);
 
