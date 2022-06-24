@@ -1,13 +1,14 @@
-import { Response } from "express";
-import { ServerResponse } from "http";
-
+require("dotenv").config();
 export {};
 const app = require("../../app");
 const mongoose = require("mongoose");
 const mongodb = "mongodb://localhost:27017/bugTracker_routes";
 const request = require("supertest");
 mongoose.connect(mongodb);
+
 describe("Testing routes", () => {
+    let accessToken = "";
+    let refreshToken = "";
     afterAll(async () => {
         await mongoose.connection.db.dropDatabase();
         await mongoose.disconnect();
@@ -17,50 +18,59 @@ describe("Testing routes", () => {
         expect(app).toBeDefined();
     });
 
-    test("create new user with registration", async () => {
-        return request(app).post("/register").expect(201).send({
-            username: "John20",
-            password: "John_123",
-            firstName: "John",
-            lastName: "Smith",
-            email: "John@Smith",
-        });
-    });
-
-    test("login user", async () => {
-        return request(app)
-            .post("/login")
-            .expect(200)
-            .send({
+    describe("User Routes", () => {
+        test("create new user with registration", async () => {
+            return request(app).post("/register").expect(201).send({
                 username: "John20",
                 password: "John_123",
-            })
-            .then((response: any) => {
-                expect(response._body).toEqual(
-                    expect.objectContaining({ accessToken: expect.any(String) })
-                );
+                firstName: "John",
+                lastName: "Smith",
+                email: "John@Smith",
             });
-    });
+        });
 
-    test("get user", async () => {
-        return request(app)
-            .post("/user/id")
-            .send({ id: "John20" })
-            .expect(200)
-            .then((response: any) => {
-                expect(response.body).toEqual(
-                    expect.objectContaining({
-                        __v: expect.any(Number),
-                        _id: expect.any(String),
-                        password: expect.any(String),
-                        email: expect.any(String),
-                        firstName: expect.any(String),
-                        lastName: expect.any(String),
-                        refreshToken: expect.any(String),
-                        roles: expect.any(Object),
-                        username: expect.any(String),
-                    })
-                );
-            });
+        test("login user", async () => {
+            return request(app)
+                .post("/login")
+                .expect(200)
+                .send({
+                    username: "John20",
+                    password: "John_123",
+                })
+                .then((response: any) => {
+                    expect(response._body).toEqual(
+                        expect.objectContaining({
+                            accessToken: expect.any(String),
+                        })
+                    );
+                    accessToken = response._body.accessToken || "";
+                });
+        });
+
+        test("get user", async () => {
+            return request(app)
+                .post("/user/id")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "John20" })
+                .expect(200)
+                .then((response: any) => {
+                    expect(response.body).toEqual(
+                        expect.objectContaining({
+                            __v: expect.any(Number),
+                            _id: expect.any(String),
+                            password: expect.any(String),
+                            email: expect.any(String),
+                            firstName: expect.any(String),
+                            lastName: expect.any(String),
+                            refreshToken: expect.any(String),
+                            roles: expect.any(Object),
+                            username: expect.any(String),
+                        })
+                    );
+                    refreshToken = response.body.refreshToken || "";
+                });
+        });
+
+        test("");
     });
 });
