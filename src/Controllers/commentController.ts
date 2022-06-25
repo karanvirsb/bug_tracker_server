@@ -60,7 +60,18 @@ const updateComment = async (
     }
 };
 
-const getComment = async () => {};
+const getComment = async (req: Request, res: Response, next: NextFunction) => {
+    const commentId = req.params.id;
+
+    try {
+        const comment = await CommentService.getComment("commentId", commentId);
+
+        if (comment) return res.status(200).json(comment);
+        res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 const replyTo = async () => {};
 
 // questionable may not be needed
