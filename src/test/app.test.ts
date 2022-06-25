@@ -142,7 +142,7 @@ describe("Testing routes", () => {
                 .put("/user/id")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ id: "John25", updates: { firstName: "Johnathan" } })
-                .expect(502);
+                .expect(204);
         });
 
         test("Error unauthorized", async () => {
