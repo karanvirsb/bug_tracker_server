@@ -13,13 +13,9 @@ const {
     getAllComments,
 } = require("../../Controllers/commentController");
 
-router
-    .route("/")
-    .post(createComment)
-    .put(updateComment)
-    .delete(deleteComment)
-    .get(getAllComments);
+router.route("/").post(createComment).put(updateComment).delete(deleteComment);
 router.route("/:id").get(getComment);
 router.route("/reply").post(replyTo).get(getReplyIds);
+router.route("/reply/comments").post(getAllComments);
 
 module.exports = router;
