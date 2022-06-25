@@ -87,7 +87,22 @@ const replyTo = async (req: Request, res: Response, next: NextFunction) => {
 
 // questionable may not be needed
 const getReplyIds = async () => {};
-const getAllComments = async () => {};
+const getAllComments = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { replyIdArr } = req.body;
+
+    try {
+        const comments = await CommentService.replyTo(replyIdArr);
+
+        if (comments) return res.status(200).json(comments);
+        res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 
 module.exports = {
     createComment,
