@@ -129,6 +129,14 @@ describe("Testing routes", () => {
                 });
         });
 
+        test("Getting a user with a incorrect refreshToken", async () => {
+            return request(app)
+                .post("/user/token")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ token: "" })
+                .expect(401);
+        });
+
         test("Update user", async () => {
             return request(app)
                 .put("/user/id")
