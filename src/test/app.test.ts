@@ -334,4 +334,92 @@ describe("Testing routes", () => {
         //         .expect(200);
         // });
     });
+
+    describe("Comment Route Tests", () => {
+        test("Create a comment", async () => {
+            return request(app)
+                .post("/comment")
+                .set("Authorzation", `Bearer ${accessToken}`)
+                .send({
+                    commentId: "1",
+                    userId: "1",
+                    ticketId: "1",
+                    comment: "Nice job",
+                })
+                .expect(200);
+        });
+
+        test("Update a comment", async () => {
+            return request(app)
+                .put("/comment")
+                .set("Authorzation", `Bearer ${accessToken}`)
+                .send({
+                    commentId: "1",
+                    updates: { comment: "Nice Job Karen" },
+                })
+                .expect(200);
+        });
+
+        test("Get a comment", async () => {
+            const commentId = 1;
+            return request(app)
+                .get("/comment/" + commentId)
+                .set("Authorzation", `Bearer ${accessToken}`)
+                .expect(200)
+                .then((response: any) => {
+                    expect(response.body).toEqual(
+                        expect.objectContaining({
+                            commentId: expect.any(String),
+                            userId: expect.any(String),
+                            ticketId: expect.any(String),
+                            comment: expect.any(String),
+                        })
+                    );
+                });
+        });
+
+        test("Replying to a comment", async () => {
+            return request(app)
+                .post("/comment/reply")
+                .set("Authorzation", `Bearer ${accessToken}`)
+                .send({
+                    commentId: 1,
+                    reply: {
+                        commentId: "2",
+                        userId: "2",
+                        ticketId: "1",
+                        comment: "Nice job Jeff",
+                    },
+                })
+                .expect(200);
+        });
+
+        test("Get all comments based on replyIds", async () => {
+            return request(app)
+                .get("/comment")
+                .set("Authorzation", `Bearer ${accessToken}`)
+                .send({ replyIdArr: ["2"] })
+                .expect(200)
+                .then((response: any) => {
+                    expect(response.body).toEqual(
+                        expect.objectContaining({
+                            commentId: expect.any(String),
+                            userId: expect.any(String),
+                            ticketId: expect.any(String),
+                            comment: expect.any(String),
+                        })
+                    );
+                });
+        });
+
+        test("Delete a comment", async () => {
+            const commentId = 1;
+
+            return request(app)
+                .delete("/comment")
+                .set("Authorzation", `Bearer ${accessToken}`)
+                .send({ commentId })
+                .expect(200);
+        });
+    });
 });
