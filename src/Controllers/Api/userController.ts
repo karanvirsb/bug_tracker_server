@@ -59,11 +59,11 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     const { id, updates } = req.body;
     try {
-        const updateUser = await Users.updateUser(id, updates);
+        const updatedUser = await Users.updateUser(id, updates);
+        console.log(updatedUser);
+        if (updatedUser) return res.sendStatus(200);
 
-        if (updateUser) return res.sendStatus(200);
-
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
