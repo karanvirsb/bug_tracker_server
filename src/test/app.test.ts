@@ -31,7 +31,7 @@ describe("Testing routes", () => {
         });
 
         // TODO give back error for incorrect data types
-        test("Incorrect parameters", async () => {
+        test("ERROR: Incorrect parameters", async () => {
             return request(app).post("/register").expect(502).send({
                 username: "John21",
                 password: "John_123",
@@ -60,14 +60,14 @@ describe("Testing routes", () => {
         });
 
         // These work
-        test("bad login request", async () => {
+        test("ERROR: bad login request", async () => {
             return request(app)
                 .post("/login")
                 .send({ username: "Johnny", password: "John_123" })
                 .expect(401);
         });
 
-        test("Incorrect password", async () => {
+        test("ERROR: Incorrect password", async () => {
             return request(app)
                 .post("/login")
                 .send({ username: "John20", password: "John_1234" })
@@ -98,7 +98,7 @@ describe("Testing routes", () => {
                 });
         });
 
-        test("Getting user that does not exist", async () => {
+        test("ERROR: Getting user that does not exist", async () => {
             return request(app)
                 .post("/user/id")
                 .set("Authorization", `Bearer ${accessToken}`)
@@ -129,7 +129,7 @@ describe("Testing routes", () => {
                 });
         });
 
-        test("Getting a user with a incorrect refreshToken", async () => {
+        test("ERROR: Getting a user with a incorrect refreshToken", async () => {
             return request(app)
                 .post("/user/token")
                 .set("Authorization", `Bearer ${accessToken}`)
@@ -145,7 +145,7 @@ describe("Testing routes", () => {
                 .expect(200);
         });
 
-        test("Update non existing user", async () => {
+        test("ERROR: Update non existing user", async () => {
             return request(app)
                 .put("/user/id")
                 .set("Authorization", `Bearer ${accessToken}`)
@@ -153,14 +153,22 @@ describe("Testing routes", () => {
                 .expect(204);
         });
 
-        test("Error unauthorized", async () => {
+        test("ERROR: updating a property that does not exist", async () => {
+            return request(app)
+                .put("/user/id")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "John20", updates: { middleName: "Johnathan" } })
+                .expect(400);
+        });
+
+        test("ERROR: Error unauthorized", async () => {
             return request(app)
                 .get("/user/id")
                 .send({ id: "John20" })
                 .expect(401);
         });
 
-        test("Forbidden tempering", async () => {
+        test("ERROR: Forbidden tempering", async () => {
             return request(app)
                 .get("/user/id")
                 .set("Authorization", `Bearer ${accessToken + "1"}`)
@@ -176,6 +184,14 @@ describe("Testing routes", () => {
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ groupId: "1", groupName: "Coderz" })
                 .expect(201);
+        });
+
+        test("ERROR: Creating group with incorrect data", async () => {
+            return request(app)
+                .post("/group")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ groupId: "", groupName: "" })
+                .expect(400);
         });
 
         test("Get the group", async () => {
@@ -194,12 +210,36 @@ describe("Testing routes", () => {
                 });
         });
 
+        test("ERROR: Getting non existent group", async () => {
+            return request(app)
+                .get("/group/3")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send()
+                .expect(204);
+        });
+
         test("Update the group", async () => {
             return request(app)
                 .put("/group")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ id: "1", updates: { groupName: "Coders" } })
                 .expect(200);
+        });
+
+        test("ERROR: Updating a group that doesnt exist", () => {
+            return request(app)
+                .put("/group")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "4", updates: { groupName: "Coders" } })
+                .expect(204);
+        });
+
+        test("ERROR: Updating a group property that isnt allowed", async () => {
+            return request(app)
+                .put("/group")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "1", updates: { groupType: "Bug" } })
+                .expect(400);
         });
 
         // test("Delete the group", async () => {
@@ -209,6 +249,14 @@ describe("Testing routes", () => {
         //         .send({ id: "1" })
         //         .expect(200);
         // });
+
+        test("ERROR: Bad delete", async () => {
+            return request(app)
+                .delete("/group")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "4" })
+                .expect(204);
+        });
     });
 
     describe("Project Route Tests", () => {
@@ -224,6 +272,20 @@ describe("Testing routes", () => {
                     users: ["1"],
                 })
                 .expect(200);
+        });
+
+        test("ERROR: creating a project with incorrect types", async () => {
+            return request(app)
+                .post("/project")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
+                    projectId: "1",
+                    groupId: "",
+                    projectName: "Bug Tracker",
+                    projectDesc: "An application used to track bugs",
+                    users: ["1"],
+                })
+                .expect(204);
         });
 
         test("Get project", async () => {
@@ -243,12 +305,37 @@ describe("Testing routes", () => {
                 });
         });
 
+        test("ERROR: Trying to get a project that doesnt exist", async () => {
+            const id = "5";
+            return request(app)
+                .get(`/project/${id}`)
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send()
+                .expect(204);
+        });
+
         test("update project", async () => {
             return request(app)
                 .put("/project")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ id: "1", updates: { projectName: "Bug Tracking" } })
                 .expect(200);
+        });
+
+        test("ERROR: updating a project that doesnt exist", async () => {
+            return request(app)
+                .put("/project")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "5", updates: { projectName: "Bug Tracking" } })
+                .expect(204);
+        });
+
+        test("ERROR: updating a project with a property that doesnt exist", async () => {
+            return request(app)
+                .put("/project")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "1", updates: { projectType: "Bug" } })
+                .expect(400);
         });
 
         // test("delete project", async () => {
@@ -258,6 +345,14 @@ describe("Testing routes", () => {
         //         .send({ id: "1" })
         //         .expect(200);
         // });
+
+        test("ERROR: deleting a project that doesnt exist", async () => {
+            return request(app)
+                .delete("/project")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "5" })
+                .expect(204);
+        });
 
         test("adding new user to project", async () => {
             return request(app)
@@ -290,6 +385,14 @@ describe("Testing routes", () => {
                     );
                 });
         });
+
+        test("ERROR: Getting a project that doesnt exist based on gorup id", async () => {
+            return request(app)
+                .get("/project/group/10")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send()
+                .expect(204);
+        });
     });
 
     describe("Ticket routes test", () => {
@@ -309,6 +412,24 @@ describe("Testing routes", () => {
                     projectId: "1",
                 })
                 .expect(200);
+        });
+
+        test("ERROR: Creating a ticket with bad data", async () => {
+            return request(app)
+                .post("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
+                    ticketId: "1",
+                    title: "Login Bug",
+                    description: "Cannot click login",
+                    time: "0.5",
+                    ticketStatus: "open",
+                    ticketSeverity: "medium",
+                    ticketType: "Bug",
+                    reporterId: "",
+                    projectId: "",
+                })
+                .expect(400);
         });
 
         test("getting ticket", async () => {
@@ -335,12 +456,37 @@ describe("Testing routes", () => {
                 });
         });
 
+        test("ERROR: Getting back a ticket that does not exist", async () => {
+            const ticketId = 10;
+            return request(app)
+                .get("/ticket/" + ticketId)
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send()
+                .expect(204);
+        });
+
         test("Update Ticket", async () => {
             return request(app)
                 .put("/ticket")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ ticketId: "1", updates: { ticketStatus: "Closed" } })
                 .expect(200);
+        });
+
+        test("ERROR: Updating a ticket that does not exist", async () => {
+            return request(app)
+                .put("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ ticketId: "12", updates: { ticketStatus: "Closed" } })
+                .expect(204);
+        });
+
+        test("ERROR: Updating a property that does not exist", async () => {
+            return request(app)
+                .put("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ ticketId: "12", updates: { ticketColumn: "Closed" } })
+                .expect(400);
         });
 
         test("Assign a dev to a ticket", async () => {
@@ -383,6 +529,14 @@ describe("Testing routes", () => {
         //         .send({ ticketId: "1" })
         //         .expect(200);
         // });
+
+        test("ERROR: bad delete", async () => {
+            return request(app)
+                .delete("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ ticketId: "10" })
+                .expect(204);
+        });
     });
 
     describe("Comment Route Tests", () => {
@@ -399,6 +553,19 @@ describe("Testing routes", () => {
                 .expect(200);
         });
 
+        test("ERROR: Creating comment with bad data", async () => {
+            return request(app)
+                .post("/comment")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
+                    commentId: "3",
+                    userId: "",
+                    ticketId: "",
+                    comment: "Nice job",
+                })
+                .expect(400);
+        });
+
         test("Update a comment", async () => {
             return request(app)
                 .put("/comment")
@@ -408,6 +575,28 @@ describe("Testing routes", () => {
                     updates: { comment: "Nice Job Karen" },
                 })
                 .expect(200);
+        });
+
+        test("ERROR: Updating an non existent comment", async () => {
+            return request(app)
+                .put("/comment")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
+                    commentId: "10",
+                    updates: { comment: "Nice Job Karen" },
+                })
+                .expect(204);
+        });
+
+        test("ERROR: Updating a property that does not exist", async () => {
+            return request(app)
+                .put("/comment")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
+                    commentId: "1",
+                    updates: { name: "Karen" },
+                })
+                .expect(400);
         });
 
         test("Get a comment", async () => {
@@ -428,12 +617,20 @@ describe("Testing routes", () => {
                 });
         });
 
+        test("ERROR: Getting a comment that does not exist", async () => {
+            const commentId = 12;
+            return request(app)
+                .get("/comment/" + commentId)
+                .set("Authorization", `Bearer ${accessToken}`)
+                .expect(204);
+        });
+
         test("Replying to a comment", async () => {
             return request(app)
                 .post("/comment/reply")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({
-                    commentId: 1,
+                    commentId: "1",
                     reply: {
                         commentId: "2",
                         userId: "2",
@@ -442,6 +639,22 @@ describe("Testing routes", () => {
                     },
                 })
                 .expect(200);
+        });
+
+        test("ERROR: Replying to a comment that does not exist", async () => {
+            return request(app)
+                .post("/comment/reply")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
+                    commentId: "10",
+                    reply: {
+                        commentId: "2",
+                        userId: "2",
+                        ticketId: "1",
+                        comment: "Nice job Jeff",
+                    },
+                })
+                .expect(410);
         });
 
         test("Get all comments based on replyIds", async () => {
@@ -470,6 +683,15 @@ describe("Testing routes", () => {
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ commentId })
                 .expect(200);
+        });
+
+        test("ERROR: Deleting a non existent comment", async () => {
+            const commentId = 15;
+            return request(app)
+                .delete("/comment")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ commentId })
+                .expect(204);
         });
     });
 });
