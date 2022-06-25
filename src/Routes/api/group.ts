@@ -7,7 +7,7 @@ const {
     getGroup,
     updateGroup,
     deleteGroup,
-} = require("../../Controllers/groupController");
+} = require("../../Controllers/Api/groupController");
 
 router.route("/").post(createGroup).put(updateGroup).delete(deleteGroup);
 router.route("/:id").get(getGroup);

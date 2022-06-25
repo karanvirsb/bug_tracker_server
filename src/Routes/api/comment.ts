@@ -11,7 +11,7 @@ const {
     replyTo,
     getReplyIds,
     getAllComments,
-} = require("../../Controllers/commentController");
+} = require("../../Controllers/Api/commentController");
 
 router.route("/").post(createComment).put(updateComment).delete(deleteComment);
 router.route("/:id").get(getComment);

@@ -11,7 +11,7 @@ const {
     assignUserToTicket,
     removeUserFromTicket,
     getStatistics,
-} = require("../../Controllers/ticketController");
+} = require("../../Controllers/Api/ticketController");
 
 router
     .route("/")

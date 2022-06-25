@@ -12,7 +12,7 @@ const {
     removeUserFromProject,
     getAllProjectsByGroupId,
     getAllUsersOfProject,
-} = require("../../Controllers/projectController");
+} = require("../../Controllers/Api/projectController");
 
 router.route("/").post(createProject).put(updateProject).delete(deleteProject);
 router.route("/:id").get(getProject);
