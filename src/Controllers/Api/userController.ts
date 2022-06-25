@@ -21,6 +21,7 @@ const getUserByRefreshToken = async (
     next: NextFunction
 ) => {
     const { token } = req.body;
+    if (!token) return res.sendStatus(401);
     try {
         const user = await Users.getUserByRefreshToken(token);
         if (!user) {
