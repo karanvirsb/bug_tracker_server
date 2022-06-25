@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 export {};
-const CommentService = require("../Services/Comments");
+const CommentService = require("../../Services/Comments");
 
 const createComment = async (
     req: Request,

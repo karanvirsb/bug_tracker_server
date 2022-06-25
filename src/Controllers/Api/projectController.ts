@@ -1,6 +1,6 @@
 export {};
 import { NextFunction, Request, Response } from "express";
-const ProjectService = require("../Services/Projects");
+const ProjectService = require("../../Services/Projects");
 
 const createProject = async (
     req: Request,

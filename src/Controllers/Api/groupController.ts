@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 export {};
-const GroupService = require("../Services/Groups");
+const GroupService = require("../../Services/Groups");
 
 const createGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { groupId, groupName } = req.body;

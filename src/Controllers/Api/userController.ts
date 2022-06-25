@@ -1,6 +1,6 @@
-const Users = require("../Services/Users");
+const Users = require("../../Services/Users");
 import { NextFunction, Request, Response } from "express";
-import { IUser } from "../Model/Users";
+import { IUser } from "../../Model/Users";
 
 const getUser = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.body;

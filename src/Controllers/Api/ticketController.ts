@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 
 export {};
 
-const TicketService = require("../Services/Tickets");
+const TicketService = require("../../Services/Tickets");
 
 const createTicket = async (
     req: Request,
