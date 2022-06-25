@@ -30,6 +30,17 @@ describe("Testing routes", () => {
             });
         });
 
+        // TODO give back error for incorrect data types
+        test("Incorrect parameters", async () => {
+            return request(app).post("/register").expect(502).send({
+                username: "John21",
+                password: "John_123",
+                firstName: "John",
+                lastName: "Smith",
+                email: 1,
+            });
+        });
+
         test("login user", async () => {
             return request(app)
                 .post("/login")
@@ -46,6 +57,21 @@ describe("Testing routes", () => {
                     );
                     accessToken = response._body.accessToken || "";
                 });
+        });
+
+        // These work
+        test("bad login request", async () => {
+            return request(app)
+                .post("/login")
+                .send({ username: "Johnny", password: "John_123" })
+                .expect(401);
+        });
+
+        test("Incorrect password", async () => {
+            return request(app)
+                .post("/login")
+                .send({ username: "John20", password: "John_1234" })
+                .expect(401);
         });
 
         test("get user", async () => {
@@ -70,6 +96,14 @@ describe("Testing routes", () => {
                     );
                     refreshToken = response.body.refreshToken || "";
                 });
+        });
+
+        test("Getting user that does not exist", async () => {
+            return request(app)
+                .post("/user/id")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "John19" })
+                .expect(204);
         });
 
         test("Get user by refreshToken", async () => {
@@ -101,6 +135,14 @@ describe("Testing routes", () => {
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ id: "John20", updates: { firstName: "Johnathan" } })
                 .expect(200);
+        });
+
+        test("Update non existing user", async () => {
+            return request(app)
+                .put("/user/id")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ id: "John25", updates: { firstName: "Johnathan" } })
+                .expect(502);
         });
 
         test("Error unauthorized", async () => {
