@@ -51,6 +51,15 @@ describe("UserService tests", () => {
         expect(updatedUser).toBe(true);
     });
 
+    test("Updating user that does not exist", async () => {
+        const userService = UserService(Users);
+        const updatedUser = await userService.updateUser("Johnny", {
+            firstName: "Johnny",
+        });
+
+        expect(updatedUser).toBe(false);
+    });
+
     test("Getting user", async () => {
         const userService = UserService(Users);
         const foundUser = await userService.getUser(userData[0].email);
