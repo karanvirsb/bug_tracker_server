@@ -396,7 +396,7 @@ describe("Testing routes", () => {
 
         test("Get all comments based on replyIds", async () => {
             return request(app)
-                .get("/comment")
+                .post("/comment/reply/comments")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ replyIdArr: ["2"] })
                 .expect(200)
