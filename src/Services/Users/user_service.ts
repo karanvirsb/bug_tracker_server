@@ -53,9 +53,10 @@ const updateUser =
 
         const updatedUser = await User.updateOne(
             { username: username },
-            updates
+            updates,
+            { upsert: false }
         );
-        return updatedUser.acknowledged;
+        return updatedUser.acknowledged && updatedUser.matchedCount === 1;
     };
 
 // Delete user
