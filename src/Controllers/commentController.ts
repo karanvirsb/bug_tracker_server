@@ -72,7 +72,18 @@ const getComment = async (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 };
-const replyTo = async () => {};
+const replyTo = async (req: Request, res: Response, next: NextFunction) => {
+    const { commentId, reply } = req.body;
+
+    try {
+        const comment = await CommentService.replyTo(commentId, reply);
+
+        if (comment) return res.sendStatus(200);
+        res.sendStatus(502);
+    } catch (error) {
+        next(error);
+    }
+};
 
 // questionable may not be needed
 const getReplyIds = async () => {};
