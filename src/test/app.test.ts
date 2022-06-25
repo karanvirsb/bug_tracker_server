@@ -339,7 +339,7 @@ describe("Testing routes", () => {
         test("Create a comment", async () => {
             return request(app)
                 .post("/comment")
-                .set("Authorzation", `Bearer ${accessToken}`)
+                .set("Authorization", `Bearer ${accessToken}`)
                 .send({
                     commentId: "1",
                     userId: "1",
@@ -352,7 +352,7 @@ describe("Testing routes", () => {
         test("Update a comment", async () => {
             return request(app)
                 .put("/comment")
-                .set("Authorzation", `Bearer ${accessToken}`)
+                .set("Authorization", `Bearer ${accessToken}`)
                 .send({
                     commentId: "1",
                     updates: { comment: "Nice Job Karen" },
@@ -364,7 +364,7 @@ describe("Testing routes", () => {
             const commentId = 1;
             return request(app)
                 .get("/comment/" + commentId)
-                .set("Authorzation", `Bearer ${accessToken}`)
+                .set("Authorization", `Bearer ${accessToken}`)
                 .expect(200)
                 .then((response: any) => {
                     expect(response.body).toEqual(
@@ -381,7 +381,7 @@ describe("Testing routes", () => {
         test("Replying to a comment", async () => {
             return request(app)
                 .post("/comment/reply")
-                .set("Authorzation", `Bearer ${accessToken}`)
+                .set("Authorization", `Bearer ${accessToken}`)
                 .send({
                     commentId: 1,
                     reply: {
@@ -397,7 +397,7 @@ describe("Testing routes", () => {
         test("Get all comments based on replyIds", async () => {
             return request(app)
                 .get("/comment")
-                .set("Authorzation", `Bearer ${accessToken}`)
+                .set("Authorization", `Bearer ${accessToken}`)
                 .send({ replyIdArr: ["2"] })
                 .expect(200)
                 .then((response: any) => {
@@ -417,7 +417,7 @@ describe("Testing routes", () => {
 
             return request(app)
                 .delete("/comment")
-                .set("Authorzation", `Bearer ${accessToken}`)
+                .set("Authorization", `Bearer ${accessToken}`)
                 .send({ commentId })
                 .expect(200);
         });
