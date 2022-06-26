@@ -1,10 +1,12 @@
 import { Model } from "mongoose";
-import { IUser } from "../../Model/Users";
+import { UserType } from "../../Model/Users";
 
 // GETS
 const getUser =
     (User: typeof Model) =>
-    async (id: IUser["username"] | IUser["email"]): Promise<IUser | null> => {
+    async (
+        id: UserType["username"] | UserType["email"]
+    ): Promise<UserType | null> => {
         if (!id) throw Error("id was not provided");
 
         if (id.includes("@")) {
@@ -18,7 +20,7 @@ const getUser =
 
 const getAllUsers =
     (User: typeof Model) =>
-    async (userIds: String[]): Promise<[] | IUser[]> => {
+    async (userIds: String[]): Promise<[] | UserType[]> => {
         if (userIds.length === 0) throw Error("No user Ids were provided");
         const userArr = [];
 
@@ -34,7 +36,7 @@ const getAllUsers =
 
 const getUserByRefreshToken =
     (User: typeof Model) =>
-    async (token: IUser["refreshToken"]): Promise<IUser> => {
+    async (token: UserType["refreshToken"]): Promise<UserType> => {
         if (!User) throw Error("User data was not provided");
         const user = await User.findOne({ refreshToken: token }).exec();
         return user;
@@ -43,7 +45,7 @@ const getUserByRefreshToken =
 // CREATES
 const saveUser =
     (User: typeof Model) =>
-    async (user: IUser): Promise<IUser> => {
+    async (user: UserType): Promise<UserType> => {
         if (!User) throw Error("User data was not provided");
         const createdUser = new User(user);
         return await createdUser.save();
@@ -52,7 +54,10 @@ const saveUser =
 // UPDATES
 const updateUser =
     (User: typeof Model) =>
-    async (username: IUser["username"], updates: Object): Promise<Boolean> => {
+    async (
+        username: UserType["username"],
+        updates: Object
+    ): Promise<Boolean> => {
         if (!username) throw Error("No username was provided");
         if (!updates) throw Error("No updates were provided");
 
@@ -68,7 +73,7 @@ const updateUser =
 
 const deleteUser =
     (User: typeof Model) =>
-    async (id: IUser["username"]): Promise<Boolean> => {
+    async (id: UserType["username"]): Promise<Boolean> => {
         if (!id) throw Error("No username was passed");
         const deletedUser = await User.deleteOne({ username: id });
         return deletedUser.acknowledged && deletedUser.deletedCount === 1;
