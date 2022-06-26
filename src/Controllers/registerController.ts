@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-const UserService = require("../Services/Users");
+import { ZodError } from "zod";
+import UserService from "../Services/Users";
 
 const bcrypt = require("bcrypt");
 
@@ -28,7 +29,7 @@ const handleNewUser = async (req: Request, res: Response) => {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            roles: { User: 2001 },
+            roles: { User: "2001" },
             group_id: "",
             refreshToken: "",
         };
@@ -41,7 +42,9 @@ const handleNewUser = async (req: Request, res: Response) => {
             return res.sendStatus(502);
         }
     } catch (err: any) {
-        res.status(500).json({ message: err.message });
+        if (err instanceof ZodError)
+            return res.status(500).json({ message: err.message });
+        console.log(err);
     }
 };
 
