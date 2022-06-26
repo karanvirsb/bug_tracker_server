@@ -1,5 +1,5 @@
 import { Model } from "mongoose";
-import { IUser } from "../../Model/Users";
+import { UserType } from "../../Model/Users";
 import UserService from "./user_service";
 const Users: typeof Model = require("../../Model/Users");
 // const sinon = require("sinon");
@@ -18,7 +18,7 @@ describe("UserService tests", () => {
         await mongoose.disconnect();
     });
 
-    const userData: IUser[] = [
+    const userData: UserType[] = [
         {
             username: "John21",
             password: "John_123",
@@ -26,6 +26,7 @@ describe("UserService tests", () => {
             firstName: "John",
             lastName: "Smith",
             refreshToken: "123",
+            roles: { User: "2000" },
         },
     ];
 
