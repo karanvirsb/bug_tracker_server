@@ -1,8 +1,13 @@
-const Users = require("../../Services/Users");
+import Users from "../../Services/Users";
 import { NextFunction, Request, Response } from "express";
-import { IUser } from "../../Model/Users";
+import { UserType, IUser } from "../../Model/Users";
+import { ZodError } from "zod";
 
-const getUser = async (req: Request, res: Response, next: NextFunction) => {
+const getUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<Response<any, Record<string, any>> | undefined> => {
     const { id } = req.body;
     try {
         const user = await Users.getUser(id);
@@ -19,7 +24,7 @@ const getUserByRefreshToken = async (
     req: Request,
     res: Response,
     next: NextFunction
-) => {
+): Promise<Response<any, Record<string, any>> | undefined> => {
     const { token } = req.body;
     if (!token) return res.sendStatus(401);
     try {
@@ -36,11 +41,16 @@ const getUserByRefreshToken = async (
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
     const { user } = req.body;
     try {
-        const newUser = await Users.saveUser(user);
+        IUser.parse(user);
+        const newUser = await Users.createUser(user);
         if (newUser) return res.sendStatus(200);
 
         return res.sendStatus(502);
     } catch (error) {
+        if (error instanceof ZodError) {
+            return res.status(204).json({ message: error.message });
+        }
+
         next(error);
     }
 };
@@ -48,7 +58,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.body;
     try {
-        const deletedUser = await Users.deletedUser(id);
+        const deletedUser = await Users.deleteUser(id);
 
         if (deletedUser) return res.sendStatus(200);
         return res.sendStatus(502);
