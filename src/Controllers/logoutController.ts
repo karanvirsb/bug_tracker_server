@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-const UserService = require("../Services/Users");
+import UserService from "../Services/Users";
 
 const handleLogout = async (req: Request, res: Response) => {
     const cookies = req.cookies;

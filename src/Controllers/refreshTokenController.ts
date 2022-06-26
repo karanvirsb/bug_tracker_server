@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { JwtPayload, VerifyErrors } from "jsonwebtoken";
-const UserService = require("../Services/Users");
+import UserService from "../Services/Users";
 const jwt = require("jsonwebtoken");
 
 const handleRefreshToken = async (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
                 return res.sendStatus(403);
 
             const roles = Object.values(foundUser.roles);
-            const group_id = Object.values(foundUser.group_id);
+            const group_id = Object.values(foundUser.groupId || "");
 
             // new access token
             const accessToken = jwt.sign(
