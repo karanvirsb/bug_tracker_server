@@ -61,7 +61,7 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
         const deletedUser = await Users.deleteUser(id);
 
         if (deletedUser) return res.sendStatus(200);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
@@ -71,7 +71,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     const { id, updates } = req.body;
     try {
         const updatedUser = await Users.updateUser(id, updates);
-        console.log(updatedUser);
+
         if (updatedUser) return res.sendStatus(200);
 
         return res.sendStatus(204);
