@@ -1,4 +1,6 @@
-const User = require("../../Model/Users");
-const UserService = require("./user_service");
+import { Model } from "mongoose";
 
-module.exports = UserService(User);
+const User: typeof Model = require("../../Model/Users");
+import UserService from "./user_service";
+
+export default UserService(User);
