@@ -6,7 +6,7 @@ const roles = z.object({
     Admin: z.string().optional(),
 });
 
-const IUser = z.object({
+export const IUser = z.object({
     username: z.string(),
     password: z.string(),
     email: z.string().email(),
