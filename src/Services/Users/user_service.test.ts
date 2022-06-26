@@ -1,6 +1,7 @@
-const UserService = require("./user_service");
-const Users = require("../../Model/Users");
+import { Model } from "mongoose";
 import { IUser } from "../../Model/Users";
+import UserService from "./user_service";
+const Users: typeof Model = require("../../Model/Users");
 // const sinon = require("sinon");
 export {};
 const mongoose = require("mongoose");
@@ -17,7 +18,7 @@ describe("UserService tests", () => {
         await mongoose.disconnect();
     });
 
-    const userData: [IUser] = [
+    const userData: IUser[] = [
         {
             username: "John21",
             password: "John_123",
@@ -64,8 +65,8 @@ describe("UserService tests", () => {
         const userService = UserService(Users);
         const foundUser = await userService.getUser(userData[0].email);
 
-        expect(foundUser.username).toBe("John21");
-        expect(foundUser.firstName).toBe("Johnny");
+        expect(foundUser?.username).toBe("John21");
+        expect(foundUser?.firstName).toBe("Johnny");
     });
 
     test("Get user by refresh Token", async () => {
