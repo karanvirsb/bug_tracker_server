@@ -1,9 +1,10 @@
+import { Model } from "mongoose";
 import { IUser } from "../../Model/Users";
 
 // GETS
 const getUser =
-    (User: any) =>
-    async (id: String): Promise<{} | null> => {
+    (User: typeof Model) =>
+    async (id: IUser["username"] | IUser["email"]): Promise<IUser | null> => {
         if (!id) throw Error("id was not provided");
 
         if (id.includes("@")) {
@@ -16,7 +17,7 @@ const getUser =
 //TODO get multiple users
 
 const getAllUsers =
-    (User: any) =>
+    (User: typeof Model) =>
     async (userIds: String[]): Promise<[] | IUser[]> => {
         if (userIds.length === 0) throw Error("No user Ids were provided");
         const userArr = [];
@@ -31,23 +32,27 @@ const getAllUsers =
         return userArr;
     };
 
-const getUserByRefreshToken = (User: any) => async (token: String) => {
-    if (!User) throw Error("User data was not provided");
-    const user = await User.findOne({ refreshToken: token }).exec();
-    return user;
-};
+const getUserByRefreshToken =
+    (User: typeof Model) =>
+    async (token: IUser["refreshToken"]): Promise<IUser> => {
+        if (!User) throw Error("User data was not provided");
+        const user = await User.findOne({ refreshToken: token }).exec();
+        return user;
+    };
 
 // CREATES
-const saveUser = (User: any) => async (user: IUser) => {
-    if (!User) throw Error("User data was not provided");
-    const createdUser = new User(user);
-    return await createdUser.save();
-};
+const saveUser =
+    (User: typeof Model) =>
+    async (user: IUser): Promise<IUser> => {
+        if (!User) throw Error("User data was not provided");
+        const createdUser = new User(user);
+        return await createdUser.save();
+    };
 
 // UPDATES
 const updateUser =
-    (User: any) =>
-    async (username: String, updates: Object): Promise<Boolean | null> => {
+    (User: typeof Model) =>
+    async (username: IUser["username"], updates: Object): Promise<Boolean> => {
         if (!username) throw Error("No username was provided");
         if (!updates) throw Error("No updates were provided");
 
@@ -62,15 +67,15 @@ const updateUser =
 // Delete user
 
 const deleteUser =
-    (User: any) =>
-    async (id: String): Promise<Boolean | null> => {
+    (User: typeof Model) =>
+    async (id: IUser["username"]): Promise<Boolean> => {
         if (!id) throw Error("No username was passed");
         const deletedUser = await User.deleteOne({ username: id });
-        return deletedUser.acknowledged;
+        return deletedUser.acknowledged && deletedUser.deletedCount === 1;
     };
 
 // the User here represents the User model
-module.exports = (User: any) => {
+export default (User: typeof Model) => {
     return {
         createUser: saveUser(User),
         getUser: getUser(User),
