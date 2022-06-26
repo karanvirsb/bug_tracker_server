@@ -1,8 +1,12 @@
 import { Schema, model } from "mongoose";
 import { z } from "zod";
 
-// TODO install nano Id
-export const IUser = z.object({
+const roles = z.object({
+    User: z.string().optional(),
+    Admin: z.string().optional(),
+});
+
+const IUser = z.object({
     username: z.string(),
     password: z.string(),
     email: z.string().email(),
@@ -10,8 +14,10 @@ export const IUser = z.object({
     lastName: z.string(),
     groupId: z.string().optional(),
     refreshToken: z.string().optional(),
-    roles: z.string(),
+    roles: roles,
 });
+
+export type UserType = z.infer<typeof IUser>;
 
 // export interface IUser {
 //     username?: String;
