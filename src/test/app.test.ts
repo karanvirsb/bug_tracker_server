@@ -1,17 +1,33 @@
+import { Response } from "express";
+
 require("dotenv").config();
-export {};
+
 const app = require("../../app");
 const mongoose = require("mongoose");
 const mongodb = "mongodb://localhost:27017/bugTracker_routes";
 const request = require("supertest");
 mongoose.connect(mongodb);
+import { Users, Groups, Comments, Projects, Tickets } from "../Model";
+
 // TODO get nano ID to generate IDs for Users, Projects, Groups, Tickets, Comments
 describe("Testing routes", () => {
     let accessToken = "";
     let refreshToken = "";
-    jest.setTimeout(7500);
+
+    beforeAll(async () => {
+        await Users.remove({});
+        await Groups.remove({});
+        await Comments.remove({});
+        await Projects.remove({});
+        await Tickets.remove({});
+    });
+
     afterAll(async () => {
-        await mongoose.connection.db.dropDatabase();
+        await Users.remove({});
+        await Groups.remove({});
+        await Comments.remove({});
+        await Projects.remove({});
+        await Tickets.remove({});
         await mongoose.disconnect();
     });
 
@@ -21,24 +37,38 @@ describe("Testing routes", () => {
 
     describe("User Routes", () => {
         test("create new user with registration", async () => {
-            return request(app).post("/register").expect(201).send({
-                username: "John20",
-                password: "John_123",
-                firstName: "John",
-                lastName: "Smith",
-                email: "John@Smith",
-            });
+            return request(app)
+                .post("/register")
+                .expect(201)
+                .send({
+                    username: "John20",
+                    password: "John_123",
+                    firstName: "John",
+                    lastName: "Smith",
+                    email: "John@Smith",
+                    role: { User: "1" },
+                });
         });
 
         // TODO give back error for incorrect data types
         test("ERROR: Incorrect parameters", async () => {
-            return request(app).post("/register").expect(502).send({
-                username: "John21",
-                password: "John_123",
-                firstName: "John",
-                lastName: "Smith",
-                email: 1,
-            });
+            return request(app)
+                .post("/register")
+                .send({
+                    username: "John21",
+                    password: "John_123",
+                    firstName: "John",
+                    lastName: "Smith",
+                    email: 1,
+                    role: { User: "1" },
+                })
+                .expect(204)
+                .then((response: Response<any>) => {
+                    console.log(response);
+                    expect(response.json).toStrictEqual({
+                        message: expect.any(String),
+                    });
+                });
         });
 
         test("login user", async () => {
