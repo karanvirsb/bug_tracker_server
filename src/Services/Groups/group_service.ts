@@ -24,7 +24,7 @@ const getGroup = (Groups: typeof Model<groupType>) => async (groupId: String) =>
     return await Groups.findOne({ groupId: groupId }).exec();
 };
 
-module.exports = (Group: typeof Model<groupType>) => {
+export default (Group: typeof Model<groupType>) => {
     return {
         createGroup: createGroup(Group),
         deleteGroup: deleteGroup(Group),
