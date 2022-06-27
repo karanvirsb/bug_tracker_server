@@ -21,7 +21,7 @@ const deleteTicket = (Tickets: typeof Model <ticketType>) => async (ticketId: St
     const deletedTicket = await Tickets.deleteOne({
         ticketId: ticketId,
     }).exec();
-    return deletedTicket.acknowledged;
+    return deletedTicket.acknowledged && deletedTicket.deletedCount === 1;
 };
 
 const getTicket =
