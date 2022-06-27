@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ZodError } from "zod";
-import { UserType } from "../Model/Users";
+import { UserType, IUser } from "../Model/Users";
 import UserService from "../Services/Users";
 
 const bcrypt = require("bcrypt");
@@ -16,6 +16,16 @@ const handleNewUser = async (req: Request, res: Response) => {
     }
 
     try {
+        const tempUser = {
+            username,
+            password,
+            firstName,
+            lastName,
+            email,
+            roles: { User: "2001" },
+        };
+        IUser.parse(tempUser);
+
         const duplicateUser = await UserService.getUser(username);
 
         if (duplicateUser) {
@@ -43,8 +53,9 @@ const handleNewUser = async (req: Request, res: Response) => {
             return res.sendStatus(502);
         }
     } catch (err: any) {
-        if (err instanceof ZodError)
+        if (err instanceof ZodError) {
             return res.status(500).json({ message: err.message });
+        }
         console.log(err);
     }
 };
