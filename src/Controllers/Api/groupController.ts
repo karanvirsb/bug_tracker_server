@@ -1,11 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-
-export {};
-const GroupService = require("../../Services/Groups");
+import GroupService from "../../Services/Groups";
+import { IGroup, groupType } from "../../Model/Groups";
+import { ZodError } from "zod";
 
 const createGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { groupId, groupName } = req.body;
+
     try {
+        IGroup.parseAsync({ groupId, groupName });
         const createdGroup = await GroupService.createGroup({
             groupId,
             groupName,
@@ -13,6 +15,9 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
         if (createdGroup) return res.sendStatus(201);
         return res.sendStatus(502);
     } catch (error) {
+        if (error instanceof ZodError) {
+            return res.status(400).json({ message: error.message });
+        }
         next(error);
     }
 };
