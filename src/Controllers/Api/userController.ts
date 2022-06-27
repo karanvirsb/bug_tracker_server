@@ -38,7 +38,11 @@ const getUserByRefreshToken = async (
     }
 };
 
-const createUser = async (req: Request, res: Response, next: NextFunction) => {
+const createUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<Response<any, Record<string, any>> | undefined> => {
     const { user } = req.body;
     try {
         IUser.parse(user);
