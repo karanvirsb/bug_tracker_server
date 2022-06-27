@@ -728,7 +728,7 @@ describe("Testing routes", () => {
                 .send({ replyIdArr: ["2"] })
                 .expect(200)
                 .then((response: any) => {
-                    expect(response.body).toEqual(
+                    expect(response.body[0]).toEqual(
                         expect.objectContaining({
                             commentId: expect.any(String),
                             userId: expect.any(String),
