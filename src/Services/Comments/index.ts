@@ -1,4 +1,4 @@
-const CommentService = require("./comments_service");
-const Comments = require("../../Model/Comments");
+import CommentService from "./comments_service";
+import { Comments } from "../../Model/Comments";
 
-module.exports = CommentService(Comments);
+export default CommentService(Comments);
