@@ -89,12 +89,12 @@ const getComment = async (req: Request, res: Response, next: NextFunction) => {
 };
 const replyTo = async (req: Request, res: Response, next: NextFunction) => {
     const { commentId, reply } = req.body;
-
+    if (!commentId) throw Error("Invalid Id");
     try {
         const comment = await CommentService.replyTo(commentId, reply);
 
         if (comment) return res.sendStatus(200);
-        res.sendStatus(502);
+        res.sendStatus(410);
     } catch (error) {
         next(error);
     }
