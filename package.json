@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "",
     "main": "server.ts",
+    "type": "module",
     "scripts": {
         "start": "ts-node-dev --respawn server.ts",
         "dev": "nodemon --exec ts-node server.ts",
@@ -29,8 +30,6 @@
         "@types/jsonwebtoken": "^8.5.8",
         "@types/mongoose": "^5.11.97",
         "@types/node": "^17.0.42",
-        "@types/passport": "^1.0.9",
-        "ckey": "^1.0.3",
         "dotenv": "^16.0.1",
         "jest": "^28.1.1",
         "nanoid": "^4.0.0",
