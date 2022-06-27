@@ -1,6 +1,8 @@
 export {};
 import { NextFunction, Request, Response } from "express";
 import ProjectService from "../../Services/Projects";
+import { projectType, IProject } from "../../Model/Projects";
+import { ZodError } from "zod";
 
 const createProject = async (
     req: Request,
@@ -9,6 +11,13 @@ const createProject = async (
 ) => {
     const { projectId, groupId, projectName, projectDesc, users } = req.body;
     try {
+        await IProject.parseAsync({
+            projectId,
+            groupId,
+            projectName,
+            projectDesc,
+            users,
+        });
         const createdProject = await ProjectService.createProject({
             projectId,
             groupId,
@@ -20,6 +29,8 @@ const createProject = async (
         if (createdProject) return res.sendStatus(200);
         return res.sendStatus(502);
     } catch (error) {
+        if (error instanceof ZodError)
+            return res.status(400).json({ message: error.message });
         next(error);
     }
 };
