@@ -55,4 +55,6 @@ const ticketSchema = new Schema<ticketType>({
     projectId: { type: String },
 });
 
-module.exports = model<ticketType>("Tickets", ticketSchema);
+const Tickets = model<ticketType>("Tickets", ticketSchema);
+
+export { Tickets, ITicket };
