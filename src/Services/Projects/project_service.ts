@@ -14,7 +14,7 @@ const updateProject =
             { projectId: projectId },
             updates
         );
-        return updatedProject.acknowledged;
+        return updatedProject.acknowledged && updatedProject.matchedCount === 1;
     };
 
 const deleteProject = (Projects: typeof Model<projectType>) => async (projectId: String) => {
