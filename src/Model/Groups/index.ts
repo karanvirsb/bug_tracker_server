@@ -7,7 +7,7 @@ import { z } from "zod";
 // }
 
 const IGroup = z.object({
-    groupId: z.string(),
+    groupId: z.string().min(1),
     groupName: z.string().min(4).max(50),
     dateCreated: z.date().optional(),
 });
