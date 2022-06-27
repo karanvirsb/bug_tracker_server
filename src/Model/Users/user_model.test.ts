@@ -1,32 +1,30 @@
-export {};
-var mongoose = require("mongoose");
-require("jest");
-var mongoDb = "mongodb://127.0.0.1:27017/bugTracker_test";
+const mongoose = require("mongoose");
+const mongoDb = "mongodb://127.0.0.1:27017/bugTracker_test";
 mongoose.connect(mongoDb);
-const User = require("./index");
+import { Users } from "./index";
 
 describe("User Model test", () => {
     // before all clear db
     beforeAll(async () => {
-        await User.remove({});
+        await Users.remove({});
     });
 
     afterEach(async () => {
-        await User.remove({});
+        await Users.remove({});
     });
 
     // disconnect
     afterAll(async () => {
-        await User.remove({});
+        await Users.remove({});
         await mongoose.disconnect();
     });
 
     it("has a module", () => {
-        expect(User).toBeDefined();
+        expect(Users).toBeDefined();
     });
 
     test("Create User", async () => {
-        const user = new User({
+        const user = new Users({
             username: "John20",
             password: "John_123",
             email: "John@gmail",
@@ -34,12 +32,7 @@ describe("User Model test", () => {
             lastName: "Smith",
             roles: { User: "2001" },
         });
-        const savedUser = await user.save(function (err: any) {
-            if (err) {
-                console.log(err);
-                return;
-            }
-        });
+        const savedUser = await user.save();
         const expected = "John20";
         const acutal = savedUser.username;
 
@@ -47,7 +40,7 @@ describe("User Model test", () => {
     });
 
     test("get user", async () => {
-        const user = new User({
+        const user = new Users({
             username: "John20",
             password: "John_123",
             email: "John@gmail",
@@ -55,15 +48,15 @@ describe("User Model test", () => {
             lastName: "Smith",
         });
         await user.save();
-        const foundUser = await User.findOne({ username: "John20" });
+        const foundUser = await Users.findOne({ username: "John20" });
 
         const expected = "John@gmail";
-        const actual = foundUser.email;
+        const actual = foundUser?.email;
         expect(actual).toEqual(expected);
     });
 
     test("update user", async () => {
-        const user = new User({
+        const user = new Users({
             username: "John20",
             password: "John_123",
             email: "John@gmail",
@@ -71,16 +64,16 @@ describe("User Model test", () => {
             lastName: "Smith",
         });
         await user.save();
-        await User.updateOne({ username: "John20" }, { firstName: "Johnny" });
-        const foundUser = await User.findOne({ username: "John20" });
+        await Users.updateOne({ username: "John20" }, { firstName: "Johnny" });
+        const foundUser = await Users.findOne({ username: "John20" });
         const expected = "Johnny";
-        const actual = foundUser.firstName;
+        const actual = foundUser?.firstName;
 
         expect(actual).toBe(expected);
     });
 
     test("delete user", async () => {
-        const user = new User({
+        const user = new Users({
             username: "John20",
             password: "John_123",
             email: "John@gmail",
@@ -88,8 +81,8 @@ describe("User Model test", () => {
             lastName: "Smith",
         });
         await user.save();
-        await User.deleteOne({ username: "John20" });
-        const foundUser = await User.findOne({ username: "John20" });
+        await Users.deleteOne({ username: "John20" });
+        const foundUser = await Users.findOne({ username: "John20" });
 
         const expected = null;
         const actual = foundUser;
