@@ -17,7 +17,7 @@ const deleteGroup = (Groups: typeof Model<groupType>) => async (groupId: String)
     const deletedGroup = await Groups.deleteOne({
         groupId: groupId,
     }).exec();
-    return deletedGroup.acknowledged;
+    return deletedGroup.acknowledged && deletedGroup.deletedCount === 1;
 };
 
 const getGroup = (Groups: typeof Model<groupType>) => async (groupId: String) => {
