@@ -71,7 +71,7 @@ const getAllUsersOfProject = (Projects: typeof Model<projectType>) => async (pro
     return users;
 };
 
-export = (Project: typeof Model<projectType>) => {
+export default (Project: typeof Model<projectType>) => {
     return {
         createProject: createProject(Project),
         deleteProject: deleteProject(Project),
