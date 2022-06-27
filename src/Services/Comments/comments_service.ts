@@ -53,6 +53,10 @@ const getComment = (Comments: typeof Model<commentType>) => async (filter: strin
 const replyTo =
     (Comments: typeof Model<commentType>) => async (commentId: String, commentInfo: commentType) => {
         const comment = new Comments(commentInfo);
+        const foundComment = await Comments.findOne({commentId: commentId});
+
+        if(!foundComment) return false;
+
         const createdComment = await comment.save();
         if (!createdComment) return false;
 
@@ -66,7 +70,7 @@ const replyTo =
             commentId: commentId,
         }).exec();
 
-        return updatedComment;
+        return updatedComment && updatedReply;
     };
 
 const getReplyIds = (Comments: typeof Model<commentType>) => async (commentId: String) => {
