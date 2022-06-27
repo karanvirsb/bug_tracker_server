@@ -60,11 +60,9 @@ const updateProject = async (
 
     for (let i = 0; i < updatesKeys.length; i++) {
         if (!IProject._getCached().keys.includes(updatesKeys[i]))
-            return res
-                .status(400)
-                .json({
-                    message: `Update property ${updatesKeys[i]} does not exist`,
-                });
+            return res.status(400).json({
+                message: `Update property ${updatesKeys[i]} does not exist`,
+            });
     }
 
     try {
@@ -81,11 +79,12 @@ const deleteProject = async (
     next: NextFunction
 ) => {
     const { id } = req.body;
+    if (!id) throw Error("Invalid Id");
 
     try {
         const deletedGroup = await ProjectService.deleteProject(id);
         if (deletedGroup) return res.sendStatus(200);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
