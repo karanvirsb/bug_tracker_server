@@ -2,7 +2,7 @@ export {};
 var mongoose = require("mongoose");
 var mongoDb = "mongodb://127.0.0.1:27017/bugTracker_test";
 mongoose.connect(mongoDb);
-const Groups = require("./index.ts");
+import { Groups } from "./index";
 
 describe("Group Model Test", () => {
     beforeAll(async () => {
@@ -45,7 +45,7 @@ describe("Group Model Test", () => {
         await group.save();
         const foundGroup = await Groups.findOne({ groupId: "1" });
         const expectedResult = "Coders";
-        const actualResult = foundGroup.groupName;
+        const actualResult = foundGroup?.groupName;
 
         expect(actualResult).toBe(expectedResult);
     });
@@ -61,7 +61,7 @@ describe("Group Model Test", () => {
 
         const foundGroup = await Groups.findOne({ groupId: "1" });
         const expectedResult = "Coderz";
-        const actualResult = foundGroup.groupName;
+        const actualResult = foundGroup?.groupName;
 
         expect(actualResult).toBe(expectedResult);
     });
