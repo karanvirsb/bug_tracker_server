@@ -24,10 +24,13 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
 };
 const getGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
+
+    if (!id) throw Error("Id is invalid");
+
     try {
         const foundGroup = await GroupService.getGroup(id);
         if (foundGroup) return res.status(200).json(foundGroup);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
