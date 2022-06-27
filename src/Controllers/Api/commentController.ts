@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
 import CommentService from "../../Services/Comments";
+import { IComment, commentType } from "../../Model/Comments";
+import { ZodError } from "zod";
 
 const createComment = async (
     req: Request,
@@ -10,6 +12,7 @@ const createComment = async (
     const { commentId, userId, ticketId, comment } = req.body;
 
     try {
+        await IComment.parseAsync({ commentId, userId, ticketId, comment });
         const createdComment = await CommentService.createComment({
             commentId,
             userId,
@@ -17,8 +20,10 @@ const createComment = async (
             comment,
         });
         if (createdComment) return res.sendStatus(200);
-        res.sendStatus(502);
+        res.sendStatus(204);
     } catch (error) {
+        if (error instanceof ZodError)
+            return res.status(400).json({ message: error.message });
         next(error);
     }
 };
