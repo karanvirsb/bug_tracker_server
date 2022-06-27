@@ -56,11 +56,9 @@ const updateComment = async (
 
     for (let i = 0; i < updatesKeys.length; i++) {
         if (!IComment._getCached().keys.includes(updatesKeys[i])) {
-            return res
-                .status(400)
-                .json({
-                    message: `Update property ${updatesKeys[i]} does not exist`,
-                });
+            return res.status(400).json({
+                message: `Update property ${updatesKeys[i]} does not exist`,
+            });
         }
     }
 
@@ -79,12 +77,12 @@ const updateComment = async (
 
 const getComment = async (req: Request, res: Response, next: NextFunction) => {
     const commentId = req.params.id;
-
+    if (!commentId) throw Error("Invalid Id");
     try {
         const comment = await CommentService.getComment("commentId", commentId);
 
         if (comment) return res.status(200).json(comment);
-        res.sendStatus(502);
+        res.sendStatus(204);
     } catch (error) {
         next(error);
     }
