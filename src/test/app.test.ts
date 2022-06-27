@@ -473,7 +473,12 @@ describe("Testing routes", () => {
                     reporterId: "",
                     projectId: "",
                 })
-                .expect(400);
+                .expect(400)
+                .then((response: any) => {
+                    expect(response.body).toEqual({
+                        message: expect.any(String),
+                    });
+                });
         });
 
         test("getting ticket", async () => {
@@ -530,7 +535,12 @@ describe("Testing routes", () => {
                 .put("/ticket")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ ticketId: "12", updates: { ticketColumn: "Closed" } })
-                .expect(400);
+                .expect(400)
+                .then((response: any) => {
+                    expect(response.body).toEqual({
+                        message: expect.any(String),
+                    });
+                });
         });
 
         test("Assign a dev to a ticket", async () => {
