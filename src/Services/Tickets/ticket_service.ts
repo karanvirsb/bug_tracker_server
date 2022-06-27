@@ -14,7 +14,7 @@ const updateTicket =
             { ticketId: ticketId },
             updates
         );
-        return updatedTicket.acknowledged;
+        return updatedTicket.acknowledged && updatedTicket.matchedCount === 1;
     };
 
 const deleteTicket = (Tickets: typeof Model <ticketType>) => async (ticketId: String) => {
