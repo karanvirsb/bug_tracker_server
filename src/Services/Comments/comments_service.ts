@@ -77,7 +77,7 @@ const getReplyIds = (Comments: typeof Model<commentType>) => async (commentId: S
     return replys;
 };
 
-const getAllComments = (Comments: typeof Model<commentType>) => async (replyArr: []) => {
+const getAllComments = (Comments: typeof Model<commentType>) => async (replyArr: string[]) => {
     const commentsArr = [];
     for (let i = 0; i < replyArr.length; i++) {
         const replyId = replyArr[i];
