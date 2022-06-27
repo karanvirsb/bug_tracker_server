@@ -3,7 +3,7 @@ import { UserType } from "../../Model/Users";
 
 // GETS
 const getUser =
-    (User: typeof Model) =>
+    (User: typeof Model<UserType>) =>
     async (
         id: UserType["username"] | UserType["email"]
     ): Promise<UserType | null> => {
@@ -19,7 +19,7 @@ const getUser =
 //TODO get multiple users
 
 const getAllUsers =
-    (User: typeof Model) =>
+    (User: typeof Model<UserType>) =>
     async (userIds: String[]): Promise<[] | UserType[]> => {
         if (userIds.length === 0) throw Error("No user Ids were provided");
         const userArr = [];
@@ -35,7 +35,7 @@ const getAllUsers =
     };
 
 const getUserByRefreshToken =
-    (User: typeof Model) =>
+    (User: typeof Model<UserType>) =>
     async (token: UserType["refreshToken"]): Promise<UserType> => {
         if (!User) throw Error("User data was not provided");
         const user = await User.findOne({ refreshToken: token }).exec();
@@ -44,7 +44,7 @@ const getUserByRefreshToken =
 
 // CREATES
 const saveUser =
-    (User: typeof Model) =>
+    (User: typeof Model<UserType>) =>
     async (user: UserType): Promise<UserType> => {
         if (!User) throw Error("User data was not provided");
         const createdUser = new User(user);
@@ -53,7 +53,7 @@ const saveUser =
 
 // UPDATES
 const updateUser =
-    (User: typeof Model) =>
+    (User: typeof Model<UserType>) =>
     async (
         username: UserType["username"],
         updates: Object
@@ -72,7 +72,7 @@ const updateUser =
 // Delete user
 
 const deleteUser =
-    (User: typeof Model) =>
+    (User: typeof Model<UserType>) =>
     async (id: UserType["username"]): Promise<Boolean> => {
         if (!id) throw Error("No username was passed");
         const deletedUser = await User.deleteOne({ username: id });
@@ -80,7 +80,7 @@ const deleteUser =
     };
 
 // the User here represents the User model
-export default (User: typeof Model) => {
+export default (User: typeof Model<UserType>) => {
     return {
         createUser: saveUser(User),
         getUser: getUser(User),
