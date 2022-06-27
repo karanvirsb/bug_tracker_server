@@ -374,7 +374,12 @@ describe("Testing routes", () => {
                 .put("/project")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ id: "1", updates: { projectType: "Bug" } })
-                .expect(400);
+                .expect(400)
+                .then((response: any) => {
+                    expect(response.body).toEqual({
+                        message: expect.any(String),
+                    });
+                });
         });
 
         // test("delete project", async () => {
