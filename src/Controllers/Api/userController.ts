@@ -54,7 +54,6 @@ const createUser = async (
         if (error instanceof ZodError) {
             return res.status(400).json({ message: error.message });
         }
-
         next(error);
     }
 };
