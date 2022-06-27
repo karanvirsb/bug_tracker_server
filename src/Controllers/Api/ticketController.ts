@@ -66,11 +66,14 @@ const deleteTicket = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { id } = req.body;
+    const { ticketId } = req.body;
+    if (!ticketId) {
+        throw Error("Invalid Id");
+    }
     try {
-        const deletedTicket = await TicketService.deleteTicket(id);
+        const deletedTicket = await TicketService.deleteTicket(ticketId);
         if (deletedTicket) return res.sendStatus(200);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
