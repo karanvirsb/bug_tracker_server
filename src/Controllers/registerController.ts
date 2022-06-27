@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ZodError } from "zod";
+import { UserType } from "../Model/Users";
 import UserService from "../Services/Users";
 
 const bcrypt = require("bcrypt");
@@ -23,19 +24,19 @@ const handleNewUser = async (req: Request, res: Response) => {
 
         const hashPassword = await bcrypt.hash(password, 10);
 
-        const user = {
+        const user: UserType = {
             username: username,
             password: hashPassword,
             firstName: firstName,
             lastName: lastName,
             email: email,
             roles: { User: "2001" },
-            group_id: "",
+            groupId: "",
             refreshToken: "",
         };
 
         const userAdded = await UserService.createUser(user);
-
+        console.log(userAdded);
         if (userAdded) {
             return res.sendStatus(201);
         } else {
