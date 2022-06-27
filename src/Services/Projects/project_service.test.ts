@@ -1,8 +1,6 @@
-const ProjectService = require("./project_service");
-const Projects = require("../../Model/Projects");
-import { IProject } from "../../Model/Projects";
-// const sinon = require("sinon");
-export {};
+import ProjectService from "./project_service";
+import { projectType, Projects } from "../../Model/Projects";
+
 const mongoose = require("mongoose");
 const mongodb = "mongodb://localhost:27017/bugTracker_serviceTest";
 mongoose.connect(mongodb);
@@ -22,7 +20,7 @@ describe("ProjectService tests", () => {
         expect(Projects).toBeDefined();
     });
 
-    const projectData: IProject[] = [
+    const projectData: projectType[] = [
         {
             projectId: "1",
             groupId: "1",
@@ -57,9 +55,10 @@ describe("ProjectService tests", () => {
 
     test("Getting project", async () => {
         const projectService = ProjectService(Projects);
-        const foundProject = await projectService.getProject(
-            projectData[0].projectId
-        );
+        const foundProject = await projectService.getProject({
+            filter: "projectId",
+            attribute: projectData[0].projectId,
+        });
 
         expect(foundProject.projectName).toBe("Coderz");
     });
