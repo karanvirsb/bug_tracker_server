@@ -1,4 +1,4 @@
-const Users = require("./Users");
+import { Users } from "./Users";
 const Groups = require("./Groups");
 const Projects = require("./Projects");
 const Tickets = require("./Tickets");
