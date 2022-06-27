@@ -72,7 +72,15 @@ const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     const { id, updates } = req.body;
+    const updatesKeys = Object.keys(updates);
     try {
+        for (let i = 0; i < updatesKeys.length; i++) {
+            if (!IUser._getCached().keys.includes(updatesKeys[i])) {
+                return res.status(400).json({
+                    message: `Update ${updatesKeys[i]} does not exist`,
+                });
+            }
+        }
         const updatedUser = await Users.updateUser(id, updates);
 
         if (updatedUser) return res.sendStatus(200);
