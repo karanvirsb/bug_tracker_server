@@ -37,11 +37,20 @@ const getGroup = async (req: Request, res: Response, next: NextFunction) => {
 };
 const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { id, updates } = req.body;
+    if (!id) throw Error("Id is invalid");
+    const updatesKeys = Object.keys(updates);
+    for (let i = 0; i < updatesKeys.length; i++) {
+        if (!IGroup._getCached().keys.includes(updatesKeys[i])) {
+            return res.status(400).json({
+                message: `Update property ${updatesKeys[i]} does not exist`,
+            });
+        }
+    }
 
     try {
         const updatedGroup = await GroupService.updateGroup(id, updates);
         if (updatedGroup) return res.sendStatus(200);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
