@@ -69,7 +69,7 @@ describe("Tickets Model Tests", () => {
         await ticket.save();
         const foundTicket = await Tickets.findOne({ ticketId: "1" });
         const expectedResult = "Fix login";
-        const actualResult = foundTicket.title;
+        const actualResult = foundTicket?.title;
 
         expect(actualResult).toBe(expectedResult);
     });
@@ -95,7 +95,7 @@ describe("Tickets Model Tests", () => {
 
         const foundTicket = await Tickets.findOne({ ticketId: "1" });
         const expectedResult = "Under Review";
-        const actualResult = foundTicket.ticketStatus;
+        const actualResult = foundTicket?.ticketStatus;
 
         expect(actualResult).toBe(expectedResult);
         expect(updated.acknowledged).toBe(true);
@@ -140,14 +140,14 @@ describe("Tickets Model Tests", () => {
         await ticket.save();
 
         const foundTicket = await Tickets.findOne({ ticketId: "1" });
-        const assignDev: String[] = foundTicket.assignedDev || [];
+        const assignDev: String[] = foundTicket?.assignedDev || [];
         assignDev.push("1");
 
         await Tickets.updateOne({ ticketId: "1" }, { assignedDev: assignDev });
         const updatedTicket = await Tickets.findOne({ ticketId: "1" });
 
         const expectedResult = ["1"];
-        const actualResult = updatedTicket.assignedDev;
+        const actualResult = updatedTicket?.assignedDev;
 
         expect(actualResult).toStrictEqual(expectedResult);
     });
@@ -169,7 +169,7 @@ describe("Tickets Model Tests", () => {
         await ticket.save();
 
         const foundTicket = await Tickets.findOne({ ticketId: "1" });
-        const users: String[] = foundTicket.assignedDev || [];
+        const users: String[] = foundTicket?.assignedDev || [];
         const filteredUsers = users.filter((user) => user != "2");
 
         await Tickets.updateOne(
@@ -179,7 +179,7 @@ describe("Tickets Model Tests", () => {
         const updatedTicket = await Tickets.findOne({ ticketId: "1" });
 
         const expectedAssignedDev = ["1", "3"];
-        const actualAssignedDevs = updatedTicket.assignedDev;
+        const actualAssignedDevs = updatedTicket?.assignedDev;
 
         expect(actualAssignedDevs).toStrictEqual(expectedAssignedDev);
     });
