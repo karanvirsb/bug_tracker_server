@@ -16,7 +16,7 @@ const handleNewUser = async (req: Request, res: Response) => {
     }
 
     try {
-        const tempUser = {
+        const tempUser: UserType = {
             username,
             password,
             firstName,
@@ -24,7 +24,9 @@ const handleNewUser = async (req: Request, res: Response) => {
             email,
             roles: { User: "2001" },
         };
-        IUser.parse(tempUser);
+
+        console.log(IUser);
+        // IUser.safeParseAsync(tempUser);
 
         const duplicateUser = await UserService.getUser(username);
 
