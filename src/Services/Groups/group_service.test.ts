@@ -1,8 +1,5 @@
 const GroupService = require("./group_service");
-const Groups = require("../../Model/Groups");
-import { IGroup } from "../../Model/Groups";
-// const sinon = require("sinon");
-export {};
+import { Groups } from "../../Model/Groups";
 const mongoose = require("mongoose");
 const mongodb = "mongodb://localhost:27017/bugTracker_serviceTest";
 mongoose.connect(mongodb);
