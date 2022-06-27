@@ -1,8 +1,7 @@
-export {};
-var mongoose = require("mongoose");
-var mongoDb = "mongodb://127.0.0.1:27017/bugTracker_test";
+const mongoose = require("mongoose");
+const mongoDb = "mongodb://127.0.0.1:27017/bugTracker_test";
 mongoose.connect(mongoDb);
-const Comments = require("./index.ts");
+import { Comments } from "./index";
 
 describe("Comment Model Test", () => {
     // before all clear db
@@ -54,7 +53,7 @@ describe("Comment Model Test", () => {
         });
 
         const expectedTicketId = "3";
-        const actualTicketId = foundComment.ticketId;
+        const actualTicketId = foundComment?.ticketId;
 
         expect(actualTicketId).toBe(expectedTicketId);
     });
@@ -81,7 +80,7 @@ describe("Comment Model Test", () => {
         });
 
         const expectedComment = "This was a success";
-        const actualComment = foundComment.comment;
+        const actualComment = foundComment?.comment;
 
         expect(actualComment).toBe(expectedComment);
     });
@@ -129,11 +128,14 @@ describe("Comment Model Test", () => {
         const reply = await Comments.findOne({ commentId: "1" });
 
         const expectedReplyComment = "This is a reply";
-        const actualReplyComment = (
-            await Comments.findOne({
-                commentId: reply.reply[0],
-            })
-        ).comment;
+        let actualReplyComment;
+        if (reply?.reply) {
+            actualReplyComment = (
+                await Comments.findOne({
+                    commentId: reply?.reply[0] || "",
+                })
+            )?.comment;
+        }
 
         expect(actualReplyComment).toBe(expectedReplyComment);
     });
@@ -187,17 +189,21 @@ describe("Comment Model Test", () => {
         // getting comment 1
         const reply = await Comments.findOne({ commentId: "1" });
 
-        // going thorugh each reply
-        for (let i = 0; i < reply.reply.length; i++) {
-            const replyId = reply.reply[i];
-            const expectedReplyComment = `This is a reply ${replyId}`;
-            const actualReplyComment = (
-                await Comments.findOne({
-                    commentId: replyId,
-                })
-            ).comment;
+        if (reply?.reply && reply?.reply?.length) {
+            // going thorugh each reply
+            for (let i = 0; i < reply?.reply?.length ?? 0; i++) {
+                const replyId = reply?.reply[i];
+                const expectedReplyComment = `This is a reply ${replyId}`;
+                if (replyId) {
+                    const actualReplyComment = (
+                        await Comments.findOne({
+                            commentId: replyId,
+                        })
+                    )?.comment;
 
-            expect(actualReplyComment).toBe(expectedReplyComment);
+                    expect(actualReplyComment).toBe(expectedReplyComment);
+                }
+            }
         }
     });
 });
