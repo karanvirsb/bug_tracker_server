@@ -108,13 +108,13 @@ const getAllComments = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { id, replyIdArr } = req.body;
+    const { replyIdArr } = req.body;
 
     try {
-        const comments = await CommentService.replyTo(id, replyIdArr);
+        const comments = await CommentService.getAllComments(replyIdArr);
 
         if (comments) return res.status(200).json(comments);
-        res.sendStatus(502);
+        res.sendStatus(204);
     } catch (error) {
         next(error);
     }
