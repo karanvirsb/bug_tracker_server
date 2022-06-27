@@ -1,7 +1,6 @@
-import { Model } from "mongoose";
-import { UserType } from "../../Model/Users";
+import { UserType, Users } from "../../Model/Users";
 import UserService from "./user_service";
-const Users: typeof Model = require("../../Model/Users");
+
 // const sinon = require("sinon");
 export {};
 const mongoose = require("mongoose");
