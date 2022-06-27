@@ -1,4 +1,4 @@
-const Tickets = require("../../Model/Tickets");
-const TicketService = require("./ticket_service");
+import { Tickets } from "../../Model/Tickets";
+import TicketService from "./ticket_service";
 
-module.exports = TicketService(Tickets);
+export default TicketService(Tickets);
