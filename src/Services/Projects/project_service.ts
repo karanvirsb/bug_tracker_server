@@ -1,14 +1,15 @@
-import { IProject } from "../../Model/Projects";
+import { Model } from "mongoose";
+import { projectType } from "../../Model/Projects";
 
 const createProject =
-    (Projects: any) =>
-    async (projectInfo: IProject): Promise<Boolean> => {
+    (Projects: typeof Model<projectType>) =>
+    async (projectInfo: projectType) => {
         const project = new Projects(projectInfo);
         return await project.save();
     };
 
 const updateProject =
-    (Projects: any) => async (projectId: String, updates: {}) => {
+    (Projects: typeof Model<projectType>) => async (projectId: String, updates: {}) => {
         const updatedProject = await Projects.updateOne(
             { projectId: projectId },
             updates
@@ -16,7 +17,7 @@ const updateProject =
         return updatedProject.acknowledged;
     };
 
-const deleteProject = (Projects: any) => async (projectId: String) => {
+const deleteProject = (Projects: typeof Model<projectType>) => async (projectId: String) => {
     const deletedProject = await Projects.deleteOne({
         projectId: projectId,
     }).exec();
@@ -24,7 +25,7 @@ const deleteProject = (Projects: any) => async (projectId: String) => {
 };
 
 const getProject =
-    (Projects: any) =>
+    (Projects: typeof Model<projectType>) =>
     async (projectInfo: { filter: string; attribute: String }) => {
         return await Projects.findOne({
             [projectInfo.filter]: projectInfo.attribute,
@@ -32,7 +33,7 @@ const getProject =
     };
 
 const addUserToProject =
-    (Projects: any) => async (projectId: String, userId: String) => {
+    (Projects: typeof Model<projectType>) => async (projectId: String, userId: String) => {
         const project = await Projects.findOne({
             projectId: projectId,
         }).exec();
@@ -46,7 +47,7 @@ const addUserToProject =
     };
 
 const removeUserFromProject =
-    (Projects: any) => async (projectId: String, userId: String) => {
+    (Projects: typeof Model<projectType>) => async (projectId: String, userId: String) => {
         const project = await Projects.findOne({
             projectId: projectId,
         }).exec();
@@ -60,17 +61,17 @@ const removeUserFromProject =
         return updatedProject.acknowledged;
     };
 
-const getAllProjectsByGroupId = (Projects: any) => async (groupId: String) => {
+const getAllProjectsByGroupId = (Projects: typeof Model<projectType>) => async (groupId: String) => {
     const projects = await Projects.find({ groupId: groupId }).exec();
     return projects;
 };
 
-const getAllUsersOfProject = (Projects: any) => async (projectId: String) => {
+const getAllUsersOfProject = (Projects: typeof Model<projectType>) => async (projectId: String) => {
     const users = await Projects.find({ projectId: projectId }, `users`).exec();
     return users;
 };
 
-export = (Project: any) => {
+export = (Project: typeof Model<projectType>) => {
     return {
         createProject: createProject(Project),
         deleteProject: deleteProject(Project),
