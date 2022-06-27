@@ -1,6 +1,5 @@
-const TicketService = require("./ticket_service");
-const Tickets = require("../../Model/Tickets");
-import { ITicket } from "../../Model/Tickets";
+import TicketService from "./ticket_service";
+import { Tickets, ticketType } from "../../Model/Tickets";
 // const sinon = require("sinon");
 export {};
 const mongoose = require("mongoose");
@@ -22,7 +21,7 @@ describe("TicketService tests", () => {
         expect(Tickets).toBeDefined();
     });
 
-    const ticketData: ITicket[] = [
+    const ticketData: ticketType[] = [
         {
             ticketId: "1",
             title: "Bugs",
