@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from "express";
 
 export {};
 
-const TicketService = require("../../Services/Tickets");
+import TicketService from "../../Services/Tickets";
+import { ITicket, ticketType } from "../../Model/Tickets";
 
 const createTicket = async (
     req: Request,
