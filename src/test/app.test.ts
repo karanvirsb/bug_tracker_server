@@ -617,7 +617,12 @@ describe("Testing routes", () => {
                     ticketId: "",
                     comment: "Nice job",
                 })
-                .expect(400);
+                .expect(400)
+                .then((response: any) => {
+                    expect(response.body).toEqual({
+                        message: expect.any(String),
+                    });
+                });
         });
 
         test("Update a comment", async () => {
@@ -650,7 +655,12 @@ describe("Testing routes", () => {
                     commentId: "1",
                     updates: { name: "Karen" },
                 })
-                .expect(400);
+                .expect(400)
+                .then((response: any) => {
+                    expect(response.body).toEqual({
+                        message: expect.any(String),
+                    });
+                });
         });
 
         test("Get a comment", async () => {
