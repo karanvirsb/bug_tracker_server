@@ -52,7 +52,7 @@ const createUser = async (
         return res.sendStatus(502);
     } catch (error) {
         if (error instanceof ZodError) {
-            return res.status(204).json({ message: error.message });
+            return res.status(400).json({ message: error.message });
         }
 
         next(error);
