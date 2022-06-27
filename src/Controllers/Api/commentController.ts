@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-export {};
-const CommentService = require("../../Services/Comments");
+import CommentService from "../../Services/Comments";
 
 const createComment = async (
     req: Request,
@@ -92,10 +91,10 @@ const getAllComments = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { replyIdArr } = req.body;
+    const { id, replyIdArr } = req.body;
 
     try {
-        const comments = await CommentService.replyTo(replyIdArr);
+        const comments = await CommentService.replyTo(id, replyIdArr);
 
         if (comments) return res.status(200).json(comments);
         res.sendStatus(502);
