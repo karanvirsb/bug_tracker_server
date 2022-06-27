@@ -1,14 +1,15 @@
-import { ITicket } from "../../Model/Tickets";
+import { Model } from "mongoose";
+import { ticketType } from "../../Model/Tickets";
 
 const createTicket =
-    (Tickets: any) =>
-    async (ticketInfo: ITicket): Promise<Boolean> => {
+    (Tickets: typeof Model <ticketType>) =>
+    async (ticketInfo: ticketType) => {
         const ticket = new Tickets(ticketInfo);
         return await ticket.save();
     };
 
 const updateTicket =
-    (Tickets: any) => async (ticketId: String, updates: {}) => {
+    (Tickets: typeof Model <ticketType>) => async (ticketId: String, updates: {}) => {
         const updatedTicket = await Tickets.updateOne(
             { ticketId: ticketId },
             updates
@@ -16,7 +17,7 @@ const updateTicket =
         return updatedTicket.acknowledged;
     };
 
-const deleteTicket = (Tickets: any) => async (ticketId: String) => {
+const deleteTicket = (Tickets: typeof Model <ticketType>) => async (ticketId: String) => {
     const deletedTicket = await Tickets.deleteOne({
         ticketId: ticketId,
     }).exec();
@@ -24,7 +25,7 @@ const deleteTicket = (Tickets: any) => async (ticketId: String) => {
 };
 
 const getTicket =
-    (Tickets: any) =>
+    (Tickets: typeof Model <ticketType>) =>
     async (ticketInfo: { filter: string; attribute: string }) => {
         return await Tickets.findOne({
             [ticketInfo.filter]: ticketInfo.attribute,
@@ -32,7 +33,7 @@ const getTicket =
     };
 
 const assignUserToTicket =
-    (Tickets: any) => async (ticketId: String, userId: String) => {
+    (Tickets: typeof Model <ticketType>) => async (ticketId: String, userId: String) => {
         const ticket = await Tickets.findOne({ ticketId: ticketId }).exec();
         const users: String[] = ticket.assignedDev || [];
         users.push(userId);
@@ -46,7 +47,7 @@ const assignUserToTicket =
     };
 
 const removeUserFromTicket =
-    (Tickets: any) => async (ticketId: String, userId: String) => {
+    (Tickets: typeof Model <ticketType>) => async (ticketId: String, userId: String) => {
         const ticket = await Tickets.findOne({ ticketId: ticketId }).exec();
         const users: String[] = ticket.assignedDev || [];
         const filteredUsers = users.filter((user) => user != userId);
@@ -59,7 +60,7 @@ const removeUserFromTicket =
         return updatedTicket.acknowledged;
     };
 
-const getStatistics = (Tickets: any) => async (projectIds: []) => {
+const getStatistics = (Tickets: typeof Model <ticketType>) => async (projectIds: []) => {
     const ticketsArr = [];
 
     for (let i = 0; i < projectIds.length; i++) {
@@ -74,7 +75,7 @@ const getStatistics = (Tickets: any) => async (projectIds: []) => {
 
 // TODO filter function
 
-export = (Ticket: any) => {
+export = (Ticket: typeof Model <ticketType>) => {
     return {
         createTicket: createTicket(Ticket),
         deleteTicket: deleteTicket(Ticket),
