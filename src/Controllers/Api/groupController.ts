@@ -7,7 +7,8 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { groupId, groupName } = req.body;
 
     try {
-        IGroup.parseAsync({ groupId, groupName });
+        await IGroup.parseAsync({ groupId, groupName });
+
         const createdGroup = await GroupService.createGroup({
             groupId,
             groupName,
