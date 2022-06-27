@@ -45,7 +45,7 @@ describe("Testing routes", () => {
                     password: "John_123",
                     firstName: "John",
                     lastName: "Smith",
-                    email: "John@Smith",
+                    email: "John@Smith.com",
                     role: { User: "1" },
                 });
         });
@@ -63,9 +63,8 @@ describe("Testing routes", () => {
                     role: { User: "1" },
                 })
                 .expect(400)
-                .then((response: Response<any>) => {
-                    console.log(response);
-                    expect(response.json).toStrictEqual({
+                .then((response: any) => {
+                    expect(response.body).toEqual({
                         message: expect.any(String),
                     });
                 });
