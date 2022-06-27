@@ -62,7 +62,7 @@ describe("Testing routes", () => {
                     email: 1,
                     role: { User: "1" },
                 })
-                .expect(204)
+                .expect(400)
                 .then((response: Response<any>) => {
                     console.log(response);
                     expect(response.json).toStrictEqual({
