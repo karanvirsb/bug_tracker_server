@@ -50,6 +50,19 @@ const updateComment = async (
     next: NextFunction
 ) => {
     const { commentId, updates } = req.body;
+    if (!commentId) throw Error("Invalid Id");
+
+    const updatesKeys = Object.keys(updates);
+
+    for (let i = 0; i < updatesKeys.length; i++) {
+        if (!IComment._getCached().keys.includes(updatesKeys[i])) {
+            return res
+                .status(400)
+                .json({
+                    message: `Update property ${updatesKeys[i]} does not exist`,
+                });
+        }
+    }
 
     try {
         const updatedComment = await CommentService.updateComment(
@@ -58,7 +71,7 @@ const updateComment = async (
         );
 
         if (updatedComment) return res.sendStatus(200);
-        res.sendStatus(502);
+        res.sendStatus(204);
     } catch (error) {
         next(error);
     }
