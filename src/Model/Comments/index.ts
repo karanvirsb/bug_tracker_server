@@ -1,15 +1,26 @@
 import { Schema, model } from "mongoose";
+import { z } from "zod";
 
-export interface IComment {
-    commentId: String;
-    dateCreated?: Date;
-    userId: String;
-    ticketId: String;
-    comment: String;
-    reply?: [];
-}
+const IComment = z.object({
+    commentId: z.string().min(1),
+    dateCreated: z.date().optional(),
+    userId: z.string().min(1),
+    ticketId: z.string().min(1),
+    comment: z.string().min(4),
+    reply: z.array(z.string()).optional(),
+});
 
-const commentSchema = new Schema<IComment>({
+export type commentType = z.infer<typeof IComment>;
+// export interface IComment {
+//     commentId: String;
+//     dateCreated?: Date;
+//     userId: String;
+//     ticketId: String;
+//     comment: String;
+//     reply?: [];
+// }
+
+const commentSchema = new Schema<commentType>({
     commentId: { type: String, unique: true },
     dateCreated: { type: Date, default: Date.now },
     userId: { type: String },
@@ -18,4 +29,6 @@ const commentSchema = new Schema<IComment>({
     reply: { type: [] },
 });
 
-module.exports = model<IComment>("Comments", commentSchema);
+const Comments = model<commentType>("Comments", commentSchema);
+
+export { Comments, IComment };
