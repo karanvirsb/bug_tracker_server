@@ -1,15 +1,26 @@
 import { Schema, model } from "mongoose";
+import { z } from "zod";
 
-export interface IProject {
-    projectId: String;
-    groupId: String;
-    projectName: String;
-    projectDesc: String;
-    dateCreated?: Date;
-    users?: String[];
-}
+const IProject = z.object({
+    projectId: z.string().min(1),
+    groupId: z.string().min(1),
+    projectName: z.string().min(5),
+    projectDesc: z.string().min(5),
+    dateCreated: z.date().optional(),
+    users: z.array(z.string()).optional(),
+});
 
-const projectSchema = new Schema<IProject>({
+export type projectType = z.infer<typeof IProject>;
+// export interface IProject {
+//     projectId: String;
+//     groupId: String;
+//     projectName: String;
+//     projectDesc: String;
+//     dateCreated?: Date;
+//     users?: String[];
+// }
+
+const projectSchema = new Schema<projectType>({
     projectId: { type: String, unique: true },
     groupId: { type: String },
     projectName: { type: String },
@@ -18,4 +29,6 @@ const projectSchema = new Schema<IProject>({
     users: { type: [] },
 });
 
-module.exports = model<IProject>("Projects", projectSchema);
+const Projects = model<projectType>("Projects", projectSchema);
+
+export { Projects, IProject };
