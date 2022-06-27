@@ -75,7 +75,7 @@ const getStatistics = (Tickets: typeof Model <ticketType>) => async (projectIds:
 
 // TODO filter function
 
-export = (Ticket: typeof Model <ticketType>) => {
+export default (Ticket: typeof Model <ticketType>) => {
     return {
         createTicket: createTicket(Ticket),
         deleteTicket: deleteTicket(Ticket),
