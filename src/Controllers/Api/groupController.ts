@@ -57,10 +57,11 @@ const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
 };
 const deleteGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.body;
+    if (!id) throw Error("Id is invalid");
     try {
         const deletedGroup = await GroupService.deleteGroup(id);
         if (deletedGroup) return res.sendStatus(200);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
