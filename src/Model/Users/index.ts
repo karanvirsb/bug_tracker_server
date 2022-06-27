@@ -30,17 +30,15 @@ export type UserType = z.infer<typeof IUser>;
 //     roles?: Object;
 // }
 
-const usersSchema = new Schema<typeof IUser>();
-// ({
-//     userId: string,
-//     username: { type: String, unique: true },
-//     password: { type: String, required: true },
-//     email: { type: String, unique: true },
-//     firstName: String,
-//     lastName: String,
-//     group_id: String,
-//     refreshToken: String,
-//     roles: Object,
-// });
+const usersSchema = new Schema<UserType>({
+    username: { type: String, unique: true },
+    password: { type: String, required: true },
+    email: { type: String, unique: true },
+    firstName: String,
+    lastName: String,
+    groupId: String,
+    refreshToken: String,
+    roles: Object,
+});
 
-module.exports = model<typeof IUser>("Users", usersSchema);
+module.exports = model<UserType>("Users", usersSchema);
