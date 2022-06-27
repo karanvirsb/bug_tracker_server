@@ -1,6 +1,6 @@
 import { Users } from "./Users";
 import { Groups } from "./Groups";
-const Projects = require("./Projects");
+import { Projects } from "./Projects";
 const Tickets = require("./Tickets");
 const Comments = require("./Comments");
 
