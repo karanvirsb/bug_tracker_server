@@ -1,4 +1,4 @@
-const Projects = require("../../Model/Projects");
-const ProjectService = require("./project_service");
+import { Projects } from "../../Model/Projects";
+import ProjectService from "./project_service";
 
 module.exports = ProjectService(Projects);
