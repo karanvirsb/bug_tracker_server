@@ -81,13 +81,24 @@ const updateTicket = async (
     next: NextFunction
 ) => {
     const { ticketId, updates } = req.body;
+    if (!ticketId) throw Error("Invalid ticketId");
+
+    const updatesKeys = Object.keys(updates);
+
+    for (let i = 0; i < updatesKeys.length; i++) {
+        if (!ITicket._getCached().keys.includes(updatesKeys[i]))
+            return res.status(400).json({
+                message: `Update property ${updatesKeys[i]} does not exist`,
+            });
+    }
+
     try {
         const updatedTicket = await TicketService.updateTicket(
             ticketId,
             updates
         );
         if (updatedTicket) return res.sendStatus(200);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
