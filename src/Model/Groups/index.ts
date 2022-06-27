@@ -1,15 +1,25 @@
 import { Schema, model } from "mongoose";
+import { z } from "zod";
+// export interface IGroup {
+//     groupId: string;
+//     groupName: string;
+//     dateCreated?: Date;
+// }
 
-export interface IGroup {
-    groupId: string;
-    groupName: string;
-    dateCreated?: Date;
-}
+const IGroup = z.object({
+    groupId: z.string(),
+    groupName: z.string().min(4).max(50),
+    dateCreated: z.date().optional(),
+});
 
-const groupSchema = new Schema<IGroup>({
+export type groupType = z.infer<typeof IGroup>;
+
+const groupSchema = new Schema<groupType>({
     groupId: { type: String, unique: true },
     groupName: { type: String, unique: true },
     dateCreated: { type: Date, default: Date.now },
 });
 
-module.exports = model<IGroup>("Groups", groupSchema);
+const Groups = model<groupType>("Groups", groupSchema);
+
+export { Groups, IGroup };
