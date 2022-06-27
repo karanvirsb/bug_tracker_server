@@ -94,14 +94,14 @@ const updateTicket = async (
 };
 const getTicket = async (req: Request, res: Response, next: NextFunction) => {
     const ticketId = req.params.id;
-
+    if (!ticketId) throw Error("Invalid Id");
     try {
         const ticket = await TicketService.getTicket({
             filter: "ticketId",
             attribute: ticketId,
         });
         if (ticket) return res.status(200).json(ticket);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
