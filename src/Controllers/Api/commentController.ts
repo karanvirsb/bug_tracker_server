@@ -33,12 +33,13 @@ const deleteComment = async (
     next: NextFunction
 ) => {
     const { commentId } = req.body;
+    if (!commentId) throw Error("Invalid Id");
 
     try {
         const deletedComment = await CommentService.deleteComment(commentId);
 
         if (deletedComment) return res.sendStatus(200);
-        res.sendStatus(502);
+        res.sendStatus(204);
     } catch (error) {
         next(error);
     }
