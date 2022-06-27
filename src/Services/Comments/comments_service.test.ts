@@ -1,6 +1,5 @@
-const CommentService = require("./comments_service");
-const Comments = require("../../Model/Comments");
-import { IComment } from "../../Model/Comments";
+import CommentService from "./comments_service";
+import { commentType, Comments } from "../../Model/Comments";
 // const sinon = require("sinon");
 export {};
 const mongoose = require("mongoose");
@@ -22,7 +21,7 @@ describe("CommentService tests", () => {
         expect(Comments).toBeDefined();
     });
 
-    const commentData: IComment[] = [
+    const commentData: commentType[] = [
         {
             commentId: "1",
             userId: "1",
