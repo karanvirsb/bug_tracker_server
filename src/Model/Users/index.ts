@@ -6,7 +6,7 @@ const roles = z.object({
     Admin: z.string().optional(),
 });
 
-export const IUser = z.object({
+const IUser = z.object({
     username: z.string(),
     password: z.string(),
     email: z.string().email(),
@@ -41,4 +41,6 @@ const usersSchema = new Schema<UserType>({
     roles: Object,
 });
 
-module.exports = model<UserType>("Users", usersSchema);
+const Users = model<UserType>("Users", usersSchema);
+
+export { Users, IUser };
