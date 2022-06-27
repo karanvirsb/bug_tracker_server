@@ -36,6 +36,7 @@ const createProject = async (
 };
 const getProject = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
+    if (!id) throw Error("Invalid Id");
     try {
         const foundProject = await ProjectService.getProject({
             filter: "projectId",
@@ -43,7 +44,7 @@ const getProject = async (req: Request, res: Response, next: NextFunction) => {
         });
         if (foundProject) return res.status(200).json(foundProject);
 
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
