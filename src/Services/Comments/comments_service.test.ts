@@ -76,7 +76,7 @@ describe("CommentService tests", () => {
             commentData[1]
         );
 
-        expect(addedReply.reply).toStrictEqual(["2"]);
+        expect(addedReply?.reply).toEqual(["2"]);
     });
 
     test("Getting reply Ids", async () => {
