@@ -1,4 +1,4 @@
-const GroupService = require("./group_service");
+import GroupService from "./group_service";
 import { Groups } from "../../Model/Groups";
 const mongoose = require("mongoose");
 const mongodb = "mongodb://localhost:27017/bugTracker_serviceTest";
