@@ -14,7 +14,7 @@ const updateComment =
             { commentId: commentId },
             updates
         );
-        return updatedComment.acknowledged;
+        return updatedComment.acknowledged && updatedComment.matchedCount === 1;
     };
 
 const updateReply = async (
@@ -34,7 +34,7 @@ const updateReply = async (
         { reply: reply }
     ).exec();
 
-    return updatedComment.acknowledged;
+    return updatedComment.acknowledged && updatedComment.matchedCount === 1;
 };
 
 const deleteComment = (Comments: typeof Model<commentType>) => async (commentId: String) => {
