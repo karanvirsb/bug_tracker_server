@@ -60,7 +60,7 @@ const removeUserFromTicket =
         return updatedTicket.acknowledged;
     };
 
-const getStatistics = (Tickets: typeof Model <ticketType>) => async (projectIds: []) => {
+const getStatistics = (Tickets: typeof Model <ticketType>) => async (projectIds: string[]) => {
     const ticketsArr = [];
 
     for (let i = 0; i < projectIds.length; i++) {
