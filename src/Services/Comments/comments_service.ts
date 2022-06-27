@@ -41,7 +41,7 @@ const deleteComment = (Comments: typeof Model<commentType>) => async (commentId:
     const deletedComment = await Comments.deleteOne({
         commentId: commentId,
     }).exec();
-    return deletedComment.acknowledged;
+    return deletedComment.acknowledged && deletedComment.deletedCount === 1;
 };
 
 const getComment = (Comments: typeof Model<commentType>) => async (filter: string, val: string) => {
