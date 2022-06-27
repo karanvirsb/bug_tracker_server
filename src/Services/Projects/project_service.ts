@@ -21,7 +21,7 @@ const deleteProject = (Projects: typeof Model<projectType>) => async (projectId:
     const deletedProject = await Projects.deleteOne({
         projectId: projectId,
     }).exec();
-    return deletedProject.acknowledged;
+    return deletedProject.acknowledged && deletedProject.deletedCount === 1;
 };
 
 const getProject =
