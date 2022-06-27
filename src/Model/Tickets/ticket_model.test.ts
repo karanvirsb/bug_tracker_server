@@ -2,7 +2,7 @@ export {};
 const mongoose = require("mongoose");
 const mongodb = "mongodb://localhost:27017/bugTracker_test";
 mongoose.connect(mongodb);
-const Tickets = require("./index");
+import { Tickets } from "./index";
 
 describe("Tickets Model Tests", () => {
     beforeAll(async () => {
