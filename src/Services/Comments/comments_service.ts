@@ -60,7 +60,7 @@ const replyTo =
         const createdComment = await comment.save();
         if (!createdComment) return false;
 
-        const updatedReply = await updateReply(
+        await updateReply(
             commentId,
             createdComment.commentId,
             Comments
@@ -70,7 +70,7 @@ const replyTo =
             commentId: commentId,
         }).exec();
 
-        return updatedComment && updatedReply;
+        return updatedComment;
     };
 
 const getReplyIds = (Comments: typeof Model<commentType>) => async (commentId: String) => {
