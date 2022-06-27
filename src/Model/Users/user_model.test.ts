@@ -32,8 +32,14 @@ describe("User Model test", () => {
             email: "John@gmail",
             firstName: "John",
             lastName: "Smith",
+            roles: { User: "2001" },
         });
-        const savedUser = await user.save();
+        const savedUser = await user.save(function (err: any) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+        });
         const expected = "John20";
         const acutal = savedUser.username;
 
