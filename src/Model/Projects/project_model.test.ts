@@ -2,7 +2,7 @@ export {};
 const mongoose = require("mongoose");
 const mongodb = "mongodb://localhost:27017/bugTracker_test";
 mongoose.connect(mongodb);
-const Projects = require("./index");
+import { Projects } from "./index";
 
 describe("Project Model Tests", () => {
     beforeAll(async () => {
@@ -57,7 +57,7 @@ describe("Project Model Tests", () => {
         await project.save();
         const foundProject = await Projects.findOne({ projectId: "1" });
         const expectedResult = "Bugs";
-        const actualResult = foundProject.projectName;
+        const actualResult = foundProject?.projectName;
 
         expect(actualResult).toBe(expectedResult);
     });
@@ -79,7 +79,7 @@ describe("Project Model Tests", () => {
 
         const foundProject = await Projects.findOne({ projectId: "1" });
         const expectedResult = "CoBug Tracker";
-        const actualResult = foundProject.projectName;
+        const actualResult = foundProject?.projectName;
 
         expect(actualResult).toBe(expectedResult);
     });
@@ -114,14 +114,14 @@ describe("Project Model Tests", () => {
 
         await project.save();
         const foundProject = await Projects.findOne({ projectId: "1" });
-        const users: String[] = foundProject.users || [];
+        const users: String[] = foundProject?.users || [];
         users.push("2");
 
         await Projects.updateOne({ projectId: "1" }, { users: users });
         const updatedProject = await Projects.findOne({ projectId: "1" });
 
         const expected = ["1", "2"];
-        const actual = updatedProject.users;
+        const actual = updatedProject?.users;
 
         expect(actual).toStrictEqual(expected);
     });
@@ -137,14 +137,14 @@ describe("Project Model Tests", () => {
 
         await project.save();
         const foundProject = await Projects.findOne({ projectId: "1" });
-        const users: String[] = foundProject.users || [];
+        const users: String[] = foundProject?.users || [];
         const filteredUsers = users.filter((user) => user !== "2");
 
         await Projects.updateOne({ projectId: "1" }, { users: filteredUsers });
         const updatedProject = await Projects.findOne({ projectId: "1" });
 
         const expected = ["1"];
-        const actual = updatedProject.users;
+        const actual = updatedProject?.users;
 
         expect(actual).toStrictEqual(expected);
     });
@@ -165,7 +165,7 @@ describe("Project Model Tests", () => {
         );
 
         const expectedUsersArr = ["1", "2"];
-        const actualUserArr = foundProject.users;
+        const actualUserArr = foundProject?.users;
         expect(actualUserArr).toStrictEqual(expectedUsersArr);
     });
 
