@@ -319,7 +319,12 @@ describe("Testing routes", () => {
                     projectDesc: "An application used to track bugs",
                     users: ["1"],
                 })
-                .expect(204);
+                .expect(400)
+                .then((response: any) => {
+                    expect(response.body).toEqual({
+                        message: expect.any(String),
+                    });
+                });
         });
 
         test("Get project", async () => {
