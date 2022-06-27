@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-
-export {};
-
+import { ZodError } from "zod";
 import TicketService from "../../Services/Tickets";
 import { ITicket, ticketType } from "../../Model/Tickets";
 
@@ -12,21 +10,21 @@ const createTicket = async (
 ) => {
     const {
         ticketId,
-        dateCreated,
         title,
         description,
-        assignedDev = [],
+        assignedDev,
         time,
         ticketStatus,
         ticketSeverity,
         ticketType,
         reporterId,
         projectId,
-    } = req.body;
-    try {
-        const createdTicket = await TicketService.createTicket({
+    }: ticketType = req.body;
+
+    let newTicket: ticketType;
+    if (assignedDev != undefined) {
+        newTicket = {
             ticketId,
-            dateCreated,
             title,
             description,
             assignedDev,
@@ -36,10 +34,30 @@ const createTicket = async (
             ticketType,
             reporterId,
             projectId,
-        });
+        };
+    } else {
+        newTicket = {
+            ticketId,
+            title,
+            description,
+            time,
+            ticketStatus,
+            ticketSeverity,
+            ticketType,
+            reporterId,
+            projectId,
+        };
+    }
+
+    try {
+        await ITicket.parseAsync(newTicket);
+
+        const createdTicket = await TicketService.createTicket(newTicket);
         if (createdTicket) return res.sendStatus(200);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
+        if (error instanceof ZodError)
+            return res.status(400).json({ message: error.message });
         next(error);
     }
 };
