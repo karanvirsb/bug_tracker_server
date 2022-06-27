@@ -1,14 +1,15 @@
-import { IComment } from "../../Model/Comments";
+import { Model } from "mongoose";
+import { commentType } from "../../Model/Comments";
 
 const createComment =
-    (Comments: any) =>
-    async (commentInfo: IComment): Promise<{}> => {
+    (Comments: typeof Model<commentType>) =>
+    async (commentInfo: commentType): Promise<{}> => {
         const comment = new Comments(commentInfo);
         return await comment.save();
     };
 
 const updateComment =
-    (Comments: any) => async (commentId: String, updates: {}) => {
+    (Comments: typeof Model<commentType>) => async (commentId: String, updates: {}) => {
         const updatedComment = await Comments.updateOne(
             { commentId: commentId },
             updates
@@ -19,7 +20,7 @@ const updateComment =
 const updateReply = async (
     commentId: String,
     replyId: String,
-    Comments: any
+    Comments: typeof Model<commentType>
 ) => {
     const comment = await Comments.findOne({
         commentId: commentId,
@@ -36,21 +37,21 @@ const updateReply = async (
     return updatedComment.acknowledged;
 };
 
-const deleteComment = (Comments: any) => async (commentId: String) => {
+const deleteComment = (Comments: typeof Model<commentType>) => async (commentId: String) => {
     const deletedComment = await Comments.deleteOne({
         commentId: commentId,
     }).exec();
     return deletedComment.acknowledged;
 };
 
-const getComment = (Comments: any) => async (filter: string, val: string) => {
+const getComment = (Comments: typeof Model<commentType>) => async (filter: string, val: string) => {
     return await Comments.findOne({
         [filter]: val,
     }).exec();
 };
 
 const replyTo =
-    (Comments: any) => async (commentId: String, commentInfo: IComment) => {
+    (Comments: typeof Model<commentType>) => async (commentId: String, commentInfo: commentType) => {
         const comment = new Comments(commentInfo);
         const createdComment = await comment.save();
         if (!createdComment) return false;
@@ -68,7 +69,7 @@ const replyTo =
         return updatedComment;
     };
 
-const getReplyIds = (Comments: any) => async (commentId: String) => {
+const getReplyIds = (Comments: typeof Model<commentType>) => async (commentId: String) => {
     const replys = await Comments.findOne(
         { commentId: commentId },
         `reply`
@@ -76,7 +77,7 @@ const getReplyIds = (Comments: any) => async (commentId: String) => {
     return replys;
 };
 
-const getAllComments = (Comments: any) => async (replyArr: []) => {
+const getAllComments = (Comments: typeof Model<commentType>) => async (replyArr: []) => {
     const commentsArr = [];
     for (let i = 0; i < replyArr.length; i++) {
         const replyId = replyArr[i];
@@ -87,7 +88,7 @@ const getAllComments = (Comments: any) => async (replyArr: []) => {
     return commentsArr;
 };
 
-module.exports = (Comment: any) => {
+module.exports = (Comment: typeof Model<commentType>) => {
     return {
         createComment: createComment(Comment),
         deleteComment: deleteComment(Comment),
