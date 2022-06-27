@@ -187,7 +187,12 @@ describe("Testing routes", () => {
                 .put("/user/id")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ id: "John20", updates: { middleName: "Johnathan" } })
-                .expect(400);
+                .expect(400)
+                .then((response: any) => {
+                    expect(response.body).toEqual({
+                        message: expect.any(String),
+                    });
+                });
         });
 
         test("ERROR: Error unauthorized", async () => {
