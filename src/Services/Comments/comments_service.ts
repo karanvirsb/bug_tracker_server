@@ -88,7 +88,7 @@ const getAllComments = (Comments: typeof Model<commentType>) => async (replyArr:
     return commentsArr;
 };
 
-module.exports = (Comment: typeof Model<commentType>) => {
+export default (Comment: typeof Model<commentType>) => {
     return {
         createComment: createComment(Comment),
         deleteComment: deleteComment(Comment),
