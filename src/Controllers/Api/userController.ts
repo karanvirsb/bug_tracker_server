@@ -47,11 +47,17 @@ const createUser = async (
     const { user } = req.body;
     try {
         let generatedId = await generate();
-        let foundUser = await UserService.getUser(generatedId);
+        let foundUser = await UserService.getUser({
+            filter: "userId",
+            val: generatedId,
+        });
 
         while (foundUser) {
             generatedId = await generate();
-            foundUser = await UserService.getUser(generatedId);
+            foundUser = await UserService.getUser({
+                filter: "userId",
+                val: generatedId,
+            });
         }
         user["userId"] = generatedId;
 
