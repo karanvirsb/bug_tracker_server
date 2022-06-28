@@ -3,6 +3,7 @@ import GroupService from "../../Services/Groups";
 import { IGroup, groupType } from "../../Model/Groups";
 import { ZodError } from "zod";
 import generate from "../../Helper/generateId";
+import nanoid from "nanoid/async";
 
 const createGroup = async (req: Request, res: Response, next: NextFunction) => {
     let { groupId, groupName } = req.body;
@@ -10,20 +11,47 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if (!groupId) {
             let generatedId = await generate();
-            let foundGroup = await GroupService.getGroup(generatedId);
+            let foundGroup = await GroupService.getGroup({
+                filter: "groupId",
+                val: generatedId,
+            });
 
             while (foundGroup) {
                 generatedId = await generate();
-                foundGroup = await GroupService.getGroup(generatedId);
+                foundGroup = await GroupService.getGroup({
+                    filter: "groupId",
+                    val: generatedId,
+                });
             }
             groupId = generatedId;
         }
 
-        await IGroup.parseAsync({ groupId, groupName });
+        let generatedGroupCode = await nanoid.customAlphabet("123456789", 4);
+        let inviteCode = groupName + generatedGroupCode;
+        let foundGroup = await GroupService.getGroup({
+            filter: "groupInviteCode",
+            val: inviteCode,
+        });
+
+        while (foundGroup) {
+            generatedGroupCode = await nanoid.customAlphabet("123456789", 4);
+            inviteCode = groupName + generatedGroupCode;
+            foundGroup = await GroupService.getGroup({
+                filter: "groupInviteCode",
+                val: inviteCode,
+            });
+        }
+
+        await IGroup.parseAsync({
+            groupId,
+            groupName,
+            groupInviteCode: inviteCode,
+        });
 
         const createdGroup = await GroupService.createGroup({
             groupId,
             groupName,
+            groupInviteCode: inviteCode,
         });
         if (createdGroup) return res.sendStatus(200);
         return res.sendStatus(204);
@@ -40,7 +68,10 @@ const getGroup = async (req: Request, res: Response, next: NextFunction) => {
     if (!id) throw Error("Id is invalid");
 
     try {
-        const foundGroup = await GroupService.getGroup(id);
+        const foundGroup = await GroupService.getGroup({
+            filter: "groupId",
+            val: id,
+        });
         if (foundGroup) return res.status(200).json(foundGroup);
         return res.sendStatus(204);
     } catch (error) {
