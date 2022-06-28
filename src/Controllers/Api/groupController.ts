@@ -65,7 +65,7 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
 const getGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
 
-    if (!filterValue) throw Error("Id is invalid");
+    if (!filterValue) throw Error("Invalid parameter");
 
     try {
         const foundGroup = await GroupService.getGroup({

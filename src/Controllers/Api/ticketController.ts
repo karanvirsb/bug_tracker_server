@@ -125,7 +125,7 @@ const updateTicket = async (
 };
 const getTicket = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
-    if (!filterValue) throw Error("Invalid Id");
+    if (!filterValue) throw Error("Invalid parameter");
     try {
         const ticket = await TicketService.getTicket({
             filter: filter ?? "ticketId",

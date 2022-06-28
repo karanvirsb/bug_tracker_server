@@ -54,7 +54,7 @@ const createProject = async (
 };
 const getProject = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
-    if (!filterValue) throw Error("Invalid Id");
+    if (!filterValue) throw Error("Invalid parameter");
     try {
         const foundProject = await ProjectService.getProject({
             filter: filter ?? "projectId",

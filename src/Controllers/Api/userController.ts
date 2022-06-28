@@ -10,6 +10,7 @@ const getUser = async (
     next: NextFunction
 ): Promise<Response<any, Record<string, any>> | undefined> => {
     const { filterValue, filter } = req.body;
+    if (!filterValue) throw Error("Invalid parameter");
 
     try {
         const user = await UserService.getUser({
