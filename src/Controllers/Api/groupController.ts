@@ -25,8 +25,8 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
             groupId,
             groupName,
         });
-        if (createdGroup) return res.sendStatus(201);
-        return res.sendStatus(502);
+        if (createdGroup) return res.sendStatus(200);
+        return res.sendStatus(204);
     } catch (error) {
         if (error instanceof ZodError) {
             return res.status(400).json({ message: error.message });
