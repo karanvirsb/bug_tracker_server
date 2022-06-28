@@ -26,21 +26,7 @@ const ITicket = z.object({
 });
 
 export type ticketType = z.infer<typeof ITicket>;
-// export interface ITicket {
-//     ticketId: String;
-//     dateCreated?: Date;
-//     title: String;
-//     description: String;
-//     assignedDev?: [];
-//     time: Number;
-//     ticketStatus: String;
-//     ticketSeverity: String;
-//     ticketType: String;
-//     reporterId: String;
-//     projectId: String;
-// }
 
-// TODO add validation to ticketStatus, severity, and type
 const ticketSchema = new Schema<ticketType>({
     ticketId: { type: String, unique: true },
     dateCreated: { type: Date, default: Date.now },
