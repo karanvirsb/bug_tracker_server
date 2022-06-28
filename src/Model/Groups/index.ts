@@ -1,10 +1,5 @@
 import { Schema, model } from "mongoose";
 import { z } from "zod";
-// export interface IGroup {
-//     groupId: string;
-//     groupName: string;
-//     dateCreated?: Date;
-// }
 
 const IGroup = z.object({
     groupId: z.string().min(1),

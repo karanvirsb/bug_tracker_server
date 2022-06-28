@@ -11,14 +11,6 @@ const IComment = z.object({
 });
 
 export type commentType = z.infer<typeof IComment>;
-// export interface IComment {
-//     commentId: String;
-//     dateCreated?: Date;
-//     userId: String;
-//     ticketId: String;
-//     comment: String;
-//     reply?: [];
-// }
 
 const commentSchema = new Schema<commentType>({
     commentId: { type: String, unique: true },

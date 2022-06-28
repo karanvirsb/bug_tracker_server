@@ -20,17 +20,6 @@ const IUser = z.object({
 
 export type UserType = z.infer<typeof IUser>;
 
-// export interface IUser {
-//     username?: String;
-//     password: String;
-//     email?: String;
-//     firstName?: String;
-//     lastName?: String;
-//     group_id?: String;
-//     refreshToken?: String;
-//     roles?: Object;
-// }
-
 const usersSchema = new Schema<UserType>({
     userId: { type: String, unique: true },
     username: { type: String, unique: true },

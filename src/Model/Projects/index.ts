@@ -11,14 +11,6 @@ const IProject = z.object({
 });
 
 export type projectType = z.infer<typeof IProject>;
-// export interface IProject {
-//     projectId: String;
-//     groupId: String;
-//     projectName: String;
-//     projectDesc: String;
-//     dateCreated?: Date;
-//     users?: String[];
-// }
 
 const projectSchema = new Schema<projectType>({
     projectId: { type: String, unique: true },
