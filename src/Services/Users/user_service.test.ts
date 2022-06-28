@@ -63,7 +63,10 @@ describe("UserService tests", () => {
 
     test("Getting user", async () => {
         const userService = UserService(Users);
-        const foundUser = await userService.getUser(userData[0].email);
+        const foundUser = await userService.getUser({
+            filter: "email",
+            val: userData[0].email,
+        });
 
         expect(foundUser?.username).toBe("John21");
         expect(foundUser?.firstName).toBe("Johnny");
