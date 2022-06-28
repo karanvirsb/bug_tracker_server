@@ -30,7 +30,11 @@ describe("Group Model Test", () => {
 
         const savedGroup = await group.save();
 
-        const expectedResult = { groupId: "1", groupName: "Coders" };
+        const expectedResult = {
+            groupId: "1",
+            groupName: "Coders",
+            groupInviteCode: "Coders#1234",
+        };
         const actualResult = savedGroup;
 
         expect(actualResult).toMatchObject(expectedResult);
