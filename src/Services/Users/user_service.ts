@@ -5,7 +5,7 @@ import { UserType } from "../../Model/Users";
 const getUser =
     (User: typeof Model<UserType>) =>
     async (
-        userInfo: {filter: string, val: string}
+        userInfo: {filter: keyof UserType, val: string}
     ): Promise<UserType | null> => {
         if (!userInfo.val) throw Error("id was not provided");
 
