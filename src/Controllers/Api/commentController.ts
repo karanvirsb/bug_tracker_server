@@ -15,17 +15,17 @@ const createComment = async (
     try {
         if (!commentId) {
             let generatedId = await generate();
-            let foundComment = await CommentService.getComment(
-                "commentId",
-                generatedId
-            );
+            let foundComment = await CommentService.getComment({
+                filter: "commentId",
+                val: generatedId,
+            });
 
             while (foundComment) {
                 generatedId = await generate();
-                foundComment = await CommentService.getComment(
-                    "commentId",
-                    generatedId
-                );
+                foundComment = await CommentService.getComment({
+                    filter: "commentId",
+                    val: generatedId,
+                });
             }
             commentId = generatedId;
         }
@@ -98,7 +98,10 @@ const getComment = async (req: Request, res: Response, next: NextFunction) => {
     const commentId = req.params.id;
     if (!commentId) throw Error("Invalid Id");
     try {
-        const comment = await CommentService.getComment("commentId", commentId);
+        const comment = await CommentService.getComment({
+            filter: "commentId",
+            val: commentId,
+        });
 
         if (comment) return res.status(200).json(comment);
         res.sendStatus(204);
