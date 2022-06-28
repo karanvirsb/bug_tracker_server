@@ -3,14 +3,32 @@ import { NextFunction, Request, Response } from "express";
 import ProjectService from "../../Services/Projects";
 import { projectType, IProject } from "../../Model/Projects";
 import { ZodError } from "zod";
+import generate from "../../Helper/generateId";
 
 const createProject = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const { projectId, groupId, projectName, projectDesc, users } = req.body;
+    let { projectId, groupId, projectName, projectDesc, users } = req.body;
     try {
+        if (!projectId) {
+            let generatedId = await generate();
+            let foundProject = await ProjectService.getProject({
+                filter: "projectId",
+                attribute: generatedId,
+            });
+
+            while (foundProject) {
+                generatedId = await generate();
+                foundProject = await ProjectService.getProject({
+                    filter: "projectId",
+                    attribute: generatedId,
+                });
+            }
+            projectId = generatedId;
+        }
+
         await IProject.parseAsync({
             projectId,
             groupId,

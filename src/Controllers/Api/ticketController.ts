@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
 import TicketService from "../../Services/Tickets";
 import { ITicket, ticketType } from "../../Model/Tickets";
+import generate from "../../Helper/generateId";
 
 const createTicket = async (
     req: Request,
@@ -50,6 +51,22 @@ const createTicket = async (
     }
 
     try {
+        if (!newTicket?.ticketId) {
+            let generatedId = await generate();
+            let foundTicket = await TicketService.getTicket({
+                filter: "ticketId",
+                attribute: generatedId,
+            });
+
+            while (foundTicket) {
+                generatedId = await generate();
+                foundTicket = await TicketService.getTicket({
+                    filter: "ticketId",
+                    attribute: generatedId,
+                });
+            }
+            newTicket["ticketId"] = generatedId;
+        }
         await ITicket.parseAsync(newTicket);
 
         const createdTicket = await TicketService.createTicket(newTicket);

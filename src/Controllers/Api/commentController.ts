@@ -3,15 +3,33 @@ import { NextFunction, Request, Response } from "express";
 import CommentService from "../../Services/Comments";
 import { IComment, commentType } from "../../Model/Comments";
 import { ZodError } from "zod";
+import generate from "../../Helper/generateId";
 
 const createComment = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const { commentId, userId, ticketId, comment } = req.body;
+    let { commentId, userId, ticketId, comment } = req.body;
 
     try {
+        if (!commentId) {
+            let generatedId = await generate();
+            let foundComment = await CommentService.getComment(
+                "commentId",
+                generatedId
+            );
+
+            while (foundComment) {
+                generatedId = await generate();
+                foundComment = await CommentService.getComment(
+                    "commentId",
+                    generatedId
+                );
+            }
+            commentId = generatedId;
+        }
+
         await IComment.parseAsync({ commentId, userId, ticketId, comment });
         const createdComment = await CommentService.createComment({
             commentId,
