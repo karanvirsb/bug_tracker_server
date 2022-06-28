@@ -522,9 +522,9 @@ describe("Testing routes", () => {
         test("getting ticket", async () => {
             const ticketId = 1;
             return request(app)
-                .get("/ticket/" + ticketId)
+                .post("/ticket/id")
                 .set("Authorization", `Bearer ${accessToken}`)
-                .send()
+                .send({ filterValue: ticketId, fitler: "ticketId" })
                 .expect(200)
                 .then((response: any) => {
                     expect(response.body).toEqual(
