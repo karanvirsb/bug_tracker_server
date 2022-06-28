@@ -27,7 +27,7 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
         }
 
         let generatedGroupCode = await nanoid.customAlphabet("123456789", 4);
-        let inviteCode = groupName + generatedGroupCode;
+        let inviteCode = groupName + "#" + generatedGroupCode;
         let foundGroup = await GroupService.getGroup({
             filter: "groupInviteCode",
             val: inviteCode,
@@ -35,7 +35,7 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
 
         while (foundGroup) {
             generatedGroupCode = await nanoid.customAlphabet("123456789", 4);
-            inviteCode = groupName + generatedGroupCode;
+            inviteCode = groupName + "#" + generatedGroupCode;
             foundGroup = await GroupService.getGroup({
                 filter: "groupInviteCode",
                 val: inviteCode,
