@@ -80,7 +80,7 @@ const deleteUser =
     };
 
 // the User here represents the User model
-export default (User: typeof Model<UserType>):Object => {
+export default (User: typeof Model<UserType>) => {
     return {
         createUser: saveUser(User),
         getUser: getUser(User),
