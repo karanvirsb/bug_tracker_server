@@ -23,6 +23,7 @@ const createTicket = async (
     }: ticketType = req.body;
 
     let newTicket: ticketType;
+    // create a ticket based on assignDev
     if (assignedDev != undefined) {
         newTicket = {
             ticketId,
@@ -51,13 +52,16 @@ const createTicket = async (
     }
 
     try {
+        // checking to see if id was given
         if (!newTicket?.ticketId) {
+            // generate id
             let generatedId = await generate();
             let foundTicket = await TicketService.getTicket({
                 filter: "ticketId",
                 val: generatedId,
             });
 
+            // if it found a ticket regenerate id
             while (foundTicket) {
                 generatedId = await generate();
                 foundTicket = await TicketService.getTicket({
@@ -67,6 +71,7 @@ const createTicket = async (
             }
             newTicket["ticketId"] = generatedId;
         }
+        // check if ticket parameters are good
         await ITicket.parseAsync(newTicket);
 
         const createdTicket = await TicketService.createTicket(newTicket);
@@ -104,7 +109,7 @@ const updateTicket = async (
     if (!ticketId) throw Error("Invalid ticketId");
 
     const updatesKeys = Object.keys(updates);
-
+    // checking to see if the updates keys exist within ticket
     for (let i = 0; i < updatesKeys.length; i++) {
         if (!ITicket._getCached().keys.includes(updatesKeys[i]))
             return res.status(400).json({
