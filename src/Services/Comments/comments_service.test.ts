@@ -61,10 +61,10 @@ describe("CommentService tests", () => {
 
     test("Getting comment", async () => {
         const commentService = CommentService(Comments);
-        const foundComment = await commentService.getComment(
-            "commentId",
-            commentData[0].commentId
-        );
+        const foundComment = await commentService.getComment({
+            filter: "commentId",
+            val: commentData[0].commentId,
+        });
 
         expect(foundComment.comment).toBe("I think you should have done ...");
     });
