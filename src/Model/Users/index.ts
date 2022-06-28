@@ -7,11 +7,12 @@ const roles = z.object({
 });
 
 const IUser = z.object({
-    username: z.string(),
-    password: z.string(),
+    userId: z.string().min(1).optional(),
+    username: z.string().min(4).max(26),
+    password: z.string().min(8),
     email: z.string().email(),
     firstName: z.string().min(3, "First Name must be greater than 3 letters"),
-    lastName: z.string(),
+    lastName: z.string().min(3),
     groupId: z.string().optional(),
     refreshToken: z.string().optional(),
     roles: roles,
@@ -31,6 +32,7 @@ export type UserType = z.infer<typeof IUser>;
 // }
 
 const usersSchema = new Schema<UserType>({
+    userId: { type: String, unique: true },
     username: { type: String, unique: true },
     password: { type: String, required: true },
     email: { type: String, unique: true },
