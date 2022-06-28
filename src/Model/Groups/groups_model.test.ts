@@ -25,6 +25,7 @@ describe("Group Model Test", () => {
     test("create a group", async () => {
         const group = new Groups({
             groupId: "1",
+            groupInviteCode: "Coders#1234",
             groupName: "Coders",
         });
 
