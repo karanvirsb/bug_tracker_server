@@ -9,13 +9,16 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
     let { groupId, groupName } = req.body;
 
     try {
+        // checking to see if the id is given
         if (!groupId) {
+            // generating and finding group
             let generatedId = await generate();
             let foundGroup = await GroupService.getGroup({
                 filter: "groupId",
                 val: generatedId,
             });
 
+            // if group exists keep generating an Id
             while (foundGroup) {
                 generatedId = await generate();
                 foundGroup = await GroupService.getGroup({
@@ -26,6 +29,7 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
             groupId = generatedId;
         }
 
+        // generate invite code for group
         let generatedGroupCode = await nanoid.customAlphabet("123456789", 4);
         let inviteCode = groupName + "#" + generatedGroupCode;
         let foundGroup = await GroupService.getGroup({
@@ -33,6 +37,7 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
             val: inviteCode,
         });
 
+        // while group exists with code
         while (foundGroup) {
             generatedGroupCode = await nanoid.customAlphabet("123456789", 4);
             inviteCode = groupName + "#" + generatedGroupCode;
@@ -42,6 +47,7 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
             });
         }
 
+        // parse group
         await IGroup.parseAsync({
             groupId,
             groupName,
@@ -54,7 +60,7 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
             groupInviteCode: inviteCode,
         });
         if (createdGroup) return res.sendStatus(200);
-        return res.sendStatus(204);
+        return res.sendStatus(204); // if group wasnt created
     } catch (error) {
         if (error instanceof ZodError) {
             return res.status(400).json({ message: error.message });
@@ -82,6 +88,8 @@ const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { id, updates } = req.body;
     if (!id) throw Error("Id is invalid");
     const updatesKeys = Object.keys(updates);
+
+    // check update keys if they exist
     for (let i = 0; i < updatesKeys.length; i++) {
         if (!IGroup._getCached().keys.includes(updatesKeys[i])) {
             return res.status(400).json({
