@@ -238,9 +238,9 @@ describe("Testing routes", () => {
 
         test("Get the group", async () => {
             return request(app)
-                .get("/group/1")
+                .post("/group/id")
                 .set("Authorization", `Bearer ${accessToken}`)
-                .send()
+                .send({ filterValue: 1, filter: "groupId" })
                 .expect(200)
                 .then((response: any) => {
                     expect(response.body).toEqual(
@@ -254,9 +254,9 @@ describe("Testing routes", () => {
 
         test("ERROR: Getting non existent group", async () => {
             return request(app)
-                .get("/group/3")
+                .post("/group/id")
                 .set("Authorization", `Bearer ${accessToken}`)
-                .send()
+                .send({ filterValue: 3, filter: "groupId" })
                 .expect(204);
         });
 
