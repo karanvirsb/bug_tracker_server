@@ -13,13 +13,15 @@ const createComment = async (
     let { commentId, userId, ticketId, comment } = req.body;
 
     try {
+        // checking to see if the id exists
         if (!commentId) {
+            // generating and finding comment
             let generatedId = await generate();
             let foundComment = await CommentService.getComment({
                 filter: "commentId",
                 val: generatedId,
             });
-
+            // while comment does not exist keep generating
             while (foundComment) {
                 generatedId = await generate();
                 foundComment = await CommentService.getComment({
@@ -30,6 +32,7 @@ const createComment = async (
             commentId = generatedId;
         }
 
+        // checking if the comment is correct
         await IComment.parseAsync({ commentId, userId, ticketId, comment });
         const createdComment = await CommentService.createComment({
             commentId,
@@ -38,6 +41,8 @@ const createComment = async (
             comment,
         });
         if (createdComment) return res.sendStatus(200);
+
+        // if comment wasnt created successfully
         res.sendStatus(204);
     } catch (error) {
         if (error instanceof ZodError)
@@ -73,6 +78,7 @@ const updateComment = async (
 
     const updatesKeys = Object.keys(updates);
 
+    // checking if the update keys actually exist
     for (let i = 0; i < updatesKeys.length; i++) {
         if (!IComment._getCached().keys.includes(updatesKeys[i])) {
             return res.status(400).json({
@@ -88,7 +94,7 @@ const updateComment = async (
         );
 
         if (updatedComment) return res.sendStatus(200);
-        res.sendStatus(204);
+        res.sendStatus(204); // if unsuccessful
     } catch (error) {
         next(error);
     }
