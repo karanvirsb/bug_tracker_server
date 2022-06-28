@@ -21,7 +21,10 @@ const handleLogin = async (req: Request, res: Response) => {
     try {
         User.parse({ username, password });
 
-        const foundUser = await UserService.getUser(username);
+        const foundUser = await UserService.getUser({
+            filter: "username",
+            val: username,
+        });
         if (!foundUser) {
             return res.sendStatus(401);
         }

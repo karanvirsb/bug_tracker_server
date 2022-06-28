@@ -25,9 +25,12 @@ const handleNewUser = async (req: Request, res: Response) => {
             roles: { User: "2001" },
         };
 
-        IUser.parse(tempUser);
+        await IUser.parseAsync(tempUser);
 
-        const duplicateUser = await UserService.getUser(username);
+        const duplicateUser = await UserService.getUser({
+            filter: "username",
+            val: username,
+        });
 
         if (duplicateUser) {
             return res.sendStatus(409); // conflict
@@ -47,7 +50,7 @@ const handleNewUser = async (req: Request, res: Response) => {
         };
 
         const userAdded = await UserService.createUser(user);
-        console.log(userAdded);
+
         if (userAdded) {
             return res.sendStatus(201);
         } else {
