@@ -26,9 +26,9 @@ const deleteTicket = (Tickets: typeof Model <ticketType>) => async (ticketId: St
 
 const getTicket =
     (Tickets: typeof Model <ticketType>) =>
-    async (ticketInfo: { filter: string; attribute: string }) => {
+    async (ticketInfo: { filter: keyof ticketType; val: string }) => {
         return await Tickets.findOne({
-            [ticketInfo.filter]: ticketInfo.attribute,
+            [ticketInfo.filter]: ticketInfo.val,
         }).exec();
     };
 
