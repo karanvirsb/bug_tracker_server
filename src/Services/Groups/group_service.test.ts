@@ -23,6 +23,7 @@ describe("GroupService tests", () => {
         {
             groupId: "1",
             groupName: "Coders",
+            groupInviteCode: "Coders#1234",
         },
     ];
 
@@ -49,7 +50,10 @@ describe("GroupService tests", () => {
 
     test("Getting group", async () => {
         const groupService = GroupService(Groups);
-        const foundGroup = await groupService.getGroup(groupData[0].groupId);
+        const foundGroup = await groupService.getGroup({
+            filter: "groupId",
+            val: groupData[0].groupId,
+        });
 
         expect(foundGroup.groupName).toBe("Coderz");
     });
