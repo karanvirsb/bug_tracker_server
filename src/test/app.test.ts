@@ -47,7 +47,6 @@ describe("Testing routes", () => {
                 });
         });
 
-        // TODO give back error for incorrect data types
         test("ERROR: Incorrect parameters", async () => {
             return request(app)
                 .post("/register")
