@@ -716,8 +716,9 @@ describe("Testing routes", () => {
         test("Get a comment", async () => {
             const commentId = 1;
             return request(app)
-                .get("/comment/" + commentId)
+                .post("/comment/id")
                 .set("Authorization", `Bearer ${accessToken}`)
+                .send({ filterValue: commentId, filter: "commentId" })
                 .expect(200)
                 .then((response: any) => {
                     expect(response.body).toEqual(
@@ -734,8 +735,9 @@ describe("Testing routes", () => {
         test("ERROR: Getting a comment that does not exist", async () => {
             const commentId = 12;
             return request(app)
-                .get("/comment/" + commentId)
+                .post("/comment/id")
                 .set("Authorization", `Bearer ${accessToken}`)
+                .send({ filterValue: commentId, filter: "commentId" })
                 .expect(204);
         });
 
