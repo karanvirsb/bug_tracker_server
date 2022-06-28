@@ -60,7 +60,7 @@ describe("TicketService tests", () => {
         const ticketService = TicketService(Tickets);
         const foundTicket = await ticketService.getTicket({
             filter: "ticketId",
-            attribute: ticketData[0].ticketId,
+            val: ticketData[0].ticketId,
         });
 
         expect(foundTicket.ticketStatus).toBe("Processing");

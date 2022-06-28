@@ -55,14 +55,14 @@ const createTicket = async (
             let generatedId = await generate();
             let foundTicket = await TicketService.getTicket({
                 filter: "ticketId",
-                attribute: generatedId,
+                val: generatedId,
             });
 
             while (foundTicket) {
                 generatedId = await generate();
                 foundTicket = await TicketService.getTicket({
                     filter: "ticketId",
-                    attribute: generatedId,
+                    val: generatedId,
                 });
             }
             newTicket["ticketId"] = generatedId;
@@ -129,7 +129,7 @@ const getTicket = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const ticket = await TicketService.getTicket({
             filter: "ticketId",
-            attribute: ticketId,
+            val: ticketId,
         });
         if (ticket) return res.status(200).json(ticket);
         return res.sendStatus(204);
