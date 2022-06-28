@@ -7,7 +7,6 @@ const request = require("supertest");
 mongoose.connect(mongodb);
 import { Users, Groups, Comments, Projects, Tickets } from "../Model";
 
-// TODO get nano ID to generate IDs for Users, Projects, Groups, Tickets, Comments
 describe("Testing routes", () => {
     let accessToken = "";
     let refreshToken = "";
