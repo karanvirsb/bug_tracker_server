@@ -10,6 +10,6 @@ const {
 } = require("../../Controllers/Api/groupController");
 
 router.route("/").post(createGroup).put(updateGroup).delete(deleteGroup);
-router.route("/:id").get(getGroup);
+router.route("/id").post(getGroup);
 
 module.exports = router;
