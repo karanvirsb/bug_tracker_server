@@ -2,11 +2,23 @@ import { NextFunction, Request, Response } from "express";
 import GroupService from "../../Services/Groups";
 import { IGroup, groupType } from "../../Model/Groups";
 import { ZodError } from "zod";
+import generate from "../../Helper/generateId";
 
 const createGroup = async (req: Request, res: Response, next: NextFunction) => {
-    const { groupId, groupName } = req.body;
+    let { groupId, groupName } = req.body;
 
     try {
+        if (!groupId) {
+            let generatedId = await generate();
+            let foundGroup = await GroupService.getGroup(generatedId);
+
+            while (foundGroup) {
+                generatedId = await generate();
+                foundGroup = await GroupService.getGroup(generatedId);
+            }
+            groupId = generatedId;
+        }
+
         await IGroup.parseAsync({ groupId, groupName });
 
         const createdGroup = await GroupService.createGroup({
