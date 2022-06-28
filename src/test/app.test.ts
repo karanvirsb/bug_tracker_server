@@ -351,9 +351,9 @@ describe("Testing routes", () => {
         test("Get project", async () => {
             const id = "1";
             return request(app)
-                .get(`/project/${id}`)
+                .post(`/project/id`)
                 .set("Authorization", `Bearer ${accessToken}`)
-                .send()
+                .send({ filterValue: id, filter: "projectId" })
                 .expect(200)
                 .then((response: any) => {
                     expect(response.body).toEqual(
@@ -368,9 +368,9 @@ describe("Testing routes", () => {
         test("ERROR: Trying to get a project that doesnt exist", async () => {
             const id = "5";
             return request(app)
-                .get(`/project/${id}`)
+                .post(`/project/id`)
                 .set("Authorization", `Bearer ${accessToken}`)
-                .send()
+                .send({ filterValue: id, filter: "projectId" })
                 .expect(204);
         });
 
