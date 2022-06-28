@@ -17,6 +17,9 @@ const getUser =
 const getAllUsers =
     (User: typeof Model<UserType>) =>
     async (userIds: String[]): Promise<[] | UserType[]> => {
+        /*
+        * gets all users based on their ids
+        */
         if (userIds.length === 0) throw Error("No user Ids were provided");
         const userArr = [];
 

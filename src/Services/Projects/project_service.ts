@@ -14,6 +14,7 @@ const updateProject =
             { projectId: projectId },
             updates
         );
+        // checking to see if it was updated and atleast 1 got updated
         return updatedProject.acknowledged && updatedProject.matchedCount === 1;
     };
 
@@ -21,6 +22,7 @@ const deleteProject = (Projects: typeof Model<projectType>) => async (projectId:
     const deletedProject = await Projects.deleteOne({
         projectId: projectId,
     }).exec();
+    // checking to see if it was deleted and atleast 1 got deleted
     return deletedProject.acknowledged && deletedProject.deletedCount === 1;
 };
 
@@ -34,9 +36,13 @@ const getProject =
 
 const addUserToProject =
     (Projects: typeof Model<projectType>) => async (projectId: String, userId: String) => {
+        /*
+        * add a new user to a project 
+        */
         const project = await Projects.findOne({
             projectId: projectId,
         }).exec();
+        // get the userId arr and add new user to it
         const users: String[] = project?.users || [];
         users.push(userId);
         const updatedProject = await Projects.updateOne(
@@ -48,9 +54,13 @@ const addUserToProject =
 
 const removeUserFromProject =
     (Projects: typeof Model<projectType>) => async (projectId: String, userId: String) => {
+         /*
+        * add a new user to a project 
+        */
         const project = await Projects.findOne({
             projectId: projectId,
         }).exec();
+        // find the users arr and filter them out
         const users: String[] = project?.users || [];
         const filteredUsers = users.filter((user) => user != userId);
 

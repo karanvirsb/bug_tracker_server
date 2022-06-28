@@ -14,6 +14,7 @@ const updateTicket =
             { ticketId: ticketId },
             updates
         );
+        // checking to see if it was updated and atleast 1 got updated
         return updatedTicket.acknowledged && updatedTicket.matchedCount === 1;
     };
 
@@ -21,6 +22,7 @@ const deleteTicket = (Tickets: typeof Model <ticketType>) => async (ticketId: St
     const deletedTicket = await Tickets.deleteOne({
         ticketId: ticketId,
     }).exec();
+    // checking to see if it was deleted and atleast 1 got deleted
     return deletedTicket.acknowledged && deletedTicket.deletedCount === 1;
 };
 
@@ -34,7 +36,11 @@ const getTicket =
 
 const assignUserToTicket =
     (Tickets: typeof Model <ticketType>) => async (ticketId: String, userId: String) => {
+        /*
+        *   assigning dev to a ticker 
+        */
         const ticket = await Tickets.findOne({ ticketId: ticketId }).exec();
+        // getting the users arr and adding id
         const users: String[] = ticket.assignedDev || [];
         users.push(userId);
 
@@ -48,7 +54,11 @@ const assignUserToTicket =
 
 const removeUserFromTicket =
     (Tickets: typeof Model <ticketType>) => async (ticketId: String, userId: String) => {
+        /*
+         * removing an assigned dev 
+         */
         const ticket = await Tickets.findOne({ ticketId: ticketId }).exec();
+        // finding users arr and removing user
         const users: String[] = ticket.assignedDev || [];
         const filteredUsers = users.filter((user) => user != userId);
 
@@ -61,6 +71,9 @@ const removeUserFromTicket =
     };
 
 const getStatistics = (Tickets: typeof Model <ticketType>) => async (projectIds: string[]) => {
+    /*
+    * Getting back status, severity and type from a project for each group 
+    */
     const ticketsArr = [];
 
     for (let i = 0; i < projectIds.length; i++) {

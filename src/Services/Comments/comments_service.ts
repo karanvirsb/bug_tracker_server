@@ -14,7 +14,8 @@ const updateComment =
             { commentId: commentId },
             updates
         );
-        return updatedComment.acknowledged && updatedComment.matchedCount === 1;
+        // checking if it was updated and matched one
+        return updatedComment.acknowledged && updatedComment.matchedCount === 1; 
     };
 
 const updateReply = async (
@@ -22,10 +23,14 @@ const updateReply = async (
     replyId: String,
     Comments: typeof Model<commentType>
 ) => {
+    /* 
+    * adds reply to a comment 
+    */
     const comment = await Comments.findOne({
         commentId: commentId,
     }).exec();
 
+    // getting the reply arr to store id
     const reply: String[] = comment?.reply || [];
     reply.push(replyId);
 
@@ -52,14 +57,18 @@ const getComment = (Comments: typeof Model<commentType>) => async (commentInfo: 
 
 const replyTo =
     (Comments: typeof Model<commentType>) => async (commentId: String, commentInfo: commentType) => {
+        /*
+ * adds commentID to comment for a reply
+ */
         const comment = new Comments(commentInfo);
         const foundComment = await Comments.findOne({commentId: commentId});
-
+        // if the original comment isnt found return false
         if(!foundComment) return false;
 
         const createdComment = await comment.save();
         if (!createdComment) return false;
 
+        // update reply with the replyid
         await updateReply(
             commentId,
             createdComment.commentId,

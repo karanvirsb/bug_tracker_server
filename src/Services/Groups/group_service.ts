@@ -10,6 +10,7 @@ const createGroup =
 
 const updateGroup = (Groups: typeof Model<groupType>) => async (groupId: String, updates: {}) => {
     const updatedGroup = await Groups.updateOne({ groupId: groupId }, updates);
+    // checking to see if it was updated and atleast 1 got updated
     return updatedGroup.acknowledged && updatedGroup.matchedCount === 1;
 };
 
@@ -17,6 +18,7 @@ const deleteGroup = (Groups: typeof Model<groupType>) => async (groupId: String)
     const deletedGroup = await Groups.deleteOne({
         groupId: groupId,
     }).exec();
+    // checking to see if it was deleted and atleast 1 got deleted
     return deletedGroup.acknowledged && deletedGroup.deletedCount === 1;
 };
 
