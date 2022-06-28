@@ -95,12 +95,12 @@ const updateComment = async (
 };
 
 const getComment = async (req: Request, res: Response, next: NextFunction) => {
-    const commentId = req.params.id;
-    if (!commentId) throw Error("Invalid Id");
+    const { filterValue, filter } = req.body;
+    if (!filterValue) throw Error("Invalid parameter");
     try {
         const comment = await CommentService.getComment({
-            filter: "commentId",
-            val: commentId,
+            filter: filter ?? "commentId",
+            val: filterValue,
         });
 
         if (comment) return res.status(200).json(comment);
