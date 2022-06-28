@@ -16,6 +16,7 @@ const handleNewUser = async (req: Request, res: Response) => {
     }
 
     try {
+        // created a temp user to test for parsing
         const tempUser: UserType = {
             username,
             password,
@@ -27,6 +28,7 @@ const handleNewUser = async (req: Request, res: Response) => {
 
         await IUser.parseAsync(tempUser);
 
+        // after parse check for dups
         const duplicateUser = await UserService.getUser({
             filter: "username",
             val: username,

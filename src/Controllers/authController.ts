@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 import UserService from "../Services/Users";
 
+// created object to check if given request are right
 const User = z.object({
     username: z.string().min(4).max(26),
     password: z.string().min(8).max(26),
@@ -19,7 +20,8 @@ const handleLogin = async (req: Request, res: Response) => {
             .json({ message: "Username and Password are required" });
     }
     try {
-        User.parse({ username, password });
+        // parsing user
+        await User.parseAsync({ username, password });
 
         const foundUser = await UserService.getUser({
             filter: "username",
@@ -58,6 +60,7 @@ const handleLogin = async (req: Request, res: Response) => {
                 { expiresIn: "1d" }
             );
 
+            // sending refresh token through cookie for authentication
             res.cookie("jwt", refreshToken, {
                 httpOnly: true,
                 maxAge: 24 * 60 * 60 * 1000,
