@@ -9,12 +9,12 @@ const getUser = async (
     res: Response,
     next: NextFunction
 ): Promise<Response<any, Record<string, any>> | undefined> => {
-    const { id, filter } = req.body;
+    const { filterValue, filter } = req.body;
 
     try {
         const user = await UserService.getUser({
             filter: filter ?? "username",
-            val: id,
+            val: filterValue,
         });
         if (!user) {
             return res.sendStatus(204);
