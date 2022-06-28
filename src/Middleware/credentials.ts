@@ -7,6 +7,7 @@ const credentials: RequestHandler = (
     res: Response,
     next: NextFunction
 ) => {
+    // Used to check origins if credentials and origin is there
     const origin = req.header("origin");
     if (allowedOrigins.includes(origin)) {
         res.header("Access-Control-Allow-Credentials", "true");
