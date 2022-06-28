@@ -5,15 +5,11 @@ import { UserType } from "../../Model/Users";
 const getUser =
     (User: typeof Model<UserType>) =>
     async (
-        id: UserType["username"] | UserType["email"]
+        userInfo: {filter: string, val: string}
     ): Promise<UserType | null> => {
-        if (!id) throw Error("id was not provided");
+        if (!userInfo.val) throw Error("id was not provided");
 
-        if (id.includes("@")) {
-            return await User.findOne({ email: id }).exec();
-        }
-
-        return await User.findOne({ username: id }).exec();
+        return await User.findOne({ [userInfo.filter]: userInfo.val }).exec();
     };
 
 //TODO get multiple users
