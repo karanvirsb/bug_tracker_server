@@ -599,7 +599,7 @@ describe("Testing routes", () => {
 
         test("Get statistics", async () => {
             return request(app)
-                .get("/ticket")
+                .get("/ticket/stats")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ projectIds: ["1"] })
                 .expect(200)
