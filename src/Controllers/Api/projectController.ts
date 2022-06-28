@@ -13,12 +13,14 @@ const createProject = async (
     let { projectId, groupId, projectName, projectDesc, users } = req.body;
     try {
         if (!projectId) {
+            // generate a id if projectId is not given
             let generatedId = await generate();
             let foundProject = await ProjectService.getProject({
                 filter: "projectId",
                 val: generatedId,
             });
 
+            // if we keep finding projects keep generarting
             while (foundProject) {
                 generatedId = await generate();
                 foundProject = await ProjectService.getProject({
@@ -29,6 +31,7 @@ const createProject = async (
             projectId = generatedId;
         }
 
+        // parse the project to see if its good
         await IProject.parseAsync({
             projectId,
             groupId,
@@ -45,7 +48,7 @@ const createProject = async (
         });
 
         if (createdProject) return res.sendStatus(200);
-        return res.sendStatus(502);
+        return res.sendStatus(204);
     } catch (error) {
         if (error instanceof ZodError)
             return res.status(400).json({ message: error.message });
@@ -74,8 +77,10 @@ const updateProject = async (
 ) => {
     const { id, updates } = req.body;
     if (!id) throw Error("Invalid Id");
+
     const updatesKeys = Object.keys(updates);
 
+    // checking to see if update keys exist in project
     for (let i = 0; i < updatesKeys.length; i++) {
         if (!IProject._getCached().keys.includes(updatesKeys[i]))
             return res.status(400).json({
