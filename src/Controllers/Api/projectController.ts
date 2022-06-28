@@ -16,14 +16,14 @@ const createProject = async (
             let generatedId = await generate();
             let foundProject = await ProjectService.getProject({
                 filter: "projectId",
-                attribute: generatedId,
+                val: generatedId,
             });
 
             while (foundProject) {
                 generatedId = await generate();
                 foundProject = await ProjectService.getProject({
                     filter: "projectId",
-                    attribute: generatedId,
+                    val: generatedId,
                 });
             }
             projectId = generatedId;
@@ -58,7 +58,7 @@ const getProject = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const foundProject = await ProjectService.getProject({
             filter: "projectId",
-            attribute: id,
+            val: id,
         });
         if (foundProject) return res.status(200).json(foundProject);
 
