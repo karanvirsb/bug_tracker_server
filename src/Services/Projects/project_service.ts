@@ -26,9 +26,9 @@ const deleteProject = (Projects: typeof Model<projectType>) => async (projectId:
 
 const getProject =
     (Projects: typeof Model<projectType>) =>
-    async (projectInfo: { filter: string; attribute: String }) => {
+    async (projectInfo: { filter: keyof projectType; val: String }) => {
         return await Projects.findOne({
-            [projectInfo.filter]: projectInfo.attribute,
+            [projectInfo.filter]: projectInfo.val,
         }).exec();
     };
 
