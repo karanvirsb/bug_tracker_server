@@ -1,7 +1,8 @@
-import Users from "../../Services/Users";
+import UserService from "../../Services/Users";
 import { NextFunction, Request, Response } from "express";
 import { UserType, IUser } from "../../Model/Users";
 import { ZodError } from "zod";
+import generate from "../../Helper/generateId";
 
 const getUser = async (
     req: Request,
@@ -10,7 +11,7 @@ const getUser = async (
 ): Promise<Response<any, Record<string, any>> | undefined> => {
     const { id } = req.body;
     try {
-        const user = await Users.getUser(id);
+        const user = await UserService.getUser(id);
         if (!user) {
             return res.sendStatus(204);
         }
@@ -28,7 +29,7 @@ const getUserByRefreshToken = async (
     const { token } = req.body;
     if (!token) return res.sendStatus(401);
     try {
-        const user = await Users.getUserByRefreshToken(token);
+        const user = await UserService.getUserByRefreshToken(token);
         if (!user) {
             return res.sendStatus(204);
         }
@@ -45,8 +46,17 @@ const createUser = async (
 ): Promise<Response<any, Record<string, any>> | undefined> => {
     const { user } = req.body;
     try {
+        let generatedId = await generate();
+        let foundUser = await UserService.getUser(generatedId);
+
+        while (foundUser) {
+            generatedId = await generate();
+            foundUser = await UserService.getUser(generatedId);
+        }
+        user["userId"] = generatedId;
+
         IUser.parse(user);
-        const newUser = await Users.createUser(user);
+        const newUser = await UserService.createUser(user);
         if (newUser) return res.sendStatus(200);
 
         return res.sendStatus(502);
@@ -61,7 +71,7 @@ const createUser = async (
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.body;
     try {
-        const deletedUser = await Users.deleteUser(id);
+        const deletedUser = await UserService.deleteUser(id);
 
         if (deletedUser) return res.sendStatus(200);
         return res.sendStatus(204);
@@ -81,7 +91,7 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
                 });
             }
         }
-        const updatedUser = await Users.updateUser(id, updates);
+        const updatedUser = await UserService.updateUser(id, updates);
 
         if (updatedUser) return res.sendStatus(200);
 
