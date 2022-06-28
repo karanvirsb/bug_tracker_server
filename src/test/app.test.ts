@@ -107,7 +107,7 @@ describe("Testing routes", () => {
             return request(app)
                 .post("/user/id")
                 .set("Authorization", `Bearer ${accessToken}`)
-                .send({ id: "John20" })
+                .send({ filterValue: "John20", filter: "username" })
                 .expect(200)
                 .then((response: any) => {
                     expect(response.body).toEqual(
@@ -131,7 +131,7 @@ describe("Testing routes", () => {
             return request(app)
                 .post("/user/id")
                 .set("Authorization", `Bearer ${accessToken}`)
-                .send({ id: "John19" })
+                .send({ filterValue: "John19", filter: "username" })
                 .expect(204);
         });
 
@@ -546,9 +546,9 @@ describe("Testing routes", () => {
         test("ERROR: Getting back a ticket that does not exist", async () => {
             const ticketId = 10;
             return request(app)
-                .get("/ticket/" + ticketId)
+                .post("/ticket/id")
                 .set("Authorization", `Bearer ${accessToken}`)
-                .send()
+                .send({ filterValue: ticketId, fitler: "ticketId" })
                 .expect(204);
         });
 
