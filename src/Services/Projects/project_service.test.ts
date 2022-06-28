@@ -57,7 +57,7 @@ describe("ProjectService tests", () => {
         const projectService = ProjectService(Projects);
         const foundProject = await projectService.getProject({
             filter: "projectId",
-            attribute: projectData[0].projectId,
+            val: projectData[0].projectId,
         });
 
         expect(foundProject.projectName).toBe("Coderz");
