@@ -44,7 +44,7 @@ const deleteComment = (Comments: typeof Model<commentType>) => async (commentId:
     return deletedComment.acknowledged && deletedComment.deletedCount === 1;
 };
 
-const getComment = (Comments: typeof Model<commentType>) => async (commentInfo: {filter: keyof commentType, val: string}) => {
+const getComment = (Comments: typeof Model<commentType>) => async (commentInfo: {filter: "commentId", val: string}) => {
     return await Comments.findOne({
         [commentInfo.filter]: commentInfo.val,
     }).exec();
