@@ -217,7 +217,15 @@ describe("Testing routes", () => {
                 .post("/group")
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({ groupId: "1", groupName: "Coderz" })
-                .expect(201);
+                .expect(200);
+        });
+
+        test("Create a Group without id", async () => {
+            return request(app)
+                .post("/group")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({ groupName: "Codering" })
+                .expect(200);
         });
 
         test("ERROR: Creating group with incorrect data", async () => {
@@ -300,6 +308,19 @@ describe("Testing routes", () => {
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({
                     projectId: "1",
+                    groupId: "1",
+                    projectName: "Bug Tracker",
+                    projectDesc: "An application used to track bugs",
+                    users: ["1"],
+                })
+                .expect(200);
+        });
+
+        test("create a Project without id", async () => {
+            return request(app)
+                .post("/project")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
                     groupId: "1",
                     projectName: "Bug Tracker",
                     projectDesc: "An application used to track bugs",
@@ -458,6 +479,23 @@ describe("Testing routes", () => {
                 .expect(200);
         });
 
+        test("Creating a ticket without id", async () => {
+            return request(app)
+                .post("/ticket")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
+                    title: "Login Bug",
+                    description: "Cannot click login",
+                    time: 0.5,
+                    ticketStatus: "Open",
+                    ticketSeverity: "Medium",
+                    ticketType: "Bug",
+                    reporterId: "1",
+                    projectId: "1",
+                })
+                .expect(200);
+        });
+
         test("ERROR: Creating a ticket with bad data", async () => {
             return request(app)
                 .post("/ticket")
@@ -600,6 +638,18 @@ describe("Testing routes", () => {
                 .set("Authorization", `Bearer ${accessToken}`)
                 .send({
                     commentId: "1",
+                    userId: "1",
+                    ticketId: "1",
+                    comment: "Nice job",
+                })
+                .expect(200);
+        });
+
+        test("Create a comment without id", async () => {
+            return request(app)
+                .post("/comment")
+                .set("Authorization", `Bearer ${accessToken}`)
+                .send({
                     userId: "1",
                     ticketId: "1",
                     comment: "Nice job",
