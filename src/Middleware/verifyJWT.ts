@@ -1,7 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import { JwtPayload, VerifyErrors } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
-const jwt = require("jsonwebtoken");
+interface UserPayload {
+    UserInfo: {
+        username: String;
+        roles: {};
+        groupId: String;
+    };
+}
 
 const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers["authorization"];
@@ -11,16 +18,19 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
 
     // Bearer token...
     const token = authHeader.split(" ")[1];
-    jwt.verify(
-        token,
-        process.env.ACCESS_TOKEN_SECRET,
-        (err: VerifyErrors, decoded: JwtPayload) => {
-            if (err) return res.sendStatus(403); // could be tempered with
-
-            (req as any).user = decoded.username;
-            next();
-        }
-    );
+    try {
+        // @tsignore
+        const payload = jwt.verify(
+            token,
+            process.env.ACCESS_TOKEN_SECRET!
+        ) as UserPayload;
+        (req as any).user = payload?.UserInfo.username;
+        (req as any).roles = payload?.UserInfo.roles;
+        (req as any).groupId = payload?.UserInfo.groupId;
+        next();
+    } catch (error) {
+        return res.sendStatus(403); // could be tempered with
+    }
 };
 
-module.exports = verifyJWT;
+export default verifyJWT;
