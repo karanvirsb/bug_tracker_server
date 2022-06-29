@@ -1,13 +1,13 @@
 require("dotenv").config();
 const port = 8000;
-const dbController = require("./src/Controllers/databaseController");
-const mongoose = require("mongoose");
-const app = require("./app");
-const { createServer } = require("http");
+import { connect, disconnect } from "./src/Controllers/databaseController";
+import mongoose from "mongoose";
+import app from "./app";
+import { createServer } from "http";
 const httpServer = createServer(app);
-const { socketListen } = require("./sockets");
+import { socketListen } from "./sockets";
 
-dbController.connect();
+connect();
 
 mongoose.connection.once("open", () => {
     socketListen(httpServer);
@@ -18,6 +18,6 @@ mongoose.connection.once("open", () => {
 
     httpServer.on("beforeExit", () => {
         console.log("beforeExit");
-        dbController.disconnect();
+        disconnect();
     });
 });
