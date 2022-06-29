@@ -13,4 +13,4 @@ const socketListen = (app: any) => {
     });
 };
 
-module.exports = { socketListen };
+export { socketListen };
