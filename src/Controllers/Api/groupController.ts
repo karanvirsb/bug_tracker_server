@@ -118,4 +118,4 @@ const deleteGroup = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-module.exports = { createGroup, getGroup, updateGroup, deleteGroup };
+export { createGroup, getGroup, updateGroup, deleteGroup };

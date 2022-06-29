@@ -1,8 +1,8 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 function connect(): void {
     mongoose
-        .connect(process.env.DATABASE_URL)
+        .connect(process?.env?.DATABASE_URL ?? "")
         .then(() => {
             console.log("running");
         })

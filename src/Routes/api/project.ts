@@ -1,9 +1,7 @@
-export {};
-
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-const {
+import {
     createProject,
     getProject,
     updateProject,
@@ -12,7 +10,7 @@ const {
     removeUserFromProject,
     getAllProjectsByGroupId,
     getAllUsersOfProject,
-} = require("../../Controllers/Api/projectController");
+} from "../../Controllers/Api/projectController";
 
 router.route("/").post(createProject).put(updateProject).delete(deleteProject);
 router.route("/id").post(getProject);
@@ -20,4 +18,4 @@ router.route("/group/:id").get(getAllProjectsByGroupId);
 router.route("/user").post(addUserToProject).delete(removeUserFromProject);
 router.route("/user/:id").get(getAllUsersOfProject); // TODO questionable need to rethink if this is needed
 
-module.exports = router;
+export default router;

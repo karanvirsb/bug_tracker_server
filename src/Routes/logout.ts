@@ -1,8 +1,7 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const logoutController = require("../Controllers/logoutController");
+import { handleLogout } from "../Controllers/logoutController";
 
-router.delete("/", logoutController.handleLogout);
+router.delete("/", handleLogout);
 
-module.exports = router;
-export = router;
+export default router;

@@ -165,7 +165,7 @@ const getAllProjectsByGroupId = async (
 };
 const getAllUsersOfProject = () => {};
 
-module.exports = {
+export {
     createProject,
     getProject,
     updateProject,

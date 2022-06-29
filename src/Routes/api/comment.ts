@@ -1,9 +1,7 @@
-export {};
-
-const express = require("express");
+import express from "express";
 const router = express.Router();
 
-const {
+import {
     createComment,
     deleteComment,
     updateComment,
@@ -11,11 +9,11 @@ const {
     replyTo,
     getReplyIds,
     getAllComments,
-} = require("../../Controllers/Api/commentController");
+} from "../../Controllers/Api/commentController";
 
 router.route("/").post(createComment).put(updateComment).delete(deleteComment);
 router.route("/id").post(getComment);
 router.route("/reply").post(replyTo).get(getReplyIds);
 router.route("/reply/comments").post(getAllComments);
 
-module.exports = router;
+export default router;

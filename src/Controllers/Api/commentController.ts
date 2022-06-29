@@ -147,7 +147,7 @@ const getAllComments = async (
     }
 };
 
-module.exports = {
+export {
     createComment,
     deleteComment,
     updateComment,

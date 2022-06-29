@@ -193,7 +193,7 @@ const getStatistics = async (
     }
 };
 
-module.exports = {
+export {
     createTicket,
     deleteTicket,
     updateTicket,

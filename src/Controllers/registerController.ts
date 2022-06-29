@@ -3,7 +3,7 @@ import { ZodError } from "zod";
 import { UserType, IUser } from "../Model/Users";
 import UserService from "../Services/Users";
 
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 
 const handleNewUser = async (req: Request, res: Response) => {
     const { username, password, firstName, lastName, email } = req.body;
@@ -66,5 +66,4 @@ const handleNewUser = async (req: Request, res: Response) => {
     }
 };
 
-module.exports = { handleNewUser };
-export = { handleNewUser };
+export { handleNewUser };

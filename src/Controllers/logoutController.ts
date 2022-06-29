@@ -39,4 +39,4 @@ const handleLogout = async (req: Request, res: Response) => {
     }
 };
 
-module.exports = { handleLogout };
+export { handleLogout };

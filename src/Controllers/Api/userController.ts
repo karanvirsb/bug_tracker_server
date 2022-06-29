@@ -117,10 +117,4 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-module.exports = {
-    getUser,
-    createUser,
-    deleteUser,
-    updateUser,
-    getUserByRefreshToken,
-};
+export { getUser, createUser, deleteUser, updateUser, getUserByRefreshToken };

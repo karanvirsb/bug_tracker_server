@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { z, ZodError } from "zod";
 
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import UserService from "../Services/Users";
 
 // created object to check if given request are right
@@ -50,13 +50,13 @@ const handleLogin = async (req: Request, res: Response) => {
                         group_id: foundUser.groupId,
                     },
                 },
-                process.env.ACCESS_TOKEN_SECRET,
+                process.env.ACCESS_TOKEN_SECRET!,
                 { expiresIn: "15m" }
             );
 
             const refreshToken = jwt.sign(
                 { username: foundUser.username },
-                process.env.REFRESH_TOKEN_SECRET,
+                process.env.REFRESH_TOKEN_SECRET!,
                 { expiresIn: "1d" }
             );
 
@@ -81,4 +81,4 @@ const handleLogin = async (req: Request, res: Response) => {
     }
 };
 
-module.exports = { handleLogin };
+export { handleLogin };

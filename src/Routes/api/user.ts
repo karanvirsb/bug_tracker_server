@@ -1,16 +1,16 @@
-export {};
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const {
+
+import {
     getUser,
     getUserByRefreshToken,
     createUser,
     deleteUser,
     updateUser,
-} = require("../../Controllers/Api/userController");
+} from "../../Controllers/Api/userController";
 
 router.route("/").post(createUser);
 router.route("/id").post(getUser).put(updateUser).delete(deleteUser);
 router.route("/token").post(getUserByRefreshToken);
 
-module.exports = router;
+export default router;
