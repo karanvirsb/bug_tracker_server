@@ -14,7 +14,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers["authorization"];
 
     // unauthorized
-    if (!authHeader) return res.sendStatus(401);
+    if (!authHeader) return next(new Error("Not authorized"));
 
     // Bearer token...
     const token = authHeader.split(" ")[1];
