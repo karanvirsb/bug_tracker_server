@@ -1,16 +1,15 @@
 import { Server } from "socket.io";
-const allowedOrigins = require("./src/Config/allowedOrigins");
-
+import { DefaultEventsMap } from "socket.io/dist/typed-events";
+let io: Server<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any>;
 const socketListen = (app: any) => {
-    const io = new Server(app, {
-        cors: { origin: allowedOrigins, credentials: true },
-    });
-
-    console.log("connection");
-
-    io.on("connection", (socket) => {
-        console.log(socket);
+    io = new Server(app, {
+        cors: { origin: "http://localhost:3000" },
     });
 };
 
-export { socketListen };
+const wrap = (middleware: any) => (socket: any, next: any) => {
+    console.log(socket.request);
+    middleware(socket.request, {}, next);
+};
+
+export { socketListen, io, wrap };
