@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { Express, NextFunction, Request, Response } from "express";
 
 import express from "express";
-const app = express();
+const app: Express = express();
 import cors from "cors";
 import corsOptions from "./src/Config/corsOptions";
 import credentials from "./src/Middleware/credentials";
@@ -18,6 +18,7 @@ import {
     ticketRouter,
     commentRouter,
 } from "./src/Routes";
+import { io, wrap } from "./sockets";
 // MIDDLEWARE
 app.use(credentials);
 app.use(cors(corsOptions));
@@ -33,6 +34,11 @@ app.use("/refresh", refreshRouter);
 app.use("/logout", logoutRouter);
 
 app.use(verifyJWT);
+
+io?.on("connection", () => {
+    console.log("user connected");
+});
+
 // Protected routes
 app.use("/user", userRouter);
 app.use("/group", groupRouter);
