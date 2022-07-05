@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 function connect(): void {
     console.log(process.env.NODE_ENV);
     if (process.env.NODE_ENV === undefined) {
+        console.log("here");
         mongoose
             .connect("mongodb://localhost:27017/bugTracker_development")
             .then(() => {
