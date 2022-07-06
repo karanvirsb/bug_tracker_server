@@ -155,6 +155,7 @@ const getAllProjectsByGroupId = async (
 ) => {
     const groupId = req.params.id;
     if (!groupId) throw Error("Invalid Id");
+    console.log(groupId);
     try {
         const project = await ProjectService.getAllProjectsByGroupId(groupId);
         if (project.length > 0) return res.status(200).json(project);
