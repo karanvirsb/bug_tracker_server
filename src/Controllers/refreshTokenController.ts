@@ -1,14 +1,11 @@
 import { Request, Response } from "express";
-import { JwtPayload, VerifyErrors } from "jsonwebtoken";
 import UserService from "../Services/Users";
 import jwt from "jsonwebtoken";
 
 interface UserPayload {
-    UserInfo: {
-        username: String;
-        roles: {};
-        groupId: String;
-    };
+    username: String;
+    roles: {};
+    groupId: String;
 }
 
 const handleRefreshToken = async (req: Request, res: Response) => {
@@ -28,9 +25,10 @@ const handleRefreshToken = async (req: Request, res: Response) => {
             process.env.REFRESH_TOKEN_SECRET!
         ) as UserPayload;
 
-        if (foundUser.username !== payload?.UserInfo?.username)
+        if (foundUser.username !== payload?.username)
             return res.sendStatus(403);
 
+        console.log("here");
         const roles = Object.values(foundUser.roles);
         const group_id = Object.values(foundUser.groupId || "");
 
@@ -38,7 +36,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
         const accessToken = jwt.sign(
             {
                 UserInfo: {
-                    username: payload?.UserInfo?.username,
+                    username: payload?.username,
                     roles: roles,
                     group_id: group_id,
                 },
@@ -47,8 +45,9 @@ const handleRefreshToken = async (req: Request, res: Response) => {
             { expiresIn: "30m" }
         );
 
-        res.json({ accessToken });
+        res.status(200).json({ accessToken });
     } catch (error) {
+        console.log(error);
         return res.sendStatus(403);
     }
 };
