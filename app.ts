@@ -47,7 +47,7 @@ app.use("/ticket", ticketRouter);
 app.use("/comment", commentRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-    res.send(404).json({ error: "Not Found" });
+    res.status(404).json({ error: "Not Found" });
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
