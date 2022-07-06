@@ -44,6 +44,26 @@ const getUserByRefreshToken = async (
     }
 };
 
+const getAllUsers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<Response<any, Record<string, any>> | undefined> => {
+    const { userIds } = req.body;
+
+    if (!userIds) return res.sendStatus(401);
+
+    try {
+        const users = UserService.getAllUsers(userIds);
+
+        if (!users) return res.sendStatus(204);
+
+        return res.status(200).json(users);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const createUser = async (
     req: Request,
     res: Response,
@@ -117,4 +137,11 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export { getUser, createUser, deleteUser, updateUser, getUserByRefreshToken };
+export {
+    getUser,
+    createUser,
+    deleteUser,
+    updateUser,
+    getUserByRefreshToken,
+    getAllUsers,
+};
