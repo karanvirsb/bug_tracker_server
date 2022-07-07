@@ -154,11 +154,16 @@ const getAllProjectsByGroupId = async (
     next: NextFunction
 ) => {
     const groupId = req.params.id;
+    const page: any = req.query.page;
+
     if (!groupId) throw Error("Invalid Id");
     console.log(groupId);
     try {
-        const project = await ProjectService.getAllProjectsByGroupId(groupId);
-        if (project.length > 0) return res.status(200).json(project);
+        const project = await ProjectService.getAllProjectsByGroupId(
+            groupId,
+            parseInt(page)
+        );
+        if (project.totalDocs > 0) return res.status(200).json(project);
         return res.sendStatus(204);
     } catch (error) {
         next(error);
