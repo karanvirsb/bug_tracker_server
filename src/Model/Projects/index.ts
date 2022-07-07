@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import { z } from "zod";
+import paginate from "mongoose-paginate-v2";
 
 const IProject = z.object({
     projectId: z.string().min(1),
@@ -21,6 +22,11 @@ const projectSchema = new Schema<projectType>({
     users: { type: [] },
 });
 
-const Projects = model<projectType>("Projects", projectSchema);
+projectSchema.plugin(paginate);
+
+const Projects = model<projectType, mongoose.PaginateModel<projectType>>(
+    "Projects",
+    projectSchema
+);
 
 export { Projects, IProject };
