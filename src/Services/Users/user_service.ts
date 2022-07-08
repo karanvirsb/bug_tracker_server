@@ -18,7 +18,7 @@ const getAllUsers =
     (User: typeof Model<UserType>) =>
     async (userIds: String[]): Promise<[] | UserType[]> => {
         /*
-        * gets all users based on their ids
+        * gets all users based on their usernames
         */
         if (userIds.length === 0) throw Error("No user Ids were provided");
         const userArr = [];
@@ -34,6 +34,15 @@ const getAllUsers =
         }
         return userArr;
     };
+
+const getUsersByGroupId = (User: typeof Model<UserType>) => async (groupId: string) => {
+    if(!groupId) throw Error('No groupId was given');
+
+    const userArr = await User.find({groupId: groupId}, 'username email firstName lastName roles');
+
+    return userArr;
+
+}
 
 const getUserByRefreshToken =
     (User: typeof Model<UserType>) =>
@@ -89,5 +98,6 @@ export default (User: typeof Model<UserType>) => {
         updateUser: updateUser(User),
         deleteUser: deleteUser(User),
         getAllUsers: getAllUsers(User),
+        getUsersByGroupId: getUsersByGroupId(User),
     };
 };
