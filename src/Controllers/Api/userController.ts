@@ -49,16 +49,16 @@ const getAllUsers = async (
     res: Response,
     next: NextFunction
 ): Promise<Response<any, Record<string, any>> | undefined> => {
-    const { userIds } = req.body;
-
-    if (!userIds) return res.sendStatus(401);
+    const { users } = req.body;
+    console.log(users);
+    if (!users) return res.sendStatus(401);
 
     try {
-        const users = UserService.getAllUsers(userIds);
+        const foundUsers = await UserService.getAllUsers(users);
 
-        if (!users) return res.sendStatus(204);
+        if (!foundUsers) return res.sendStatus(204);
 
-        return res.status(200).json(users);
+        return res.status(200).json(foundUsers);
     } catch (error) {
         next(error);
     }
