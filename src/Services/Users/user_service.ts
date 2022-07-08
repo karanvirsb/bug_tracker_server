@@ -25,10 +25,12 @@ const getAllUsers =
 
         for (let i = 0; i < userIds.length; i++) {
             const user = await User.findOne(
-                { username: userIds },
+                { username: userIds[i] },
                 "username email firstName lastName groupId roles"
             );
-            userArr.push(user);
+            if(user){
+                userArr.push(user);
+            }
         }
         return userArr;
     };
