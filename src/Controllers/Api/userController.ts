@@ -64,6 +64,26 @@ const getAllUsers = async (
     }
 };
 
+const getUsersByGroupId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<Response<any, Record<string, any>> | undefined> => {
+    const { groupId } = req.body;
+
+    if (!groupId) return res.sendStatus(401);
+
+    try {
+        const usersArr = UserService.getUsersByGroupId(groupId);
+
+        if (!usersArr) return res.sendStatus(204);
+
+        return res.status(200).json(usersArr);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const createUser = async (
     req: Request,
     res: Response,
@@ -144,4 +164,5 @@ export {
     updateUser,
     getUserByRefreshToken,
     getAllUsers,
+    getUsersByGroupId,
 };
