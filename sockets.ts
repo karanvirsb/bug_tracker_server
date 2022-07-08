@@ -8,7 +8,10 @@ const socketListen = (app: any) => {
 
     io.sockets.on("connection", (socket) => {
         socket.on("joinRoom", (roomId) => {
-            console.log(roomId);
+            console.log(
+                "🚀 ~ file: sockets.ts ~ line 11 ~ socket.on ~ roomId",
+                roomId
+            );
             if (!roomId) {
                 socket.emit("error", { message: "Room id was not given" });
             }
