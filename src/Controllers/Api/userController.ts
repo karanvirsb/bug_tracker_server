@@ -70,6 +70,7 @@ const getUsersByGroupId = async (
     next: NextFunction
 ): Promise<Response<any, Record<string, any>> | undefined> => {
     const { groupId } = req.body;
+    console.log("🚀 ~ file: userController.ts ~ line 73 ~ groupId", groupId);
 
     if (!groupId) return res.sendStatus(401);
 
