@@ -75,7 +75,7 @@ const getUsersByGroupId = async (
     if (!groupId) return res.sendStatus(401);
 
     try {
-        const usersArr = UserService.getUsersByGroupId(groupId);
+        const usersArr = await UserService.getUsersByGroupId(groupId);
 
         if (!usersArr) return res.sendStatus(204);
 
