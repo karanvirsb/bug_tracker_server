@@ -28,7 +28,6 @@ const handleRefreshToken = async (req: Request, res: Response) => {
         if (foundUser.username !== payload?.username)
             return res.sendStatus(403);
 
-        console.log("here");
         const roles = Object.values(foundUser.roles);
         const group_id = Object.values(foundUser.groupId || "");
 
@@ -44,7 +43,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
             process.env.ACCESS_TOKEN_SECRET!,
             { expiresIn: "30m" }
         );
-
+        console.log("here in refresh");
         res.status(200).json({ accessToken });
     } catch (error) {
         console.log(error);
