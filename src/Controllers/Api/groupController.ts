@@ -71,7 +71,12 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
 };
 const getGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
-    console.log(req.body);
+    console.log(
+        "🚀 ~ file: groupController.ts ~ line 74 ~ getGroup ~ filterValue, filter",
+        filterValue,
+        filter
+    );
+
     if (!filterValue) throw Error("Invalid parameter");
 
     try {
