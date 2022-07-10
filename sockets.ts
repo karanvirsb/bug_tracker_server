@@ -9,11 +9,6 @@ const socketListen = (app: any) => {
     io.on("connection", (socket) => {
         socket.emit("connection", socket.id);
         socket.on("joinRoom", (roomId) => {
-            console.log(
-                "🚀 ~ file: sockets.ts ~ line 12 ~ socket.on ~ roomId",
-                roomId
-            );
-
             if (!roomId) {
                 socket.emit("error", { message: "Room id was not given" });
             }
@@ -22,10 +17,6 @@ const socketListen = (app: any) => {
 
         // invalidating query for all users
         socket.on("invalidateQuery", (data) => {
-            console.log(
-                "🚀 ~ file: sockets.ts ~ line 19 ~ socket.on ~ data",
-                data
-            );
             io.sockets.to(data.groupId).emit("invalidateData", data.queryName);
         });
     });
