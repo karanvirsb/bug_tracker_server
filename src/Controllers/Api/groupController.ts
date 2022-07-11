@@ -28,7 +28,7 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
             }
             groupId = generatedId;
         }
-        console.log("passed for loop");
+
         // generate invite code for group
         let nanoid = customAlphabet("123456789", 4);
         let generatedGroupCode = await nanoid();
@@ -47,7 +47,7 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
                 val: inviteCode,
             });
         }
-        console.log("passed second loop");
+
         // parse group
         await IGroup.parseAsync({
             groupId,
@@ -71,11 +71,6 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
 };
 const getGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
-    console.log(
-        "🚀 ~ file: groupController.ts ~ line 74 ~ getGroup ~ filterValue, filter",
-        filterValue,
-        filter
-    );
 
     if (!filterValue) throw Error("Invalid parameter");
 
