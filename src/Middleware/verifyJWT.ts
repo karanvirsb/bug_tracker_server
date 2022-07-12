@@ -12,7 +12,6 @@ interface UserPayload {
 
 const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers["authorization"];
-
     // unauthorized
     if (!authHeader) return next(new Error("Not authorized"));
 
