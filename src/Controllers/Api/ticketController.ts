@@ -142,6 +142,31 @@ const getTicket = async (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 };
+
+const getTicketsByProjectId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const id = req.params.id;
+    const page: any = req.query.page;
+    const limit: any = req.query.limit || 10;
+
+    if (!id) throw Error("Invalid id");
+
+    try {
+        const tickets = await TicketService.getTicketsByProjectId({
+            ticketId: id,
+            page: parseInt(page),
+            limit: parseInt(limit),
+        });
+        if (tickets.totalDocs > 0) return res.status(200).json(tickets);
+        return res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const assignUserToTicket = async (
     req: Request,
     res: Response,
