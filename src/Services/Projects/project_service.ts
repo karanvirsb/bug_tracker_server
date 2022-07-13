@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { Model } from "mongoose";
 import { projectType } from "../../Model/Projects";
 
 const createProject =
