@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import { z } from "zod";
+import paginate from "mongoose-paginate-v2";
 
 const roles = z.object({
     User: z.string().optional(),
@@ -32,6 +33,11 @@ const usersSchema = new Schema<UserType>({
     roles: Object,
 });
 
-const Users = model<UserType>("Users", usersSchema);
+usersSchema.plugin(paginate);
+
+const Users = model<UserType, mongoose.PaginateModel<UserType>>(
+    "Users",
+    usersSchema
+);
 
 export { Users, IUser };
