@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import { z } from "zod";
+import paginate from "mongoose-paginate-v2";
 
 const IComment = z.object({
     commentId: z.string().min(1),
@@ -21,6 +22,11 @@ const commentSchema = new Schema<commentType>({
     reply: { type: [] },
 });
 
-const Comments = model<commentType>("Comments", commentSchema);
+commentSchema.plugin(paginate);
+
+const Comments = model<commentType, mongoose.PaginateModel<commentType>>(
+    "Comments",
+    commentSchema
+);
 
 export { Comments, IComment };
