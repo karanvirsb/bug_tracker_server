@@ -1,5 +1,6 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import { z } from "zod";
+import paginate from "mongoose-paginate-v2";
 
 const status = z.enum([
     "Open",
@@ -41,6 +42,11 @@ const ticketSchema = new Schema<ticketType>({
     projectId: { type: String },
 });
 
-const Tickets = model<ticketType>("Tickets", ticketSchema);
+ticketSchema.plugin(paginate);
+
+const Tickets = model<ticketType, mongoose.PaginateModel<ticketType>>(
+    "Tickets",
+    ticketSchema
+);
 
 export { Tickets, ITicket };
