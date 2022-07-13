@@ -226,4 +226,5 @@ export {
     assignUserToTicket,
     removeUserFromTicket,
     getStatistics,
+    getTicketsByProjectId,
 };
