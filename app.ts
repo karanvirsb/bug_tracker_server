@@ -18,7 +18,7 @@ import {
     ticketRouter,
     commentRouter,
 } from "./src/Routes";
-import { io, wrap } from "./sockets";
+
 // MIDDLEWARE
 app.use(credentials);
 app.use(cors(corsOptions));
@@ -34,10 +34,6 @@ app.use("/refresh", refreshRouter);
 app.use("/logout", logoutRouter);
 
 app.use(verifyJWT);
-
-io?.on("connection", () => {
-    console.log("user connected");
-});
 
 // Protected routes
 app.use("/user", userRouter);
