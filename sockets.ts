@@ -4,10 +4,9 @@ interface SocketData {
     username: string;
 }
 
-let io: Server<DefaultEventsMap, any, SocketData>;
 const socketListen = (app: any) => {
     // TODO add redis backend for caching users in room
-    io = new Server(app, {
+    const io = new Server<DefaultEventsMap, any, SocketData>(app, {
         cors: { origin: "http://localhost:3000", methods: ["GET", "POST"] },
     });
 
@@ -27,7 +26,8 @@ const socketListen = (app: any) => {
 
         // invalidating query for all users
         socket.on("invalidateQuery", (data) => {
-            io.sockets.to(data.groupId).emit("invalidateData", data.queryName);
+            console.log("invalidate", data);
+            io.to(data.groupId).emit("invalidateData", data.queryName);
         });
     });
 };
@@ -37,4 +37,4 @@ const wrap = (middleware: any) => (socket: any, next: any) => {
     middleware(socket.request, {}, next);
 };
 
-export { socketListen, io, wrap };
+export { socketListen, wrap };
