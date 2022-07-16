@@ -69,17 +69,6 @@ function userJoinsRoom(
 
                 socket.join(roomId);
                 // emit room data back
-            } else {
-                const user = users?.get(username);
-                const userSockets = user?.socketId;
-                if (users && userSockets && userSockets.size < 4) {
-                    userSockets.add(socket.id);
-
-                    users.set(username, user);
-                    rooms.set(roomId, users);
-
-                    socket.join(roomId);
-                }
             }
         }
         socket.emit("roomJoined", socket.rooms.has(roomId));
