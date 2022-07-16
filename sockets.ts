@@ -22,6 +22,7 @@ const socketListen = (app: any) => {
             // if not then add user to room
             socket.data.username = username;
             socket.join(roomId);
+            socket.emit("roomJoined", socket.rooms.has(roomId));
         });
 
         // invalidating query for all users
