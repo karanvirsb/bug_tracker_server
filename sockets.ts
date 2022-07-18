@@ -23,10 +23,24 @@ const socketListen = (app: any) => {
 
         socket.on("joinRoom", userJoinsRoom(socket));
 
+        socket.on("leaveRoom", ({ roomId, username }) => {
+            const roomMembers = rooms.get(roomId);
+            roomMembers?.delete(username);
+            console.log(`${username} is leaving room ${roomId}`);
+            socket.leave(roomId);
+        });
         // invalidating query for all users
         socket.on("invalidateQuery", (data) => {
             console.log("invalidate", data);
             io.to(data.groupId).emit("invalidateData", data.queryName);
+        });
+
+        socket.on("disconnecting", (reason: string) => {
+            for (const [key] of socket.rooms.entries()) {
+                console.log(`Deleting ${socket.data.username} from ${key}`);
+                const roomMembers = rooms.get(key);
+                roomMembers?.delete(socket.data.username);
+            }
         });
     });
 };
@@ -39,10 +53,18 @@ const wrap = (middleware: any) => (socket: any, next: any) => {
 function userJoinsRoom(
     socket: Socket<DefaultEventsMap, any, SocketData, any>
 ): (...args: any[]) => void {
-    return (roomId, username) => {
+    return ({ roomId, username }) => {
+        console.log(
+            "🚀 ~ file: sockets.ts ~ line 56 ~ return ~ roomId, username",
+            roomId,
+            username
+        );
+
         if (!roomId) {
             socket.emit("error", { message: "Room id was not given" });
         }
+
+        socket.data.username = username;
 
         // check if user is already in room;
         // if not then add user to room
@@ -56,6 +78,8 @@ function userJoinsRoom(
             rooms.set(roomId, users);
 
             socket.join(roomId);
+
+            socket.emit("roomJoined", socket.rooms.has(roomId));
             // emit room data back
         } else {
             const users = rooms.get(roomId);
