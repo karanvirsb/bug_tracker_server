@@ -56,7 +56,7 @@ const createTicket = async (
         if (!newTicket?.ticketId) {
             // generate id
             let generatedId = await generate();
-            let foundTicket = await TicketService.getTicket({
+            let foundTicket: any = await TicketService.getTicket({
                 filter: "ticketId",
                 val: generatedId,
             });
@@ -156,7 +156,7 @@ const getTicketsByProjectId = async (
 
     try {
         const tickets = await TicketService.getTicketsByProjectId({
-            ticketId: id,
+            projectId: id,
             page: parseInt(page),
             limit: parseInt(limit),
         });
