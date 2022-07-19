@@ -35,7 +35,7 @@ const socketListen = (app: any) => {
             io.to(data.groupId).emit("invalidateData", data.queryName);
         });
 
-        socket.on("disconnecting", (reason: string) => {
+        socket.on("leavingPage", () => {
             for (const [key] of socket.rooms.entries()) {
                 console.log(`Deleting ${socket.data.username} from ${key}`);
                 const roomMembers = rooms.get(key);
