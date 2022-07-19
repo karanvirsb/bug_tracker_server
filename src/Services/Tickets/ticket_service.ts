@@ -2,6 +2,14 @@ import mongoose from "mongoose";
 import { number } from "zod";
 import { ticketType } from "../../Model/Tickets";
 
+type params = {
+    getTicketsByProjectId: {
+        projectId: string;
+        page: number;
+        limit: number;
+    };
+};
+
 const createTicket =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
     async (ticketInfo: ticketType) => {
@@ -41,18 +49,11 @@ const getTicket =
         }).exec();
     };
 
-type params = {
-    getTicketsByProjectId: {
-        ticketId: string;
-        page: number;
-        limit: number;
-    };
-};
 const getTicketsByProjectId =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
-    async ({ ticketId, page, limit }: params["getTicketsByProjectId"]) => {
+    async ({ projectId, page, limit }: params["getTicketsByProjectId"]) => {
         const tickets = await Tickets.paginate(
-            { ticketId: ticketId },
+            { projectId: projectId },
             { page: page, limit: limit }
         );
 
