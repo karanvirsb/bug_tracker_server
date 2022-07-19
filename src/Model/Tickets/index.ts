@@ -6,8 +6,8 @@ const status = z.enum([
     "Open",
     "Todo",
     "In Progress",
-    "To be tested",
-    "closed",
+    "To Be Tested",
+    "Closed",
 ]);
 const severity = z.enum(["Critical", "High", "Medium", "Low", "None"]);
 const type = z.enum(["Bug", "Feature", "Error", "Issue"]);
