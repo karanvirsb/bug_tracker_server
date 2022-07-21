@@ -17,7 +17,7 @@ const roles = z.object({
 //     "image/svg+xml",
 // ];
 
-const avatar = z.object({
+const avatarType = z.object({
     data: z.any(),
     contentType: z.enum([
         "image/jpeg",
@@ -30,7 +30,7 @@ const avatar = z.object({
 
 const IUser = z.object({
     userId: z.string().min(1).optional(),
-    avatar: avatar,
+    avatar: avatarType,
     username: z.string().min(4).max(26),
     password: z.string().min(8),
     email: z.string().email(),
