@@ -8,28 +8,29 @@ const roles = z.object({
     Admin: z.string().optional(),
 });
 
-const MAX_FILE_SIZE = 100000;
-const ACCEPTED_IMAGE_TYPES = [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/webp",
-    "image/svg+xml",
-];
+// const MAX_FILE_SIZE = 100000;
+// const ACCEPTED_IMAGE_TYPES = [
+//     "image/jpeg",
+//     "image/jpg",
+//     "image/png",
+//     "image/webp",
+//     "image/svg+xml",
+// ];
+
+const avatar = z.object({
+    data: z.any(),
+    contentType: z.enum([
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/webp",
+        "image/svg+xml",
+    ]),
+});
 
 const IUser = z.object({
     userId: z.string().min(1).optional(),
-    avatar: z
-        .any()
-        .refine((files) => files?.length == 1, "Image is required.")
-        .refine(
-            (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-            `Max file size is 1MB.`
-        )
-        .refine(
-            (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-            ".jpg, .jpeg, .png, .svg and .webp files are accepted."
-        ),
+    avatar: avatar,
     username: z.string().min(4).max(26),
     password: z.string().min(8),
     email: z.string().email(),
@@ -44,7 +45,7 @@ export type UserType = z.infer<typeof IUser>;
 
 const usersSchema = new Schema<UserType>({
     userId: { type: String, unique: true },
-    avatar: { type: buffer },
+    avatar: { data: buffer, contentType: String },
     username: { type: String, unique: true },
     password: { type: String, required: true },
     email: { type: String, unique: true },
