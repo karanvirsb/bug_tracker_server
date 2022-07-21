@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { UserType, IUser } from "../../Model/Users";
 import { ZodError } from "zod";
 import generate from "../../Helper/generateId";
+import axios from "axios";
 
 const getUser = async (
     req: Request,
@@ -107,7 +108,10 @@ const createUser = async (
             });
         }
         user["userId"] = generatedId;
-
+        const avatar = axios(
+            "https://ui-avatars.com/api/?name=Bond+Does&background=random&color=fff&length=2&rounded=true&bold=true&format=svg",
+            { method: "get" }
+        );
         // parse user to see if its correct
         await IUser.parseAsync(user);
         const newUser = await UserService.createUser(user);
