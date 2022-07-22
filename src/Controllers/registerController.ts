@@ -4,6 +4,20 @@ import { UserType, IUser } from "../Model/Users";
 import UserService from "../Services/Users";
 
 import bcrypt from "bcrypt";
+import axios from "axios";
+
+const colors = [
+    "d28100",
+    "d1423f",
+    "dc1677",
+    "c233a0",
+    "6163e1",
+    "246db6",
+    "008290",
+    "7ba100",
+    "9355d2",
+    "627a89",
+];
 
 const handleNewUser = async (req: Request, res: Response) => {
     const { username, password, firstName, lastName, email } = req.body;
@@ -49,6 +63,16 @@ const handleNewUser = async (req: Request, res: Response) => {
             roles: { User: "2001" },
             groupId: "",
             refreshToken: "",
+        };
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const response = await axios(
+            `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=${color}&color=fff&length=2&rounded=true&bold=true&format=svg`,
+            { method: "get" }
+        );
+
+        user["avatar"] = {
+            data: response.data,
+            contentType: "image/svg+xml",
         };
 
         const userAdded = await UserService.createUser(user);
