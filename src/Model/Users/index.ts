@@ -30,7 +30,7 @@ const avatarType = z.object({
 
 const IUser = z.object({
     userId: z.string().min(1).optional(),
-    avatar: avatarType,
+    avatar: avatarType.optional(),
     username: z.string().min(4).max(26),
     password: z.string().min(8),
     email: z.string().email(),
