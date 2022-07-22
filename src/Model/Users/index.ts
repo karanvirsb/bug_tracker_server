@@ -1,7 +1,6 @@
 import mongoose, { Schema, model } from "mongoose";
 import { z } from "zod";
 import paginate from "mongoose-paginate-v2";
-import { buffer } from "stream/consumers";
 
 const roles = z.object({
     User: z.string().optional(),
@@ -45,7 +44,7 @@ export type UserType = z.infer<typeof IUser>;
 
 const usersSchema = new Schema<UserType>({
     userId: { type: String, unique: true },
-    avatar: { data: buffer, contentType: String },
+    avatar: Object,
     username: { type: String, unique: true },
     password: { type: String, required: true },
     email: { type: String, unique: true },
