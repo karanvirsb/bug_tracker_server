@@ -70,7 +70,13 @@ const handleLogin = async (req: Request, res: Response) => {
             UserService.updateUser(foundUser.username, {
                 refreshToken: refreshToken,
             });
-            return res.json({ accessToken: accessToken });
+            return res.json({
+                accessToken: accessToken,
+                firstName: foundUser.firstName,
+                lastName: foundUser.lastName,
+                email: foundUser.email,
+                avatar: foundUser.avatar,
+            });
         } else {
             return res.sendStatus(401);
         }
