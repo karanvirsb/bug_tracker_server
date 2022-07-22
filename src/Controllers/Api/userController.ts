@@ -90,7 +90,21 @@ const createUser = async (
     res: Response,
     next: NextFunction
 ): Promise<Response<any, Record<string, any>> | undefined> => {
-    const { user } = req.body;
+    const user: UserType = (req as any).body.user;
+    // having predetermined colors for avatars
+    const colors = [
+        "d28100",
+        "d1423f",
+        "dc1677",
+        "c233a0",
+        "6163e1",
+        "246db6",
+        "008290",
+        "7ba100",
+        "9355d2",
+        "627a89",
+    ];
+
     try {
         // generating an id
         let generatedId = await generate();
@@ -108,10 +122,17 @@ const createUser = async (
             });
         }
         user["userId"] = generatedId;
-        const avatar = axios(
-            "https://ui-avatars.com/api/?name=Bond+Does&background=random&color=fff&length=2&rounded=true&bold=true&format=svg",
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const response = await axios(
+            `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=${color}&color=fff&length=2&rounded=true&bold=true&format=svg`,
             { method: "get" }
         );
+        // adding avatar to user
+        user["avatar"] = {
+            ...user.avatar,
+            data: response.data,
+            contentType: "image/svg+xml",
+        };
         // parse user to see if its correct
         await IUser.parseAsync(user);
         const newUser = await UserService.createUser(user);
