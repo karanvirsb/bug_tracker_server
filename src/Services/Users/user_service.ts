@@ -13,8 +13,6 @@ const getUser =
         return await User.findOne({ [userInfo.filter]: userInfo.val }).exec();
     };
 
-//TODO get multiple users
-
 const getAllUsers =
     (User: mongoose.PaginateModel<UserType>) =>
     async (userIds: String[]): Promise<[] | UserType[]> => {
@@ -27,7 +25,7 @@ const getAllUsers =
         for (let i = 0; i < userIds.length; i++) {
             const user = await User.findOne(
                 { username: userIds[i] },
-                "username email firstName lastName groupId roles"
+                "avatar username email firstName lastName groupId roles"
             );
             if (user) {
                 userArr.push(user);
@@ -42,7 +40,7 @@ const getUsersByGroupId =
 
         const userArr = await User.find(
             { groupId: groupId },
-            "username email firstName lastName roles"
+            "avatar username email firstName lastName roles"
         );
 
         return userArr;
