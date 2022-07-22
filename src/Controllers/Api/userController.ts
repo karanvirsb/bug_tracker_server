@@ -129,7 +129,6 @@ const createUser = async (
         );
         // adding avatar to user
         user["avatar"] = {
-            ...user.avatar,
             data: response.data,
             contentType: "image/svg+xml",
         };
