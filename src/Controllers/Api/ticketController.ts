@@ -174,7 +174,7 @@ const getTicketsByUsername = async (
 ) => {
     const username = req.params.username;
     const page: any = req.query.page;
-    const limit: any = req.query.limit || 10;
+    const limit: any = req.query.limit || 5;
 
     if (!username) throw Error("Invalid username");
 
