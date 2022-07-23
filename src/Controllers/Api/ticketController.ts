@@ -167,6 +167,30 @@ const getTicketsByProjectId = async (
     }
 };
 
+const getTicketsByUsername = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const username = req.params.username;
+    const page: any = req.query.page;
+    const limit: any = req.query.limit || 10;
+
+    if (!username) throw Error("Invalid username");
+
+    try {
+        const tickets = await TicketService.getTicketsByUsername({
+            username: username,
+            page: parseInt(page),
+            limit: parseInt(limit),
+        });
+        if (tickets.totalDocs > 0) return res.status(200).json(tickets);
+        return res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const assignUserToTicket = async (
     req: Request,
     res: Response,
@@ -227,4 +251,5 @@ export {
     removeUserFromTicket,
     getStatistics,
     getTicketsByProjectId,
+    getTicketsByUsername,
 };
