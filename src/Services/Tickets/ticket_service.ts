@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
-import { number } from "zod";
 import { ticketType } from "../../Model/Tickets";
 
 type params = {
     getTicketsByProjectId: {
         projectId: string;
+        page: number;
+        limit: number;
+    };
+    getTicketsByUsername: {
+        username: string;
         page: number;
         limit: number;
     };
@@ -58,6 +62,15 @@ const getTicketsByProjectId =
         );
 
         return tickets;
+    };
+
+const getTicketsByUsername =
+    (Tickets: mongoose.PaginateModel<ticketType>) =>
+    async ({ username, page, limit }: params["getTicketsByUsername"]) => {
+        return await Tickets.paginate(
+            { username: username },
+            { page: page, limit: limit }
+        );
     };
 
 const assignUserToTicket =
@@ -129,5 +142,6 @@ export default (Ticket: mongoose.PaginateModel<ticketType>) => {
         removeUserFromTicket: removeUserFromTicket(Ticket),
         getStatistics: getStatistics(Ticket),
         getTicketsByProjectId: getTicketsByProjectId(Ticket),
+        getTicketsByUsername: getTicketsByUsername(Ticket),
     };
 };
