@@ -68,7 +68,7 @@ const getTicketsByUsername =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
     async ({ username, page, limit }: params["getTicketsByUsername"]) => {
         return await Tickets.paginate(
-            { username: username },
+            { reporterId: username },
             { page: page, limit: limit }
         );
     };
