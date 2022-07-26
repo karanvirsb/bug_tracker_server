@@ -78,7 +78,11 @@ function userJoinsRoom(
             rooms.set(roomId, users);
 
             socket.join(roomId);
-
+            console.log(
+                `line 81: added user: ${username} to room: ${roomId}, room has: ${socket.rooms.has(
+                    roomId
+                )}`
+            );
             socket.emit("roomJoined", socket.rooms.has(roomId));
             // emit room data back
         } else {
@@ -92,6 +96,12 @@ function userJoinsRoom(
                 rooms.set(roomId, users);
 
                 socket.join(roomId);
+                console.log(
+                    `line 95: added user: ${username} to room: ${roomId} , room has: ${socket.rooms.has(
+                        roomId
+                    )}`
+                );
+
                 // emit room data back
             }
         }
