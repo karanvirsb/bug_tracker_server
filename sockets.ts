@@ -42,6 +42,7 @@ const socketListen = (app: any) => {
                 roomMembers?.delete(socket.data.username);
             }
         });
+        socket.on("updateUserRoles", updateUserRoles);
     });
 };
 
@@ -106,6 +107,30 @@ function userJoinsRoom(
             }
         }
         socket.emit("roomJoined", socket.rooms.has(roomId));
+    };
+}
+
+type updateUserRoles = {
+    roomId: string;
+    username: string;
+    roles: { [key: string]: string };
+};
+
+function updateUserRoles(
+    socket: Socket<DefaultEventsMap, any, SocketData, any>
+): (...args: any[]) => void {
+    return ({ roomId, username, roles }: updateUserRoles) => {
+        const room = rooms.get(roomId);
+        if (!room) {
+            socket.emit("error", { message: "Invalid Room" });
+        }
+
+        const user = room?.get(username);
+        if (user?.socketId) {
+            socket
+                .to([...user.socketId].pop() ?? "")
+                .emit("updateRoles", { roles: roles });
+        }
     };
 }
 export { socketListen, wrap };
