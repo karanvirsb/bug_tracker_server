@@ -44,7 +44,7 @@ const socketListen = (app: any) => {
             }
         });
 
-        socket.on("updateUserRoles", updateUserRoles);
+        socket.on("updateUserRoles", updateUserRoles(socket));
 
         socket.on("removedUserFromGroup", removeUserFromGroup(socket));
     });
@@ -140,13 +140,24 @@ function updateUserRoles(
     socket: Socket<DefaultEventsMap, any, SocketData, any>
 ): (...args: any[]) => void {
     return ({ roomId, username, roles }: updateUserRoles) => {
+        console.log(
+            "🚀 ~ file: sockets.ts ~ line 143 ~ return ~ roomId, username, roles",
+            roomId,
+            username,
+            roles
+        );
         const room = rooms.get(roomId);
         if (!room) {
             socket.emit("error", { message: "Invalid Room" });
         }
 
         const user = room?.get(username);
-        if (user?.socketId) {
+        if (user) {
+            console.log(
+                "🚀 ~ file: sockets.ts ~ line 150 ~ return ~ user",
+                user
+            );
+
             socket
                 .to([...user.socketId].pop() ?? "")
                 .emit("updateRoles", { roles: roles });
