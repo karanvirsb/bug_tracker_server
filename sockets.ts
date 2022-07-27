@@ -46,20 +46,7 @@ const socketListen = (app: any) => {
 
         socket.on("updateUserRoles", updateUserRoles);
 
-        socket.on("removedUserFromGroup", ({ username, roomId }) => {
-            const room = rooms.get(roomId);
-
-            if (!room)
-                socket.emit("error", { message: "RoomId does not exist" });
-
-            const user = room?.get(username);
-
-            if (user) {
-                socket
-                    .to([...user.socketId].pop() ?? "")
-                    .emit("removedFromGroup");
-            }
-        });
+        socket.on("removedUserFromGroup", removeUserFromGroup(socket));
     });
 };
 
@@ -67,6 +54,22 @@ const wrap = (middleware: any) => (socket: any, next: any) => {
     console.log(socket.request);
     middleware(socket.request, {}, next);
 };
+
+function removeUserFromGroup(
+    socket: Socket<DefaultEventsMap, any, SocketData, any>
+): (...args: any[]) => void {
+    return ({ username, roomId }) => {
+        const room = rooms.get(roomId);
+
+        if (!room) socket.emit("error", { message: "RoomId does not exist" });
+
+        const user = room?.get(username);
+
+        if (user) {
+            socket.to([...user.socketId].pop() ?? "").emit("removedFromGroup");
+        }
+    };
+}
 
 function userJoinsRoom(
     socket: Socket<DefaultEventsMap, any, SocketData, any>
