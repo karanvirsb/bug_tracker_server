@@ -29,6 +29,7 @@ const socketListen = (app: any) => {
             console.log(`${username} is leaving room ${roomId}`);
             socket.leave(roomId);
         });
+
         // invalidating query for all users
         socket.on("invalidateQuery", (data) => {
             console.log("invalidate", data);
@@ -42,7 +43,23 @@ const socketListen = (app: any) => {
                 roomMembers?.delete(socket.data.username);
             }
         });
+
         socket.on("updateUserRoles", updateUserRoles);
+
+        socket.on("removedUserFromGroup", ({ username, roomId }) => {
+            const room = rooms.get(roomId);
+
+            if (!room)
+                socket.emit("error", { message: "RoomId does not exist" });
+
+            const user = room?.get(username);
+
+            if (user) {
+                socket
+                    .to([...user.socketId].pop() ?? "")
+                    .emit("removedFromGroup");
+            }
+        });
     });
 };
 
