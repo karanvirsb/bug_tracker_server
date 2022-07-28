@@ -117,7 +117,10 @@ const updateGroupName = async (
     if (!id) throw Error("Id is invalid");
 
     if (groupName.length < 4 || groupName.length > 50) {
-        throw Error("Group Name should be between 4-50 characters");
+        return res
+            .status(500)
+            .json({ message: "Group Name should be between 4-50 characters" });
+        // throw Error("Group Name should be between 4-50 characters");
     }
 
     let nanoid = customAlphabet("123456789", 4);
