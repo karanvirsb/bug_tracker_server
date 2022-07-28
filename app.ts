@@ -43,12 +43,12 @@ app.use("/ticket", ticketRouter);
 app.use("/comment", commentRouter);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
-    res.status(404).json({ error: "Not Found" });
+    return res.status(404).json({ error: "Not Found" });
 });
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     console.log(err.message);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
 });
 
 export default app;
