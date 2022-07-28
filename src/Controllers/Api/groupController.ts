@@ -107,6 +107,85 @@ const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 };
+
+const updateGroupName = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { id, groupName } = req.body;
+    if (!id) throw Error("Id is invalid");
+
+    if (groupName.length < 4 || groupName.length > 50) {
+        throw Error("Group Name should be between 4-50 characters");
+    }
+
+    let nanoid = customAlphabet("123456789", 4);
+    let generatedGroupCode = await nanoid();
+    let inviteCode = groupName + "#" + generatedGroupCode;
+    let foundGroup = await GroupService.getGroup({
+        filter: "groupInviteCode",
+        val: inviteCode,
+    });
+
+    // while group exists with code
+    while (foundGroup) {
+        generatedGroupCode = await nanoid();
+        inviteCode = groupName + "#" + generatedGroupCode;
+        foundGroup = await GroupService.getGroup({
+            filter: "groupInviteCode",
+            val: inviteCode,
+        });
+    }
+
+    try {
+        const updatedGroup = await GroupService.updateGroup(id, {
+            groupName: groupName,
+            groupInviteCode: inviteCode,
+        });
+        if (updatedGroup) return res.sendStatus(200);
+        return res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const refreshInviteCode = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { id, groupName } = req.body;
+
+    let nanoid = customAlphabet("123456789", 4);
+    let generatedGroupCode = await nanoid();
+    let inviteCode = groupName + "#" + generatedGroupCode;
+    let foundGroup = await GroupService.getGroup({
+        filter: "groupInviteCode",
+        val: inviteCode,
+    });
+
+    // while group exists with code
+    while (foundGroup) {
+        generatedGroupCode = await nanoid();
+        inviteCode = groupName + "#" + generatedGroupCode;
+        foundGroup = await GroupService.getGroup({
+            filter: "groupInviteCode",
+            val: inviteCode,
+        });
+    }
+
+    try {
+        const updatedGroup = await GroupService.updateGroup(id, {
+            groupInviteCode: inviteCode,
+        });
+        if (updatedGroup) return res.sendStatus(200);
+        return res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const deleteGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.body;
     if (!id) throw Error("Id is invalid");
@@ -119,4 +198,11 @@ const deleteGroup = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export { createGroup, getGroup, updateGroup, deleteGroup };
+export {
+    createGroup,
+    getGroup,
+    updateGroup,
+    deleteGroup,
+    refreshInviteCode,
+    updateGroupName,
+};
