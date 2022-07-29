@@ -28,7 +28,6 @@ const avatarType = z.object({
 });
 
 const IUser = z.object({
-    userId: z.string().min(1).optional(),
     avatar: avatarType.optional(),
     username: z.string().min(4).max(26),
     password: z.string().min(8),
@@ -43,7 +42,6 @@ const IUser = z.object({
 export type UserType = z.infer<typeof IUser>;
 
 const usersSchema = new Schema<UserType>({
-    userId: { type: String, unique: true },
     avatar: Object,
     username: { type: String, unique: true },
     password: { type: String, required: true },
