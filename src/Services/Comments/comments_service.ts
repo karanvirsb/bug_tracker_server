@@ -109,6 +109,25 @@ const getAllComments =
         return commentsArr;
     };
 
+const getCommentsByTicketId =
+    (Comments: mongoose.PaginateModel<commentType>) =>
+    async ({
+        ticketId,
+        page,
+        limit = 10,
+    }: {
+        ticketId: string;
+        page: number;
+        limit: number;
+    }) => {
+        // const comments = Comments.find({ ticketId: ticketId }).exec();
+        const comments = Comments.paginate(
+            { ticketId: ticketId },
+            { page: page, limit: limit }
+        );
+        return comments;
+    };
+
 export default (Comment: mongoose.PaginateModel<commentType>) => {
     return {
         createComment: createComment(Comment),
@@ -118,5 +137,6 @@ export default (Comment: mongoose.PaginateModel<commentType>) => {
         replyTo: replyTo(Comment),
         getReplyIds: getReplyIds(Comment),
         getAllComments: getAllComments(Comment),
+        getCommentsByTicketId: getCommentsByTicketId(Comment),
     };
 };
