@@ -130,6 +130,29 @@ const replyTo = async (req: Request, res: Response, next: NextFunction) => {
 
 // questionable may not be needed
 const getReplyIds = async () => {};
+
+const getCommentsByTicketId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const { id } = req.params;
+    const page: any = req.query.page;
+    const limit: any = req.query.limit || 10;
+    try {
+        const comments = await CommentService.getCommentsByTicketId({
+            ticketId: id,
+            page: parseInt(page),
+            limit: parseInt(limit),
+        });
+
+        if (comments) return res.status(200).json(comments);
+        res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const getAllComments = async (
     req: Request,
     res: Response,
@@ -155,4 +178,5 @@ export {
     replyTo,
     getReplyIds,
     getAllComments,
+    getCommentsByTicketId,
 };
