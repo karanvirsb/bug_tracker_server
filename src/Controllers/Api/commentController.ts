@@ -119,6 +119,25 @@ const replyTo = async (req: Request, res: Response, next: NextFunction) => {
     const { commentId, reply } = req.body;
     if (!commentId) throw Error("Invalid Id");
     try {
+        // checking to see if the id exists
+        if (!reply.commentId) {
+            // generating and finding comment
+            let generatedId = await generate();
+            let foundComment = await CommentService.getComment({
+                filter: "commentId",
+                val: generatedId,
+            });
+            // while comment does not exist keep generating
+            while (foundComment) {
+                generatedId = await generate();
+                foundComment = await CommentService.getComment({
+                    filter: "commentId",
+                    val: generatedId,
+                });
+            }
+            reply.commentId = generatedId;
+        }
+        await IComment.parseAsync(reply);
         const comment = await CommentService.replyTo(commentId, reply);
 
         if (comment) return res.sendStatus(200);
