@@ -9,6 +9,7 @@ const IComment = z.object({
     ticketId: z.string().min(1).optional(),
     comment: z.string().min(4),
     reply: z.array(z.string()).optional(),
+    repliedTo: z.string().optional(),
 });
 
 export type commentType = z.infer<typeof IComment>;
@@ -20,6 +21,7 @@ const commentSchema = new Schema<commentType>({
     ticketId: { type: String },
     comment: { type: String },
     reply: { type: [] },
+    repliedTo: { type: String },
 });
 
 commentSchema.plugin(paginate);
