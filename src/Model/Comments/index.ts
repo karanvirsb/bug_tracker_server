@@ -7,7 +7,7 @@ const IComment = z.object({
     dateCreated: z.date().optional(),
     userId: z.string().min(1),
     ticketId: z.string().min(1).optional(),
-    comment: z.string().min(4),
+    comment: z.string().min(1),
     reply: z.array(z.string()).optional(),
     repliedTo: z.string().optional(),
 });
