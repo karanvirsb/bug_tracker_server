@@ -59,9 +59,48 @@ const deleteComment = async (
     if (!commentId) throw Error("Invalid Id");
 
     try {
+        // find comment
+        const foundComment = await CommentService.getComment({
+            filter: "commentId",
+            val: commentId,
+        });
+        let deletedAll = true;
+        // after found if it has replies purge all of them
+        if (foundComment && foundComment.reply) {
+            try {
+                foundComment.reply.forEach(async (commentId) => {
+                    await CommentService.deleteComment(commentId);
+                });
+            } catch (error) {
+                console.log(
+                    "🚀 ~ file: commentController.ts ~ line 72 ~ error",
+                    error
+                );
+                deletedAll = false;
+            }
+        }
+        // else delete the top level comment
         const deletedComment = await CommentService.deleteComment(commentId);
+        let updatedTopLevelComment;
+        // remove reply from other comment
+        if (deletedComment) {
+            const topLevelComment = await CommentService.getComment({
+                filter: "commentId",
+                val: foundComment?.repliedTo ?? "",
+            });
 
-        if (deletedComment) return res.sendStatus(200);
+            if (topLevelComment) {
+                const replys = topLevelComment?.reply?.filter(
+                    (id) => id !== commentId
+                );
+                updatedTopLevelComment = await CommentService.updateComment(
+                    topLevelComment.commentId,
+                    { reply: replys }
+                );
+            }
+        }
+        if (deletedComment && deletedAll && updatedTopLevelComment)
+            return res.sendStatus(200);
         res.sendStatus(204);
     } catch (error) {
         next(error);
