@@ -6,6 +6,7 @@ import UserService from "../Services/Users";
 import bcrypt from "bcrypt";
 import axios from "axios";
 
+// created array for background colors of avatars
 const colors = [
     "d28100",
     "d1423f",
@@ -64,6 +65,7 @@ const handleNewUser = async (req: Request, res: Response) => {
             groupId: "",
             refreshToken: "",
         };
+        // fetch avatar for user
         const color = colors[Math.floor(Math.random() * colors.length)];
         const response = await axios(
             `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=${color}&color=fff&length=2&rounded=true&bold=true&format=svg`,
