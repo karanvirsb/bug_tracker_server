@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 function connect(): void {
     console.log(process.env.NODE_ENV);
+    // checking to see if we are in production to connect to local or online database
     if (process.env.NODE_ENV === undefined) {
-        console.log("here");
         mongoose
             .connect("mongodb://localhost:27017/bugTracker_development")
             .then(() => {
