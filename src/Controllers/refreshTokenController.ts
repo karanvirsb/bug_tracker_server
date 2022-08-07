@@ -3,9 +3,9 @@ import UserService from "../Services/Users";
 import jwt from "jsonwebtoken";
 
 interface UserPayload {
-    username: String;
+    username: string;
     roles: {};
-    groupId: String;
+    groupId: string;
 }
 
 const handleRefreshToken = async (req: Request, res: Response) => {
