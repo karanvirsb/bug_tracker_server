@@ -9,7 +9,6 @@ type roomUsers = {
     status: string;
 };
 
-// const usersOnline: roomUsers[] = [];
 const rooms = new Map<string, Map<string, roomUsers>>();
 
 const socketListen = (app: any) => {
@@ -122,10 +121,9 @@ function userJoinsRoom(
                         roomId
                     )}`
                 );
-
-                // emit room data back
             }
         }
+        // emit room data back
         socket.emit("roomJoined", socket.rooms.has(roomId));
     };
 }
