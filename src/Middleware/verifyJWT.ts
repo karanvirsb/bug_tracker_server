@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken";
 
 interface UserPayload {
     UserInfo: {
-        username: String;
+        username: string;
         roles: {};
-        groupId: String;
+        groupId: string;
     };
 }
 
@@ -18,7 +17,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
     // Bearer token...
     const token = authHeader.split(" ")[1];
     try {
-        // @tsignore
+        // checking to see if the token has username, roles and groupId
         const payload = jwt.verify(
             token,
             process.env.ACCESS_TOKEN_SECRET!
