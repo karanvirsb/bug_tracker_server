@@ -33,16 +33,17 @@ const createGroup = async (req: Request, res: Response, next: NextFunction) => {
         let nanoid = customAlphabet("123456789", 4);
         let generatedGroupCode = await nanoid();
         let inviteCode = groupName + "#" + generatedGroupCode;
-        let foundGroup = await GroupService.getGroup({
-            filter: "groupInviteCode",
-            val: inviteCode,
-        });
+        let foundGroupByInviteCode: groupType | null =
+            await GroupService.getGroup({
+                filter: "groupInviteCode",
+                val: inviteCode,
+            });
 
         // while group exists with code
-        while (foundGroup) {
+        while (foundGroupByInviteCode) {
             generatedGroupCode = await nanoid();
             inviteCode = groupName + "#" + generatedGroupCode;
-            foundGroup = await GroupService.getGroup({
+            foundGroupByInviteCode = await GroupService.getGroup({
                 filter: "groupInviteCode",
                 val: inviteCode,
             });
@@ -120,13 +121,12 @@ const updateGroupName = async (
         return res
             .status(500)
             .json({ message: "Group Name should be between 4-50 characters" });
-        // throw Error("Group Name should be between 4-50 characters");
     }
 
     let nanoid = customAlphabet("123456789", 4);
     let generatedGroupCode = await nanoid();
     let inviteCode = groupName + "#" + generatedGroupCode;
-    let foundGroup = await GroupService.getGroup({
+    let foundGroup: groupType | null = await GroupService.getGroup({
         filter: "groupInviteCode",
         val: inviteCode,
     });
@@ -163,7 +163,7 @@ const refreshInviteCode = async (
     let nanoid = customAlphabet("123456789", 4);
     let generatedGroupCode = await nanoid();
     let inviteCode = groupName + "#" + generatedGroupCode;
-    let foundGroup = await GroupService.getGroup({
+    let foundGroup: groupType | null = await GroupService.getGroup({
         filter: "groupInviteCode",
         val: inviteCode,
     });
