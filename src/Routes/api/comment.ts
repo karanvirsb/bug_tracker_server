@@ -14,6 +14,7 @@ import {
 router.route("/").post(createComment).put(updateComment).delete(deleteComment);
 router.route("/id").post(getComment);
 router.route("/tickets/:id").get(getCommentsByTicketId);
+router.route("/reply").post(replyTo);
 router.route("/reply/comments").post(getAllComments);
 
 export default router;
