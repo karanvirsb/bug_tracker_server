@@ -1,5 +1,5 @@
 import { groupType } from "../../Model/Groups";
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 
 const createGroup =
     (Groups: mongoose.PaginateModel<groupType>) =>
@@ -10,7 +10,7 @@ const createGroup =
 
 const updateGroup =
     (Groups: mongoose.PaginateModel<groupType>) =>
-    async (groupId: String, updates: {}) => {
+    async (groupId: string, updates: {}) => {
         const updatedGroup = await Groups.updateOne(
             { groupId: groupId },
             updates
