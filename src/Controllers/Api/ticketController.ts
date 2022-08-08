@@ -56,7 +56,7 @@ const createTicket = async (
         if (!newTicket?.ticketId) {
             // generate id
             let generatedId = await generate();
-            let foundTicket: any = await TicketService.getTicket({
+            let foundTicket: ticketType | null = await TicketService.getTicket({
                 filter: "ticketId",
                 val: generatedId,
             });
@@ -132,7 +132,7 @@ const getTicket = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
     if (!filterValue) throw Error("Invalid parameter");
     try {
-        const ticket = await TicketService.getTicket({
+        const ticket: ticketType | null = await TicketService.getTicket({
             filter: filter ?? "ticketId",
             val: filterValue,
         });
@@ -144,21 +144,28 @@ const getTicket = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getTicketsByProjectId = async (
-    req: Request,
+    req: Request<
+        { id: string },
+        unknown,
+        unknown,
+        { page: number; limit: number }
+    >,
     res: Response,
     next: NextFunction
 ) => {
     const id = req.params.id;
-    const page: any = req.query.page;
-    const limit: any = req.query.limit || 10;
+    let page = req.query.page;
+    let limit = req.query.limit || 10;
 
     if (!id) throw Error("Invalid id");
 
     try {
+        page = typeof page === "string" ? parseInt(page) : page;
+        limit = typeof limit === "string" ? parseInt(limit) : limit;
         const tickets = await TicketService.getTicketsByProjectId({
             projectId: id,
-            page: parseInt(page),
-            limit: parseInt(limit),
+            page: page,
+            limit: limit,
         });
         if (tickets.totalDocs > 0) return res.status(200).json(tickets);
         return res.sendStatus(204);
@@ -168,21 +175,28 @@ const getTicketsByProjectId = async (
 };
 
 const getTicketsByUsername = async (
-    req: Request,
+    req: Request<
+        { username: string },
+        unknown,
+        unknown,
+        { page: number; limit: number }
+    >,
     res: Response,
     next: NextFunction
 ) => {
     const username = req.params.username;
-    const page: any = req.query.page;
-    const limit: any = req.query.limit || 5;
+    let page = req.query.page;
+    let limit = req.query.limit || 5;
 
     if (!username) throw Error("Invalid username");
 
     try {
+        page = typeof page === "string" ? parseInt(page) : page;
+        limit = typeof limit === "string" ? parseInt(limit) : limit;
         const tickets = await TicketService.getTicketsByUsername({
             username: username,
-            page: parseInt(page),
-            limit: parseInt(limit),
+            page: page,
+            limit: limit,
         });
         if (tickets.totalDocs > 0) return res.status(200).json(tickets);
         return res.sendStatus(204);
