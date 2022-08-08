@@ -13,7 +13,7 @@ const getUser = async (
     if (!filterValue) throw Error("Invalid parameter");
 
     try {
-        const user: IUser | null = await UserService.getUser({
+        const user: UserType | null = await UserService.getUser({
             filter: filter ?? "username",
             val: filterValue,
         });
@@ -108,7 +108,9 @@ const createUser = async (
     ];
 
     try {
+        // generate a random number for a color
         const color = colors[Math.floor(Math.random() * colors.length)];
+        // fetching the avatar
         const response = await axios(
             `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=${color}&color=fff&length=2&rounded=true&bold=true&format=svg`,
             { method: "get" }
