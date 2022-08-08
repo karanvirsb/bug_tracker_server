@@ -241,6 +241,7 @@ const removeUserFromTicket = async (
         next(error);
     }
 };
+
 const getStatistics = async (
     req: Request,
     res: Response,
@@ -248,6 +249,7 @@ const getStatistics = async (
 ) => {
     const { projectIds } = req.body;
     try {
+        // captures are ticketStatus, type and severity
         const stats = await TicketService.getStatistics(projectIds);
         if (stats) return res.status(200).json(stats);
         return res.sendStatus(502);
