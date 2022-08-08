@@ -1,4 +1,4 @@
-import mongoose, { Model } from "mongoose";
+import mongoose from "mongoose";
 import { commentType } from "../../Model/Comments";
 
 const createComment =
@@ -10,7 +10,7 @@ const createComment =
 
 const updateComment =
     (Comments: mongoose.PaginateModel<commentType>) =>
-    async (commentId: String, updates: {}) => {
+    async (commentId: string, updates: { [key: string]: any }) => {
         const updatedComment = await Comments.updateOne(
             { commentId: commentId },
             updates
@@ -20,8 +20,8 @@ const updateComment =
     };
 
 const updateReply = async (
-    commentId: String,
-    replyId: String,
+    commentId: string,
+    replyId: string,
     Comments: mongoose.PaginateModel<commentType>
 ) => {
     /*
@@ -32,7 +32,7 @@ const updateReply = async (
     }).exec();
 
     // getting the reply arr to store id
-    const reply: String[] = comment?.reply || [];
+    const reply: string[] = comment?.reply || [];
     reply.push(replyId);
 
     const updatedComment = await Comments.updateOne(
@@ -45,7 +45,7 @@ const updateReply = async (
 
 const deleteComment =
     (Comments: mongoose.PaginateModel<commentType>) =>
-    async (commentId: String) => {
+    async (commentId: string) => {
         const deletedComment = await Comments.deleteOne({
             commentId: commentId,
         }).exec();
@@ -55,19 +55,21 @@ const deleteComment =
 const getComment =
     (Comments: mongoose.PaginateModel<commentType>) =>
     async (commentInfo: { filter: "commentId"; val: string }) => {
-        return await Comments.findOne({
+        return Comments.findOne({
             [commentInfo.filter]: commentInfo.val,
         }).exec();
     };
 
 const replyTo =
     (Comments: mongoose.PaginateModel<commentType>) =>
-    async (commentId: String, commentInfo: commentType) => {
+    async (commentId: string, commentInfo: commentType) => {
         /*
          * adds commentID to comment for a reply
          */
         const comment = new Comments(commentInfo);
-        const foundComment = await Comments.findOne({ commentId: commentId });
+        const foundComment: commentType | null = await Comments.findOne({
+            commentId: commentId,
+        });
         // if the original comment isnt found return false
         if (!foundComment) return false;
 
@@ -77,21 +79,17 @@ const replyTo =
         // update reply with the replyid
         await updateReply(commentId, createdComment.commentId, Comments);
 
-        const updatedComment = await Comments.findOne({
+        // returning an updated comment
+        return Comments.findOne({
             commentId: commentId,
         }).exec();
-
-        return updatedComment;
     };
 
 const getReplyIds =
     (Comments: mongoose.PaginateModel<commentType>) =>
-    async (commentId: String) => {
-        const replys = await Comments.findOne(
-            { commentId: commentId },
-            `reply`
-        ).exec();
-        return replys;
+    async (commentId: string) => {
+        // returning replys
+        return Comments.findOne({ commentId: commentId }, `reply`).exec();
     };
 
 const getAllComments =
@@ -99,6 +97,7 @@ const getAllComments =
     async (replyArr: string[]) => {
         const commentsArr = [];
         for (let i = 0; i < replyArr.length; i++) {
+            // going through each reply id to get the comment
             const replyId = replyArr[i];
             const comment = await Comments.findOne({
                 commentId: replyId,
@@ -120,12 +119,10 @@ const getCommentsByTicketId =
         page: number;
         limit: number;
     }) => {
-        // const comments = Comments.find({ ticketId: ticketId }).exec();
-        const comments = Comments.paginate(
+        return Comments.paginate(
             { ticketId: ticketId },
             { page: page, limit: limit }
         );
-        return comments;
     };
 
 export default (Comment: mongoose.PaginateModel<commentType>) => {
