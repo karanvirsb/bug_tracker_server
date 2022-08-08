@@ -38,20 +38,19 @@ const getUsersByGroupId =
     (User: mongoose.PaginateModel<UserType>) => async (groupId: string) => {
         if (!groupId) throw Error("No groupId was given");
 
-        const userArr = await User.find(
+        // returning all users based on groupId
+        return await User.find(
             { groupId: groupId },
             "avatar username email firstName lastName roles"
         );
-
-        return userArr;
     };
 
 const getUserByRefreshToken =
     (User: mongoose.PaginateModel<UserType>) =>
     async (token: UserType["refreshToken"]): Promise<UserType | null> => {
         if (!User) throw Error("User data was not provided");
-        const user = await User.findOne({ refreshToken: token }).exec();
-        return user;
+        // returning the user
+        return await User.findOne({ refreshToken: token }).exec();
     };
 
 // CREATES
@@ -69,7 +68,7 @@ const updateUser =
     async (
         username: UserType["username"],
         updates: Object
-    ): Promise<Boolean> => {
+    ): Promise<boolean> => {
         if (!username) throw Error("No username was provided");
         if (!updates) throw Error("No updates were provided");
 
@@ -85,7 +84,7 @@ const updateUser =
 
 const deleteUser =
     (User: mongoose.PaginateModel<UserType>) =>
-    async (id: UserType["username"]): Promise<Boolean> => {
+    async (id: UserType["username"]): Promise<boolean> => {
         if (!id) throw Error("No username was passed");
         const deletedUser = await User.deleteOne({ username: id });
         return deletedUser.acknowledged && deletedUser.deletedCount === 1;
