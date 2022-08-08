@@ -1,4 +1,3 @@
-export {};
 import { NextFunction, Request, Response } from "express";
 import ProjectService from "../../Services/Projects";
 import { projectType, IProject } from "../../Model/Projects";
@@ -15,10 +14,11 @@ const createProject = async (
         if (!projectId) {
             // generate a id if projectId is not given
             let generatedId = await generate();
-            let foundProject = await ProjectService.getProject({
-                filter: "projectId",
-                val: generatedId,
-            });
+            let foundProject: projectType | null =
+                await ProjectService.getProject({
+                    filter: "projectId",
+                    val: generatedId,
+                });
 
             // if we keep finding projects keep generarting
             while (foundProject) {
@@ -59,10 +59,11 @@ const getProject = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
     if (!filterValue) throw Error("Invalid parameter");
     try {
-        const foundProject = await ProjectService.getProject({
-            filter: filter ?? "projectId",
-            val: filterValue,
-        });
+        const foundProject: projectType | null =
+            await ProjectService.getProject({
+                filter: filter ?? "projectId",
+                val: filterValue,
+            });
         if (foundProject) return res.status(200).json(foundProject);
 
         return res.sendStatus(204);
@@ -105,13 +106,14 @@ const deleteProject = async (
     if (!id) throw Error("Invalid Id");
 
     try {
-        const deletedGroup = await ProjectService.deleteProject(id);
-        if (deletedGroup) return res.sendStatus(200);
+        const deletedProject = await ProjectService.deleteProject(id);
+        if (deletedProject) return res.sendStatus(200);
         return res.sendStatus(204);
     } catch (error) {
         next(error);
     }
 };
+
 const addUserToProject = async (
     req: Request,
     res: Response,
@@ -135,7 +137,7 @@ const removeUserFromProject = async (
     res: Response,
     next: NextFunction
 ) => {
-    const { projectId, userId } = req.body;
+    const { projectId, userId } = req.body; // number, string
 
     try {
         const removedUser = await ProjectService.removeUserFromProject(
@@ -149,12 +151,12 @@ const removeUserFromProject = async (
     }
 };
 const getAllProjectsByGroupId = async (
-    req: Request,
+    req: Request<{ id: string }, unknown, unknown, { page: string }>,
     res: Response,
     next: NextFunction
 ) => {
     const groupId = req.params.id;
-    const page: any = req.query.page;
+    const page = req.query.page;
 
     if (!groupId) throw Error("Invalid Id");
     console.log(groupId);
@@ -169,7 +171,6 @@ const getAllProjectsByGroupId = async (
         next(error);
     }
 };
-const getAllUsersOfProject = () => {};
 
 export {
     createProject,
@@ -179,5 +180,4 @@ export {
     addUserToProject,
     removeUserFromProject,
     getAllProjectsByGroupId,
-    getAllUsersOfProject,
 };
