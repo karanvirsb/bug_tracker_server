@@ -23,7 +23,7 @@ const createTicket =
 
 const updateTicket =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
-    async (ticketId: String, updates: {}) => {
+    async (ticketId: string, updates: {}) => {
         const updatedTicket = await Tickets.updateOne(
             { ticketId: ticketId },
             updates
@@ -34,7 +34,7 @@ const updateTicket =
 
 const deleteTicket =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
-    async (ticketId: String) => {
+    async (ticketId: string) => {
         const deletedTicket = await Tickets.deleteOne({
             ticketId: ticketId,
         }).exec();
@@ -56,12 +56,11 @@ const getTicket =
 const getTicketsByProjectId =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
     async ({ projectId, page, limit }: params["getTicketsByProjectId"]) => {
-        const tickets = await Tickets.paginate(
+        // returing all tickets
+        return await Tickets.paginate(
             { projectId: projectId },
             { page: page, limit: limit }
         );
-
-        return tickets;
     };
 
 const getTicketsByUsername =
@@ -75,14 +74,14 @@ const getTicketsByUsername =
 
 const assignUserToTicket =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
-    async (ticketId: String, userId: String) => {
+    async (ticketId: string, userId: string) => {
         /*
          *   assigning dev to a ticker
          */
         const ticket = await Tickets.findOne({ ticketId: ticketId }).exec();
         // getting the users arr and adding id
 
-        const users: String[] = (ticket && ticket.assignedDev) || [];
+        const users: string[] = (ticket && ticket.assignedDev) || [];
         users.push(userId);
 
         const updatedTicket = await Tickets.updateOne(
@@ -95,13 +94,13 @@ const assignUserToTicket =
 
 const removeUserFromTicket =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
-    async (ticketId: String, userId: String) => {
+    async (ticketId: string, userId: string) => {
         /*
          * removing an assigned dev
          */
         const ticket = await Tickets.findOne({ ticketId: ticketId }).exec();
         // finding users arr and removing user
-        const users: String[] = (ticket && ticket.assignedDev) || [];
+        const users: string[] = (ticket && ticket.assignedDev) || [];
         const filteredUsers = users.filter((user) => user != userId);
 
         const updatedTicket = await Tickets.updateOne(
