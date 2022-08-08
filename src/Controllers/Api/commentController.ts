@@ -17,10 +17,11 @@ const createComment = async (
         if (!commentId) {
             // generating and finding comment
             let generatedId = await generate();
-            let foundComment = await CommentService.getComment({
-                filter: "commentId",
-                val: generatedId,
-            });
+            let foundComment: commentType | null =
+                await CommentService.getComment({
+                    filter: "commentId",
+                    val: generatedId,
+                });
             // while comment does not exist keep generating
             while (foundComment) {
                 generatedId = await generate();
@@ -60,10 +61,11 @@ const deleteComment = async (
 
     try {
         // find comment
-        const foundComment = await CommentService.getComment({
-            filter: "commentId",
-            val: commentId,
-        });
+        const foundComment: commentType | null =
+            await CommentService.getComment({
+                filter: "commentId",
+                val: commentId,
+            });
         let deletedAll = true;
         // after found if it has replies purge all of them
         if (foundComment && foundComment.reply) {
@@ -84,10 +86,11 @@ const deleteComment = async (
         let updatedTopLevelComment;
         // remove reply from other comment
         if (deletedComment) {
-            const topLevelComment = await CommentService.getComment({
-                filter: "commentId",
-                val: foundComment?.repliedTo ?? "",
-            });
+            const topLevelComment: commentType | null =
+                await CommentService.getComment({
+                    filter: "commentId",
+                    val: foundComment?.repliedTo ?? "",
+                });
 
             if (topLevelComment) {
                 const replys = topLevelComment?.reply?.filter(
@@ -143,7 +146,7 @@ const getComment = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
     if (!filterValue) throw Error("Invalid parameter");
     try {
-        const comment = await CommentService.getComment({
+        const comment: commentType | null = await CommentService.getComment({
             filter: filter ?? "commentId",
             val: filterValue,
         });
@@ -162,11 +165,12 @@ const replyTo = async (req: Request, res: Response, next: NextFunction) => {
         if (!reply.commentId) {
             // generating and finding comment
             let generatedId = await generate();
-            let foundComment = await CommentService.getComment({
-                filter: "commentId",
-                val: generatedId,
-            });
-            // while comment does not exist keep generating
+            let foundComment: commentType | null =
+                await CommentService.getComment({
+                    filter: "commentId",
+                    val: generatedId,
+                });
+            // while comment exists keep generating
             while (foundComment) {
                 generatedId = await generate();
                 foundComment = await CommentService.getComment({
@@ -176,7 +180,9 @@ const replyTo = async (req: Request, res: Response, next: NextFunction) => {
             }
             reply.commentId = generatedId;
         }
+        // parse the comment to make sure its up to standards
         await IComment.parseAsync(reply);
+
         const comment = await CommentService.replyTo(commentId, reply);
 
         if (comment) return res.sendStatus(200);
@@ -185,9 +191,6 @@ const replyTo = async (req: Request, res: Response, next: NextFunction) => {
         next(error);
     }
 };
-
-// questionable may not be needed
-const getReplyIds = async () => {};
 
 const getCommentsByTicketId = async (
     req: Request,
@@ -234,7 +237,6 @@ export {
     updateComment,
     getComment,
     replyTo,
-    getReplyIds,
     getAllComments,
     getCommentsByTicketId,
 };
