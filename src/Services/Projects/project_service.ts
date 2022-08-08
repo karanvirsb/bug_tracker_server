@@ -4,13 +4,12 @@ import { projectType } from "../../Model/Projects";
 const createProject =
     (Projects: mongoose.PaginateModel<projectType>) =>
     async (projectInfo: projectType) => {
-        const project = await Projects.create(projectInfo);
-        return project;
+        return await Projects.create(projectInfo);
     };
 
 const updateProject =
     (Projects: mongoose.PaginateModel<projectType>) =>
-    async (projectId: String, updates: {}) => {
+    async (projectId: string, updates: { [key: string]: any }) => {
         const updatedProject = await Projects.updateOne(
             { projectId: projectId },
             updates
@@ -21,7 +20,7 @@ const updateProject =
 
 const deleteProject =
     (Projects: mongoose.PaginateModel<projectType>) =>
-    async (projectId: String) => {
+    async (projectId: string) => {
         const deletedProject = await Projects.deleteOne({
             projectId: projectId,
         }).exec();
@@ -33,7 +32,7 @@ const getProject =
     (Projects: mongoose.PaginateModel<projectType>) =>
     async (projectInfo: {
         filter: "projectId" | "projectName";
-        val: String;
+        val: string;
     }) => {
         return await Projects.findOne({
             [projectInfo.filter]: projectInfo.val,
@@ -42,7 +41,7 @@ const getProject =
 
 const addUserToProject =
     (Projects: mongoose.PaginateModel<projectType>) =>
-    async (projectId: String, userId: String) => {
+    async (projectId: string, userId: string) => {
         /*
          * add a new user to a project
          */
@@ -50,7 +49,7 @@ const addUserToProject =
             projectId: projectId,
         }).exec();
         // get the userId arr and add new user to it
-        const users: String[] = project?.users || [];
+        const users: string[] = project?.users || [];
         users.push(userId);
         const updatedProject = await Projects.updateOne(
             { projectId: projectId },
@@ -61,15 +60,15 @@ const addUserToProject =
 
 const removeUserFromProject =
     (Projects: mongoose.PaginateModel<projectType>) =>
-    async (projectId: String, userId: String) => {
+    async (projectId: string, userId: string) => {
         /*
-         * add a new user to a project
+         * remove user from a project
          */
         const project = await Projects.findOne({
             projectId: projectId,
         }).exec();
         // find the users arr and filter them out
-        const users: String[] = project?.users || [];
+        const users: string[] = project?.users || [];
         const filteredUsers = users.filter((user) => user != userId);
 
         const updatedProject = await Projects.updateOne(
@@ -81,23 +80,19 @@ const removeUserFromProject =
 
 const getAllProjectsByGroupId =
     (Projects: mongoose.PaginateModel<projectType>) =>
-    async (groupId: String, pageNumber: number) => {
-        const projects = await Projects.paginate(
+    async (groupId: string, pageNumber: number) => {
+        // returning all projects
+        return await Projects.paginate(
             { groupId: groupId },
             { limit: 5, page: pageNumber }
         );
-        // const projects = await Projects.find({ groupId: groupId }).exec();
-        return projects;
     };
 
 const getAllUsersOfProject =
     (Projects: mongoose.PaginateModel<projectType>) =>
     async (projectId: String) => {
-        const users = await Projects.find(
-            { projectId: projectId },
-            `users`
-        ).exec();
-        return users;
+        // returning users
+        return await Projects.find({ projectId: projectId }, `users`).exec();
     };
 
 export default (Project: mongoose.PaginateModel<projectType>) => {
