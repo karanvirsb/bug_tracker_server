@@ -31,8 +31,14 @@ const socketListen = (app: any) => {
 
         // invalidating query for all users
         socket.on("invalidateQuery", (data) => {
-            console.log("invalidate", data);
             io.to(data.groupId).emit("invalidateData", data.queryName);
+        });
+
+        socket.on("invalidateCommentsPage", (data) => {
+            io.to(data.roomId).emit("invalidateCommentPage", {
+                queryName: data.queryName,
+                page: data.page,
+            });
         });
 
         socket.on("leavingPage", () => {
