@@ -34,10 +34,9 @@ const socketListen = (app: any) => {
             io.to(data.groupId).emit("invalidateData", data.queryName);
         });
 
-        socket.on("invalidateCommentsPage", (data) => {
-            io.to(data.roomId).emit("invalidateCommentPage", {
-                queryName: data.queryName,
-                page: data.page,
+        socket.on("deleteCommentFromState", (data) => {
+            io.to(data.roomId).emit("deleteComment", {
+                comment: data.comment,
             });
         });
 
