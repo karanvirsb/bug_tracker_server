@@ -40,6 +40,13 @@ const socketListen = (app: any) => {
             });
         });
 
+        socket.on("invalidateCommentsPage", (data) => {
+            io.to(data.roomId).emit("invalidateCommentPage", {
+                page: data.page,
+                queryName: data.queryName,
+            });
+        });
+
         socket.on("leavingPage", () => {
             for (const [key] of socket.rooms.entries()) {
                 console.log(`Deleting ${socket.data.username} from ${key}`);
