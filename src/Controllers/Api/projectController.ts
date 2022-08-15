@@ -172,6 +172,25 @@ const getAllProjectsByGroupId = async (
     }
 };
 
+const getProjectIdsByGroupId = async (
+    req: Request<{ id: string }, unknown, unknown, unknown>,
+    res: Response,
+    next: NextFunction
+) => {
+    const groupId = req.params.id;
+
+    try {
+        const projectIds = await ProjectService.getProjectIdsFromGroupId(
+            groupId
+        );
+
+        if (projectIds) return res.status(200).json(projectIds);
+        return res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export {
     createProject,
     getProject,
@@ -180,4 +199,5 @@ export {
     addUserToProject,
     removeUserFromProject,
     getAllProjectsByGroupId,
+    getProjectIdsByGroupId,
 };
