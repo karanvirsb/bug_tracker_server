@@ -88,6 +88,12 @@ const getAllProjectsByGroupId =
         );
     };
 
+const getProjectIdsFromGroupId =
+    (Projects: mongoose.PaginateModel<projectType>) =>
+    async (groupId: string) => {
+        return await Projects.find({ groupId: groupId }, "projectId").exec();
+    };
+
 const getAllUsersOfProject =
     (Projects: mongoose.PaginateModel<projectType>) =>
     async (projectId: String) => {
@@ -105,5 +111,6 @@ export default (Project: mongoose.PaginateModel<projectType>) => {
         removeUserFromProject: removeUserFromProject(Project),
         getAllProjectsByGroupId: getAllProjectsByGroupId(Project),
         getAllUsersOfProject: getAllUsersOfProject(Project),
+        getProjectIdsFromGroupId: getProjectIdsFromGroupId(Project),
     };
 };
