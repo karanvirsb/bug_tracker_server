@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import ProjectService from "../../Services/Projects";
+import TicketService from "../../Services/Tickets";
 import { projectType, IProject } from "../../Model/Projects";
 import { ZodError } from "zod";
 import generate from "../../Helper/generateId";
@@ -144,8 +145,47 @@ const removeUserFromProject = async (
             projectId,
             userId
         );
-        if (removedUser) return res.sendStatus(200);
-        return res.sendStatus(502);
+        if (!removedUser) return res.sendStatus(502);
+
+        // once user is removed then remove from tickets
+        const promisesArr: Promise<boolean>[] = []; // to store the promises where the user exists
+        const projectTickets = await TicketService.getAllTicketsByProjectId({
+            projectId: projectId,
+        });
+
+        if (projectTickets) {
+            projectTickets.forEach((ticket) => {
+                if (ticket.reporterId === userId) {
+                    promisesArr.push(
+                        TicketService.removeUserFromTicket(
+                            ticket.ticketId,
+                            userId
+                        )
+                    );
+                } else if (
+                    ticket.assignedDev &&
+                    ticket?.assignedDev?.includes(userId)
+                ) {
+                    promisesArr.push(
+                        TicketService.removeUserFromTicket(
+                            ticket.ticketId,
+                            userId
+                        )
+                    );
+                }
+            });
+        }
+
+        // no tickets but removed from project
+        if (promisesArr.length === 0) return res.sendStatus(200);
+
+        Promise.all(promisesArr)
+            .then(() => {
+                return res.sendStatus(200);
+            })
+            .catch(() => {
+                return res.sendStatus(502);
+            });
     } catch (error) {
         next(error);
     }
