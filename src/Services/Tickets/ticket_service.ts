@@ -63,6 +63,12 @@ const getTicketsByProjectId =
         );
     };
 
+const getAllTicketsByProjectId =
+    (Tickets: mongoose.PaginateModel<ticketType>) =>
+    async ({ projectId }: { projectId: string }) => {
+        return await Tickets.find({ projectId: projectId });
+    };
+
 const getTicketsByUsername =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
     async ({ username, page, limit }: params["getTicketsByUsername"]) => {
@@ -142,5 +148,6 @@ export default (Ticket: mongoose.PaginateModel<ticketType>) => {
         getStatistics: getStatistics(Ticket),
         getTicketsByProjectId: getTicketsByProjectId(Ticket),
         getTicketsByUsername: getTicketsByUsername(Ticket),
+        getAllTicketsByProjectId: getAllTicketsByProjectId(Ticket),
     };
 };
