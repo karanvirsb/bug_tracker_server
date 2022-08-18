@@ -28,7 +28,9 @@ const handleLogin = async (req: Request, res: Response) => {
         });
 
         if (!foundUser) {
-            return res.sendStatus(401);
+            return res
+                .status(401)
+                .json({ message: "User with that username does not exist." });
         }
 
         const match = await bcrypt.compare(password, foundUser.password);
@@ -81,12 +83,12 @@ const handleLogin = async (req: Request, res: Response) => {
                 avatar: foundUser.avatar,
             });
         } else {
-            return res.sendStatus(401);
+            return res.status(401).json({ message: "Incorrect password" });
         }
     } catch (error) {
         console.log(error);
         if (error instanceof ZodError) {
-            return res.status(401).json({ message: error.message });
+            return res.status(403).json({ message: error.message });
         }
     }
 };
