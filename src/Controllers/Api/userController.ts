@@ -1,4 +1,6 @@
 import UserService from "../../Services/Users";
+import ProjectService from "../../Services/Projects";
+import TicketService from "../../Services/Tickets";
 import { NextFunction, Request, Response } from "express";
 import { UserType, IUser } from "../../Model/Users";
 import { ZodError } from "zod";
@@ -167,6 +169,117 @@ const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     } catch (error) {
         next(error);
     }
+};
+
+const removeUserFromGroup = async (
+    req: Request<
+        unknown,
+        unknown,
+        { username: string; groupId: string },
+        unknown
+    >,
+    res: Response,
+    next: NextFunction
+) => {
+    const { username, groupId } = req.body;
+
+    try {
+        // first find user
+        const foundUser = await UserService.getUser({
+            filter: "username",
+            val: username,
+        });
+
+        if (!foundUser)
+            return res.status(500).json({ error: "User was not found" });
+
+        // then delete the groupId
+        const updatedUser = await UserService.updateUser(username, {
+            groupId: "",
+        });
+
+        if (!updatedUser)
+            return res.status(204).json({ error: "User could not be removed" });
+
+        // then find all teh projects and remove that user
+        const projects = await ProjectService.getProjectsByGroupIdNoPages(
+            groupId
+        );
+
+        const projectPromises: Promise<any>[] = []; // storing the project promises
+        const projectIds: string[] = []; // storing the projectIds
+
+        if (projects) {
+            // checking to see if the user is within the project
+            for (let i = 0; i < projects.length; i++) {
+                const project = projects[i];
+                if (project.users && project.users.includes(username)) {
+                    projectIds.push(project.projectId);
+
+                    projectPromises.push(
+                        ProjectService.removeUserFromProject(
+                            project.projectId,
+                            username
+                        )
+                    );
+                }
+            }
+        }
+        // if there are promises for projects then return that
+        if (projectPromises) {
+            Promise.all(projectPromises).catch(() => {
+                return res
+                    .status(500)
+                    .json({ error: "Could not remove user from projects" });
+            });
+        }
+        // promising all deletes for all the tickets
+        for (let j = 0; j < projectIds?.length; j++) {
+            Promise.all(await getTicketPromises(projectIds[j], username)).catch(
+                () => {
+                    return res
+                        .status(500)
+                        .json({ error: "Could not remove user from tickets" });
+                }
+            );
+        }
+
+        return res.sendStatus(200);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getTicketPromises = async (projectId: string, username: string) => {
+    const ticketPromises: Promise<boolean>[] = [];
+    const projectTickets = await TicketService.getAllTicketsByProjectId({
+        projectId: projectId,
+    });
+
+    if (projectTickets) {
+        projectTickets.forEach((ticket) => {
+            if (ticket.reporterId === username) {
+                ticketPromises.push(
+                    TicketService.removeUserFromTicket(
+                        ticket.ticketId,
+                        username
+                    )
+                );
+            } else if (
+                ticket.assignedDev &&
+                ticket?.assignedDev?.includes(username)
+            ) {
+                ticketPromises.push(
+                    TicketService.removeUserFromTicket(
+                        ticket.ticketId,
+                        username
+                    )
+                );
+            }
+        });
+    }
+
+    return ticketPromises;
 };
 
 export {
