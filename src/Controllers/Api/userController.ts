@@ -196,6 +196,7 @@ const removeUserFromGroup = async (
         // then delete the groupId
         const updatedUser = await UserService.updateUser(username, {
             groupId: "",
+            roles: { User: "2001" },
         });
 
         if (!updatedUser)
