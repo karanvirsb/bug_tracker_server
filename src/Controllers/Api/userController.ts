@@ -290,4 +290,5 @@ export {
     getUserByRefreshToken,
     getAllUsers,
     getUsersByGroupId,
+    removeUserFromGroup,
 };
