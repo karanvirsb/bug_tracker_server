@@ -10,7 +10,10 @@ const getUser =
     }): Promise<UserType | null> => {
         if (!userInfo.val) throw Error("id was not provided");
 
-        return await User.findOne({ [userInfo.filter]: userInfo.val }).exec();
+        return await User.findOne(
+            { [userInfo.filter]: userInfo.val },
+            "avatar username email firstName lastName groupId roles"
+        ).exec();
     };
 
 const getAllUsers =
