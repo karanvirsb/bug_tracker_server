@@ -258,6 +258,31 @@ const getStatistics = async (
     }
 };
 
+const findTicketInfo = async (
+    req: Request<
+        {},
+        {},
+        {},
+        { projectId: string; ticketId: string; limit: string }
+    >,
+    res: Response,
+    next: NextFunction
+) => {
+    const { projectId, ticketId, limit } = req.query;
+    const limitNum = parseInt(limit);
+    try {
+        const ticketInfo = await TicketService.findTicketInfo({
+            projectId,
+            ticketId,
+            limit: limitNum,
+        });
+        if (ticketInfo) return res.status(200).json(ticketInfo);
+        return res.sendStatus(204);
+    } catch (error) {
+        next(error);
+    }
+};
+
 export {
     createTicket,
     deleteTicket,
@@ -268,4 +293,5 @@ export {
     getStatistics,
     getTicketsByProjectId,
     getTicketsByUsername,
+    findTicketInfo,
 };
