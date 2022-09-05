@@ -19,7 +19,7 @@ specifiers:
   express: ^4.18.1
   jest: ^28.1.1
   jsonwebtoken: ^8.5.1
-  mongoose: ^6.3.8
+  mongoose: ^6.5.4
   mongoose-paginate-v2: ^1.7.0
   nanoid: ^3.3.4
   nodemon: ^2.0.16
@@ -38,7 +38,7 @@ dependencies:
   cors: 2.8.5
   express: 4.18.1
   jsonwebtoken: 8.5.1
-  mongoose: 6.5.0
+  mongoose: 6.5.4
   mongoose-paginate-v2: 1.7.0
   socket.io: 4.5.1
   zod: 3.17.10
@@ -1764,7 +1764,7 @@ packages:
     resolution: {integrity: sha512-cqwOVYT3qXyLiGw7ueU2kX9noE8DPGRY6z8eUxudhXY8NZ7DMKYAxyZkLSevGfhCX3dO/AoX5/SO9lAzfjon0Q==}
     deprecated: Mongoose publishes its own types, so you do not need to install this package.
     dependencies:
-      mongoose: 6.5.0
+      mongoose: 6.5.4
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -3677,8 +3677,8 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: false
 
-  /mongoose/6.5.0:
-    resolution: {integrity: sha512-swOX8ZEbmCeJaEs29B1j67StBIhuOccNNkipbVhsnLYYCDpNE7heM9W54MFGwN5es9tGGoxINHSzOhJ9kTOZGg==}
+  /mongoose/6.5.4:
+    resolution: {integrity: sha512-8hKV+9baDa7fyWRADQcSN/c0/QQbnewA2D0xOqdFb7f1UGYAHk4YSMNu9Hu2bdRUfQbK/daFuqlcmI17j6/8eg==}
     engines: {node: '>=12.0.0'}
     dependencies:
       bson: 4.6.5
