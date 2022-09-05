@@ -78,6 +78,31 @@ const getTicketsByUsername =
         );
     };
 
+const findTicketInfo =
+    (Tickets: mongoose.PaginateModel<ticketType>) =>
+    async ({
+        ticketId,
+        projectId,
+        limit,
+    }: {
+        ticketId: string;
+        projectId: string;
+        limit: number;
+    }) => {
+        const tickets = await Tickets.find({ projectId: projectId }).exec();
+        let ticketIndex = -1;
+
+        tickets.forEach((ticket, index) => {
+            if (ticket.ticketId === ticketId) {
+                ticketIndex = index + 1;
+            }
+        });
+
+        const ticketsPage = Math.ceil(ticketIndex / limit);
+        if (ticketIndex === -1) return {};
+        return { ticketsPage, ticketId, projectId, limit };
+    };
+
 const assignUserToTicket =
     (Tickets: mongoose.PaginateModel<ticketType>) =>
     async (ticketId: string, userId: string) => {
@@ -149,5 +174,6 @@ export default (Ticket: mongoose.PaginateModel<ticketType>) => {
         getTicketsByProjectId: getTicketsByProjectId(Ticket),
         getTicketsByUsername: getTicketsByUsername(Ticket),
         getAllTicketsByProjectId: getAllTicketsByProjectId(Ticket),
+        findTicketInfo: findTicketInfo(Ticket),
     };
 };
