@@ -25,7 +25,7 @@ const socketListen = (app: any) => {
         socket.on("leaveRoom", ({ roomId, username }) => {
             const roomMembers = rooms.get(roomId);
             roomMembers?.delete(username);
-            console.log(`${username} is leaving room ${roomId}`);
+            // console.log(`${username} is leaving room ${roomId}`);
             socket.leave(roomId);
         });
 
@@ -49,7 +49,7 @@ const socketListen = (app: any) => {
 
         socket.on("leavingPage", () => {
             for (const [key] of socket.rooms.entries()) {
-                console.log(`Deleting ${socket.data.username} from ${key}`);
+                // console.log(`Deleting ${socket.data.username} from ${key}`);
                 const roomMembers = rooms.get(key);
                 roomMembers?.delete(socket.data.username);
             }
@@ -62,7 +62,7 @@ const socketListen = (app: any) => {
 };
 
 const wrap = (middleware: any) => (socket: any, next: any) => {
-    console.log(socket.request);
+    // console.log(socket.request);
     middleware(socket.request, {}, next);
 };
 
@@ -86,11 +86,11 @@ function userJoinsRoom(
     socket: Socket<DefaultEventsMap, any, SocketData, any>
 ): (...args: any[]) => void {
     return ({ roomId, username }) => {
-        console.log(
-            "🚀 ~ file: sockets.ts ~ line 56 ~ return ~ roomId, username",
-            roomId,
-            username
-        );
+        // console.log(
+        //     "🚀 ~ file: sockets.ts ~ line 56 ~ return ~ roomId, username",
+        //     roomId,
+        //     username
+        // );
 
         if (!roomId) {
             socket.emit("error", { message: "Room id was not given" });
@@ -110,11 +110,11 @@ function userJoinsRoom(
             rooms.set(roomId, users);
 
             socket.join(roomId);
-            console.log(
-                `line 81: added user: ${username} to room: ${roomId}, room has: ${socket.rooms.has(
-                    roomId
-                )}`
-            );
+            // console.log(
+            //     `line 81: added user: ${username} to room: ${roomId}, room has: ${socket.rooms.has(
+            //         roomId
+            //     )}`
+            // );
             socket.emit("roomJoined", socket.rooms.has(roomId));
             // emit room data back
         } else {
@@ -128,11 +128,11 @@ function userJoinsRoom(
                 rooms.set(roomId, users);
 
                 socket.join(roomId);
-                console.log(
-                    `line 95: added user: ${username} to room: ${roomId} , room has: ${socket.rooms.has(
-                        roomId
-                    )}`
-                );
+                // console.log(
+                //     `line 95: added user: ${username} to room: ${roomId} , room has: ${socket.rooms.has(
+                //         roomId
+                //     )}`
+                // );
             }
         }
         // emit room data back
@@ -150,12 +150,12 @@ function updateUserRoles(
     socket: Socket<DefaultEventsMap, any, SocketData, any>
 ): (...args: any[]) => void {
     return ({ roomId, username, roles }: updateUserRoles) => {
-        console.log(
-            "🚀 ~ file: sockets.ts ~ line 143 ~ return ~ roomId, username, roles",
-            roomId,
-            username,
-            roles
-        );
+        // console.log(
+        //     "🚀 ~ file: sockets.ts ~ line 143 ~ return ~ roomId, username, roles",
+        //     roomId,
+        //     username,
+        //     roles
+        // );
         const room = rooms.get(roomId);
         if (!room) {
             socket.emit("error", { message: "Invalid Room" });
@@ -163,10 +163,10 @@ function updateUserRoles(
 
         const user = room?.get(username);
         if (user) {
-            console.log(
-                "🚀 ~ file: sockets.ts ~ line 150 ~ return ~ user",
-                user
-            );
+            // console.log(
+            //     "🚀 ~ file: sockets.ts ~ line 150 ~ return ~ user",
+            //     user
+            // );
 
             socket
                 .to([...user.socketId].pop() ?? "")
