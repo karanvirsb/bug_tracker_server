@@ -11,7 +11,7 @@ interface UserPayload {
 const handleRefreshToken = async (req: Request, res: Response) => {
     // look for the cookie with the jwt
     const cookies = req.cookies;
-
+    // console.log(cookies);
     if (!cookies.jwt) return res.sendStatus(401); // unauthorized
 
     const refreshToken = cookies.jwt;
