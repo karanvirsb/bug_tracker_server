@@ -57,9 +57,9 @@ const deleteComment = async (
     next: NextFunction
 ) => {
     const { commentId } = req.body;
-    if (!commentId) throw Error("Invalid Id");
 
     try {
+        if (!commentId) throw Error("Invalid Id");
         // find comment
         const foundComment: commentType | null =
             await CommentService.getComment({
@@ -116,7 +116,11 @@ const updateComment = async (
     next: NextFunction
 ) => {
     const { commentId, updates } = req.body;
-    if (!commentId) throw Error("Invalid Id");
+    try {
+        if (!commentId) throw Error("Invalid Id");
+    } catch (err) {
+        next(err);
+    }
 
     const updatesKeys = Object.keys(updates);
 
@@ -144,8 +148,8 @@ const updateComment = async (
 
 const getComment = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
-    if (!filterValue) throw Error("Invalid parameter");
     try {
+        if (!filterValue) throw Error("Invalid filter");
         const comment: commentType | null = await CommentService.getComment({
             filter: filter ?? "commentId",
             val: filterValue,
@@ -159,8 +163,8 @@ const getComment = async (req: Request, res: Response, next: NextFunction) => {
 };
 const replyTo = async (req: Request, res: Response, next: NextFunction) => {
     const { commentId, reply } = req.body;
-    if (!commentId) throw Error("Invalid Id");
     try {
+        if (!commentId) throw Error("Invalid Id");
         // checking to see if the id exists
         if (!reply.commentId) {
             // generating and finding comment

@@ -58,8 +58,8 @@ const createProject = async (
 };
 const getProject = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
-    if (!filterValue) throw Error("Invalid parameter");
     try {
+        if (!filterValue) throw Error("Invalid parameter");
         const foundProject: projectType | null =
             await ProjectService.getProject({
                 filter: filter ?? "projectId",
@@ -78,7 +78,11 @@ const updateProject = async (
     next: NextFunction
 ) => {
     const { id, updates } = req.body;
-    if (!id) throw Error("Invalid Id");
+    try {
+        if (!id) throw Error("Invalid Id");
+    } catch (error) {
+        next(error);
+    }
 
     const updatesKeys = Object.keys(updates);
 
@@ -104,9 +108,9 @@ const deleteProject = async (
     next: NextFunction
 ) => {
     const { id } = req.body;
-    if (!id) throw Error("Invalid Id");
 
     try {
+        if (!id) throw Error("Invalid Id");
         const deletedProject = await ProjectService.deleteProject(id);
         if (deletedProject) return res.sendStatus(200);
         return res.sendStatus(204);
@@ -198,9 +202,8 @@ const getAllProjectsByGroupId = async (
     const groupId = req.params.id;
     const page = req.query.page;
 
-    if (!groupId) throw Error("Invalid Id");
-    console.log(groupId);
     try {
+        if (!groupId) throw Error("Invalid Id");
         const project = await ProjectService.getAllProjectsByGroupId(
             groupId,
             parseInt(page)
@@ -220,6 +223,7 @@ const getProjectIdsByGroupId = async (
     const groupId = req.params.id;
 
     try {
+        if (!groupId) throw Error("Invalid Id");
         const projectIds = await ProjectService.getProjectIdsFromGroupId(
             groupId
         );

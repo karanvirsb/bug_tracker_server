@@ -12,9 +12,9 @@ const getUser = async (
     next: NextFunction
 ): Promise<Response<any, Record<string, any>> | undefined> => {
     const { filterValue, filter } = req.body;
-    if (!filterValue) throw Error("Invalid parameter");
 
     try {
+        if (!filterValue) throw Error("Invalid parameter");
         const user: UserType | null = await UserService.getUser({
             filter: filter ?? "username",
             val: filterValue,
@@ -34,9 +34,9 @@ const getUserByRefreshToken = async (
     next: NextFunction
 ): Promise<Response<any, Record<string, any>> | undefined> => {
     const { token } = req.body;
-    if (!token) return res.sendStatus(401);
 
     try {
+        if (!token) throw new Error("Invalid token");
         const user = await UserService.getUserByRefreshToken(token);
 
         if (!user) {
@@ -56,9 +56,8 @@ const getAllUsers = async (
 ): Promise<Response<any, Record<string, any>> | undefined> => {
     const { users } = req.body;
 
-    if (!users) return res.sendStatus(401);
-
     try {
+        if (!users) throw new Error("Users do not exist");
         const foundUsers = await UserService.getAllUsers(users);
 
         if (!foundUsers) return res.sendStatus(204);
@@ -76,9 +75,8 @@ const getUsersByGroupId = async (
 ): Promise<Response<any, Record<string, any>> | undefined> => {
     const { groupId } = req.body;
 
-    if (!groupId) return res.sendStatus(401);
-
     try {
+        if (!groupId) throw new Error("Invalid group id");
         const usersArr = await UserService.getUsersByGroupId(groupId);
 
         if (!usersArr) return res.sendStatus(204);

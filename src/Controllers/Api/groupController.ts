@@ -88,7 +88,11 @@ const getGroup = async (req: Request, res: Response, next: NextFunction) => {
 };
 const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
     const { id, updates } = req.body;
-    if (!id) throw Error("Id is invalid");
+    try {
+        if (!id) throw Error("Id is invalid");
+    } catch (error) {
+        next(error);
+    }
     const updatesKeys = Object.keys(updates);
 
     // check update keys if they exist
@@ -115,7 +119,11 @@ const updateGroupName = async (
     next: NextFunction
 ) => {
     const { id, groupName } = req.body;
-    if (!id) throw Error("Id is invalid");
+    try {
+        if (!id) throw Error("Id is invalid");
+    } catch (error) {
+        next(error);
+    }
 
     if (groupName.length < 4 || groupName.length > 50) {
         return res
@@ -159,7 +167,11 @@ const refreshInviteCode = async (
     next: NextFunction
 ) => {
     const { id, groupName } = req.body;
-
+    try {
+        if (!id) throw Error("Id is invalid");
+    } catch (error) {
+        next(error);
+    }
     let nanoid = customAlphabet("123456789", 4);
     let generatedGroupCode = await nanoid();
     let inviteCode = groupName + "#" + generatedGroupCode;

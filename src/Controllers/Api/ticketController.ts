@@ -89,10 +89,10 @@ const deleteTicket = async (
     next: NextFunction
 ) => {
     const { ticketId } = req.body;
-    if (!ticketId) {
-        throw Error("Invalid Id");
-    }
     try {
+        if (!ticketId) {
+            throw Error("Invalid Id");
+        }
         const deletedTicket = await TicketService.deleteTicket(ticketId);
         if (deletedTicket) return res.sendStatus(200);
         return res.sendStatus(204);
@@ -106,7 +106,11 @@ const updateTicket = async (
     next: NextFunction
 ) => {
     const { ticketId, updates } = req.body;
-    if (!ticketId) throw Error("Invalid ticketId");
+    try {
+        if (!ticketId) throw Error("Invalid ticketId");
+    } catch (error) {
+        next(error);
+    }
 
     const updatesKeys = Object.keys(updates);
     // checking to see if the updates keys exist within ticket
@@ -130,8 +134,8 @@ const updateTicket = async (
 };
 const getTicket = async (req: Request, res: Response, next: NextFunction) => {
     const { filterValue, filter } = req.body;
-    if (!filterValue) throw Error("Invalid parameter");
     try {
+        if (!filterValue) throw Error("Invalid parameter");
         const ticket: ticketType | null = await TicketService.getTicket({
             filter: filter ?? "ticketId",
             val: filterValue,
@@ -157,9 +161,8 @@ const getTicketsByProjectId = async (
     let page = req.query.page;
     let limit = req.query.limit || 10;
 
-    if (!id) throw Error("Invalid id");
-
     try {
+        if (!id) throw Error("Invalid id");
         page = typeof page === "string" ? parseInt(page) : page;
         limit = typeof limit === "string" ? parseInt(limit) : limit;
         const tickets = await TicketService.getTicketsByProjectId({
@@ -188,9 +191,8 @@ const getTicketsByUsername = async (
     let page = req.query.page;
     let limit = req.query.limit || 5;
 
-    if (!username) throw Error("Invalid username");
-
     try {
+        if (!username) throw Error("Invalid username");
         page = typeof page === "string" ? parseInt(page) : page;
         limit = typeof limit === "string" ? parseInt(limit) : limit;
         const tickets = await TicketService.getTicketsByUsername({
@@ -213,6 +215,8 @@ const assignUserToTicket = async (
     const { ticketId, userId } = req.body;
 
     try {
+        if (!ticketId || userId) throw new Error("Invalid id");
+
         const addedUser = await TicketService.assignUserToTicket(
             ticketId,
             userId
@@ -231,6 +235,8 @@ const removeUserFromTicket = async (
     const { ticketId, userId } = req.body;
 
     try {
+        if (!ticketId || userId) throw new Error("Invalid id");
+
         const removedUser = await TicketService.removeUserFromTicket(
             ticketId,
             userId
