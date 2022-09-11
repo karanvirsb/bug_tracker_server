@@ -20,6 +20,8 @@ const socketListen = (app: any) => {
     io.on("connection", (socket) => {
         socket.emit("connection", socket.id);
 
+        socket.on("ping", () => [socket.emit("echo")]);
+
         socket.on("joinRoom", userJoinsRoom(socket));
 
         socket.on("leaveRoom", ({ roomId, username }) => {
