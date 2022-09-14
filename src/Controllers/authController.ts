@@ -63,16 +63,15 @@ const handleLogin = async (req: Request, res: Response) => {
                 { expiresIn: "1d" }
             );
 
+            await UserService.updateUser(foundUser.username, {
+                refreshToken: refreshToken,
+            });
             // sending refresh token through cookie for authentication
             res.cookie("jwt", refreshToken, {
                 httpOnly: true,
                 maxAge: 24 * 60 * 60 * 1000,
                 sameSite: "none",
                 secure: true,
-            });
-
-            UserService.updateUser(foundUser.username, {
-                refreshToken: refreshToken,
             });
 
             return res.json({
