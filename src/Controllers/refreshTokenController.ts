@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import UserService from "../Services/Users";
-import jwt, { VerifyOptions } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 interface UserPayload {
     username: string;
