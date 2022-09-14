@@ -79,6 +79,26 @@ const handleRefreshToken = async (req: Request, res: Response) => {
                 process.env.ACCESS_TOKEN_SECRET!,
                 { expiresIn: "10s" }
             );
+
+            const newRefreshToken = jwt.sign(
+                { username: foundUser.username },
+                process.env.REFRESH_TOKEN_SECRET!,
+                { expiresIn: "1d" }
+            );
+            // saving refresh token for current user
+            foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
+            await UserService.updateUser(foundUser.username, {
+                refreshToken: foundUser.refreshToken,
+            });
+
+            // creates secure cookie with refreshToken
+            res.cookie("jwt", newRefreshToken, {
+                httpOnly: true,
+                maxAge: 24 * 60 * 60 * 1000,
+                sameSite: "none",
+                secure: true,
+            });
+
             res.json({ roles, accessToken });
         }
     );
