@@ -12,6 +12,7 @@ const User = z.object({
 });
 
 const handleLogin = async (req: Request, res: Response) => {
+    const cookies = req.cookies;
     const { username, password } = req.body;
     if (!username || !password) {
         return res
@@ -57,17 +58,30 @@ const handleLogin = async (req: Request, res: Response) => {
                 { expiresIn: "15m" }
             );
 
-            const refreshToken = jwt.sign(
+            const newRefreshToken = jwt.sign(
                 { username: foundUser.username },
                 process.env.REFRESH_TOKEN_SECRET!,
                 { expiresIn: "1d" }
             );
 
+            const newRefreshTokenArray = !cookies.jwt
+                ? foundUser.refreshToken || []
+                : foundUser?.refreshToken?.filter((rt) => rt !== cookies.jwt) ||
+                  [];
+            if (cookies.jwt)
+                res.clearCookie("jwt", {
+                    httpOnly: true,
+                    sameSite: "none",
+                    secure: true,
+                }); // secure: true  - serves on https
+
+            foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
+
             await UserService.updateUser(foundUser.username, {
-                refreshToken: refreshToken,
+                refreshToken: foundUser.refreshToken,
             });
             // sending refresh token through cookie for authentication
-            res.cookie("jwt", refreshToken, {
+            res.cookie("jwt", newRefreshToken, {
                 httpOnly: true,
                 maxAge: 24 * 60 * 60 * 1000,
                 sameSite: "none",
