@@ -13,6 +13,7 @@ const User = z.object({
 
 const handleLogin = async (req: Request, res: Response) => {
     const cookies = req.cookies;
+    console.log("cookie available at login", JSON.stringify(cookies));
     const { username, password } = req.body;
     if (!username || !password) {
         return res
@@ -55,13 +56,13 @@ const handleLogin = async (req: Request, res: Response) => {
                     },
                 },
                 process.env.ACCESS_TOKEN_SECRET!,
-                { expiresIn: "15m" }
+                { expiresIn: "10s" }
             );
 
             const newRefreshToken = jwt.sign(
                 { username: foundUser.username },
                 process.env.REFRESH_TOKEN_SECRET!,
-                { expiresIn: "1d" }
+                { expiresIn: "15s" }
             );
 
             const newRefreshTokenArray = !cookies.jwt
