@@ -35,7 +35,7 @@ const IUser = z.object({
     firstName: z.string().min(3, "First Name must be greater than 3 letters"),
     lastName: z.string().min(3),
     groupId: z.string().optional(),
-    refreshToken: z.string().optional(),
+    refreshToken: z.array(z.string()).optional(),
     roles: roles,
 });
 
@@ -49,7 +49,7 @@ const usersSchema = new Schema<UserType>({
     firstName: String,
     lastName: String,
     groupId: String,
-    refreshToken: String,
+    refreshToken: [String],
     roles: Object,
 });
 
