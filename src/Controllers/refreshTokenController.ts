@@ -33,6 +33,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
             process.env.REFRESH_TOKEN_SECRET!,
             async (err: any, decoded: any) => {
                 if (err) return res.sendStatus(403);
+                console.log("attempted refresh token reuse");
                 const hackedUser = await UserService.getUser({
                     filter: "username",
                     val: decoded.username,
@@ -57,6 +58,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
         process.env.REFRESH_TOKEN_SECRET!,
         async (err: any, decoded: any) => {
             if (err) {
+                console.log("expired token");
                 // we receive token but the token has expired, needs to be replaced
                 foundUser.refreshToken = [...newRefreshTokenArray];
                 const result = await UserService.updateUser(
