@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import UserService from "../Services/Users";
-import jwt from "jsonwebtoken";
+import jwt, { VerifyOptions } from "jsonwebtoken";
 
 interface UserPayload {
     username: string;
@@ -49,36 +49,70 @@ const handleRefreshToken = async (req: Request, res: Response) => {
         return res.sendStatus(403);
     }
 
-    try {
-        const payload = jwt.verify(
-            refreshToken,
-            process.env.REFRESH_TOKEN_SECRET!
-        ) as UserPayload;
+    const newRefreshTokenArray =
+        foundUser.refreshToken?.filter((rt) => rt !== refreshToken) || [];
 
-        if (foundUser.username !== payload?.username)
-            return res.sendStatus(403);
-
-        const roles = Object.values(foundUser.roles);
-        const group_id = Object.values(foundUser.groupId || "");
-
-        // new access token
-        const accessToken = jwt.sign(
-            {
-                UserInfo: {
-                    username: payload?.username,
-                    roles: roles,
-                    group_id: group_id,
+    jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET!,
+        async (err: any, decoded: any) => {
+            if (err) {
+                // we receive token but the token has expired, needs to be replaced
+                foundUser.refreshToken = [...newRefreshTokenArray];
+                const result = await UserService.updateUser(
+                    foundUser.username,
+                    { refreshToken: foundUser.refreshToken }
+                );
+                console.log(result);
+            }
+            const decodedValue: UserPayload = decoded;
+            if (err || foundUser.username !== decodedValue.username)
+                return res.sendStatus(403);
+            const roles = Object.values(foundUser.roles);
+            const accessToken = jwt.sign(
+                {
+                    UserInfo: {
+                        username: decodedValue.username,
+                        roles: roles,
+                    },
                 },
-            },
-            process.env.ACCESS_TOKEN_SECRET!,
-            { expiresIn: "30m" }
-        );
-        console.log("here in refresh");
-        res.status(200).json({ accessToken });
-    } catch (error) {
-        console.log(error);
-        return res.sendStatus(403);
-    }
+                process.env.ACCESS_TOKEN_SECRET!,
+                { expiresIn: "10s" }
+            );
+            res.json({ roles, accessToken });
+        }
+    );
+
+    // try {
+    //     const payload = jwt.verify(
+    //         refreshToken,
+    //         process.env.REFRESH_TOKEN_SECRET!
+    //     ) as UserPayload;
+
+    //     if (foundUser.username !== payload?.username)
+    //         return res.sendStatus(403);
+
+    //     const roles = Object.values(foundUser.roles);
+    //     const group_id = Object.values(foundUser.groupId || "");
+
+    //     // new access token
+    //     const accessToken = jwt.sign(
+    //         {
+    //             UserInfo: {
+    //                 username: payload?.username,
+    //                 roles: roles,
+    //                 group_id: group_id,
+    //             },
+    //         },
+    //         process.env.ACCESS_TOKEN_SECRET!,
+    //         { expiresIn: "30m" }
+    //     );
+    //     console.log("here in refresh");
+    //     res.status(200).json({ accessToken });
+    // } catch (error) {
+    //     console.log(error);
+    //     return res.sendStatus(403);
+    // }
 };
 
 export { handleRefreshToken };
