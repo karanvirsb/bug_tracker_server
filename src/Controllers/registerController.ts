@@ -63,7 +63,7 @@ const handleNewUser = async (req: Request, res: Response) => {
             email: email,
             roles: { User: "2001" },
             groupId: "",
-            refreshToken: "",
+            refreshToken: [],
         };
         // fetch avatar for user
         const color = colors[Math.floor(Math.random() * colors.length)];
