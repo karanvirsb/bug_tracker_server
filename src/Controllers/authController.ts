@@ -62,7 +62,7 @@ const handleLogin = async (req: Request, res: Response) => {
             const newRefreshToken = jwt.sign(
                 { username: foundUser.username },
                 process.env.REFRESH_TOKEN_SECRET!,
-                { expiresIn: "15s" }
+                { expiresIn: "15d" }
             );
 
             let newRefreshTokenArray = !cookies.jwt

@@ -65,7 +65,6 @@ const handleRefreshToken = async (req: Request, res: Response) => {
                     foundUser.username,
                     { refreshToken: foundUser.refreshToken }
                 );
-                console.log(result);
             }
             const decodedValue: UserPayload = decoded;
             if (err || foundUser.username !== decodedValue.username)
@@ -85,7 +84,7 @@ const handleRefreshToken = async (req: Request, res: Response) => {
             const newRefreshToken = jwt.sign(
                 { username: foundUser.username },
                 process.env.REFRESH_TOKEN_SECRET!,
-                { expiresIn: "1d" }
+                { expiresIn: "15d" }
             );
             // saving refresh token for current user
             foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
